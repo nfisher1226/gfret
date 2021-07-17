@@ -1,41 +1,18 @@
 [package]
-name = "gfret"
-version = "1.0.3"
-authors = ["Nathan Fisher <nfisher.sr@gmail.com>"]
+name = "gfret2"
+version = "1.99.0"
 edition = "2018"
-license-file = "LICENSE"
-description = "Generate an svg template of a musical instrument fretboard"
-repository = "https://gitlab.com/jeang3nie/gfret"
-keywords = ["graphics", "gtk", "design", "vector-graphics", "lutherie"]
-categories = ["graphics", "multimedia::images", "mathematics", "simulation"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-gdk = "0.13.*"
-gdk-pixbuf = "0.9.*"
-gio = "0.9.*"
-glib = "0.10.*"
-gtk = "0.9.*"
-lazy_static = "1.4.*"
-pango = "0.9.*"
+fretboard_layout = { git = "https://codeberg.org/jeang3nie/fretboard-layout.git" }
 svg = "0.10.*"
-toml = "0.5.*"
-xdg-basedir = "1.0.*"
+
+[dependencies.gtk]
+version = "0.1.*"
+package = "gtk4"
 
 [dependencies.clap]
 version = "3.0.0-beta.2"
 features = ["yaml"]
-
-[dependencies.rug]
-version = "1.12.*"
-features = ["float"]
-
-[dependencies.serde]
-version = "1.0.*"
-features = ["derive"]
-
-[profile.release]
-panic = 'abort'
-lto = true
-codegen-units = 1

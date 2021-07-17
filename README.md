@@ -67,5 +67,5 @@ dialog.
 * For the gui, it would be nice to save state and allow loading specs from and saving
 to templates. **partial implementation 4/7/21** | **completed 5/5/21**
 * Port to Gtk4
-  * Preferences window should use new preferences dialog widget
 * Support changing from metric to imperial measurements
+* Support left handed multiscale fretboards

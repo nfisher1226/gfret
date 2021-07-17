@@ -1,4 +1,15 @@
 #![warn(clippy::all, clippy::pedantic)]
+//! Contents
+//! ========
+//! * [Introduction](#introduction)
+//! * [Usage](#usage)
+//!   * [Cli](#running-the-command-line-interface)
+//!   * [Gui](#running-the-gui)
+//!     * [Keybindings](#keybindings)
+//!   * [Templates](#templates)
+//! * [Configuration](#configuration)
+//!
+//! ## Introduction
 //! Gfret renders an svg image template of a fretboard for a stringed instrument.
 //! It has a Gtk interface as well as a command line interface and can produce
 //! templates for instruments ranging from a piccolo mandolin to an upright bass.
@@ -10,7 +21,7 @@
 //! will be installed if the program is installed using the included
 //! ```Makefile```, and can be used for launching the program from desktop menus
 //! or creating shortcuts.
-//! ## The command line interface
+//! ## Running the command line interface
 //! ```Bash
 //! USAGE:
 //!    gfret cli [OPTIONS] [SCALE]
@@ -34,22 +45,6 @@
 //!    -p, --perpendicular <PERPENDICULAR>
 //!            Set which fret is perpendicular to the centerline [default: 8]
 //! ```
-//! ## config.toml
-//! On Unix systems the default configuration directory is ```~/.config/gfret```.
-//! Gfret will maintain a configuration file here in [Toml](https://github.com/toml-lang/toml)
-//! format, with the following fields:
-//! ```Toml
-//! external_program = String
-//! border = f64
-//! line_weight = f64
-//! fretline_color = rgba String
-//! fretboard_color = rgba String
-//! draw_centerline = bool
-//! centerline_color = rgba String
-//! print_specs = bool
-//! font = String
-//! background_color = rgba String
-//! ```
 //! ## Keybindings
 //! | Key | Action |
 //! | --- | --- |
@@ -67,28 +62,28 @@
 //! immediately generated, or else loaded from the Gui interface for further
 //! editing. This is useful for sharing a common scale among multiple designs to
 //! use as a starting point.
+//! ## Configuration
+//! On Unix systems the default configuration directory is ```~/.config/gfret```.
+//! Gfret will maintain a configuration file here in [Toml](https://github.com/toml-lang/toml)
+//! format, with the following fields:
+//! ```Toml
+//! external_program = String
+//! border = f64
+//! line_weight = f64
+//! fretline_color = rgba String
+//! fretboard_color = rgba String
+//! draw_centerline = bool
+//! centerline_color = rgba String
+//! print_specs = bool
+//! font = String
+//! background_color = rgba String
+//! ```
 
 use clap::{crate_version, load_yaml, App};
 use std::path::PathBuf;
-/// Processes the data provided by the gui into a fully rendered svg image.
 mod backend;
-mod config;
-/// Used by the backend to calculate point locations and lines.
-mod fretboard;
 /// The Gtk user interface to gfret.
 mod gui;
-/// Persistent templates
-mod template;
-
-use backend::Specs;
-use config::Config;
-
-#[macro_use]
-extern crate lazy_static;
-
-lazy_static! {
-    static ref CONFIGDIR: PathBuf = Config::get_config_dir();
-}
 
 fn main() {
     let yaml = load_yaml!("cli.yaml");

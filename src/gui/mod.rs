@@ -1,13 +1,16 @@
+#![warn(clippy::all, clippy::pedantic)]
 use clap::crate_version;
 use fretboard_layout::Specs;
 use gtk::gdk_pixbuf::Pixbuf;
 use gtk::gio::{Cancellable, MemoryInputStream};
-use gtk::prelude::*;
 use gtk::glib::clone;
+use gtk::prelude::*;
 use gtk::{Application, ApplicationWindow, Builder, Button, Inhibit, MessageDialog, ResponseType};
 
 use std::cell::RefCell;
 use std::rc::Rc;
+
+mod prefs;
 
 struct Menu {
     template: gtk::Button,
@@ -88,13 +91,11 @@ impl Gui {
         let bytes = gtk::glib::Bytes::from_owned(image.into_bytes());
         let stream = MemoryInputStream::from_bytes(&bytes);
         let mut width = self.image_preview.size(gtk::Orientation::Horizontal);
-        if width == 0 { width = 1000 };
+        if width == 0 {
+            width = 1000
+        };
         let pixbuf = Pixbuf::from_stream_at_scale::<MemoryInputStream, Cancellable>(
-            &stream,
-            width,
-            -1,
-            true,
-            None,
+            &stream, width, -1, true, None,
         );
         self.image_preview.set_pixbuf(Some(&pixbuf.unwrap()));
         //if swap {
@@ -117,12 +118,8 @@ impl Gui {
     }
 }
 
-
 pub fn main() {
-    let application = gtk::Application::new(
-        Some("org.hitchhiker-linux.gfret"),
-        Default::default(),
-    );
+    let application = gtk::Application::new(Some("org.hitchhiker-linux.gfret"), Default::default());
     application.connect_activate(build_ui);
     application.run();
 }
@@ -173,7 +170,12 @@ fn build_ui(application: &Application) {
             gui.draw_preview(false);
         }));
 
-    gui.menu.quit
+    gui.menu.preferences.connect_clicked(move |_| {
+        prefs::run();
+    });
+
+    gui.menu
+        .quit
         .connect_clicked(clone!(@strong gui => move |_| {
         //gui.cleanup();
             gui.window.close();

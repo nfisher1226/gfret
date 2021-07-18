@@ -17,6 +17,7 @@
     <property name="can-focus">0</property>
     <property name="title" translatable="yes">Gfret - Preferences</property>
     <property name="destroy-with-parent">1</property>
+    <property name="modal">True</property>
     <child internal-child="content_area">
       <object class="GtkBox">
         <property name="can-focus">0</property>
@@ -298,7 +299,7 @@
       </object>
     </child>
     <action-widgets>
-      <action-widget response="-1">close_button</action-widget>
+      <action-widget response="-5">close_button</action-widget>
     </action-widgets>
     <child internal-child="action_area">
       <object class="GtkBox">

@@ -82,8 +82,18 @@
 use clap::{crate_version, load_yaml, App};
 use std::path::PathBuf;
 mod backend;
+mod config;
 /// The Gtk user interface to gfret.
 mod gui;
+/// Persistent templates
+mod template;
+
+#[macro_use]
+extern crate lazy_static;
+
+lazy_static! {
+    static ref CONFIGDIR: PathBuf = config::get_config_dir();
+}
 
 fn main() {
     let yaml = load_yaml!("cli.yaml");

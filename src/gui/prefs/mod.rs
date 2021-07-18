@@ -1,14 +1,15 @@
 #![warn(clippy::all, clippy::pedantic)]
-use glib::clone;
+use fretboard_layout::color::ReducedRGBA;
+use gtk::glib::clone;
 use gtk::prelude::*;
 
-use crate::Config;
+//use crate::Config;
 
 use std::rc::Rc;
 use std::str::FromStr;
 
 /// Opens a [gtk::AppChooserDialog]
-mod appchooser;
+//mod appchooser;
 
 /// Handles on the widgets in the preferences dialog window for which we need to
 /// save data
@@ -30,44 +31,42 @@ struct PrefWidgets {
 impl PrefWidgets {
     /// Returns a struct of pointers to the widgets that contain state
     fn new() -> PrefWidgets {
-        let glade_src = include_str!("prefs.glade");
+        let glade_src = include_str!("prefs.ui");
         let builder = gtk::Builder::from_string(glade_src);
         PrefWidgets {
             prefs_window: builder
-                .get_object("prefs_window")
+                .object("prefs_window")
                 .expect("Error getting 'prefs_window'"),
             external_program: builder
-                .get_object("external_program")
+                .object("external_program")
                 .expect("Error getting 'external_program'"),
             external_button: builder
-                .get_object("external_button")
+                .object("external_button")
                 .expect("Error getting 'external_button'"),
-            border: builder
-                .get_object("border")
-                .expect("Error getting 'border'"),
+            border: builder.object("border").expect("Error getting 'border'"),
             line_weight: builder
-                .get_object("line_weight")
+                .object("line_weight")
                 .expect("Error getting 'line_weight'"),
             fretline_color: builder
-                .get_object("fretline_color")
+                .object("fretline_color")
                 .expect("Error getting 'fretline_color'"),
             fretboard_color: builder
-                .get_object("fretboard_color")
+                .object("fretboard_color")
                 .expect("Error getting 'fretboard_color'"),
             draw_centerline: builder
-                .get_object("draw_centerline")
+                .object("draw_centerline")
                 .expect("Error getting 'draw_centerline'"),
             centerline_color: builder
-                .get_object("centerline_color")
+                .object("centerline_color")
                 .expect("Error getting 'centerline_color'"),
             print_specs: builder
-                .get_object("print_specs")
+                .object("print_specs")
                 .expect("Error getting 'print_specs'"),
             font_chooser: builder
-                .get_object("font_chooser")
+                .object("font_chooser")
                 .expect("Error getting 'font_chooser'"),
             background_color: builder
-                .get_object("background_color")
+                .object("background_color")
                 .expect("Error getting 'background_color'"),
         }
     }
@@ -76,19 +75,18 @@ impl PrefWidgets {
     /// struct into a String suitable for saving in config.toml
     #[allow(clippy::cast_sign_loss)]
     #[allow(clippy::cast_possible_truncation)]
-    fn get_color_string(button: &gtk::ColorButton) -> String {
-        let color = button.get_rgba();
-        format!(
-            "rgba({},{},{},{})",
-            (color.red * 255.0) as u8,
-            (color.green * 255.0) as u8,
-            (color.blue * 255.0) as u8,
-            color.alpha
-        )
+    fn get_color(button: &gtk::ColorButton) -> ReducedRGBA {
+        let color = button.rgba();
+        ReducedRGBA {
+            red: (color.red * 255.0) as u8,
+            green: (color.green * 255.0) as u8,
+            blue: (color.blue * 255.0) as u8,
+            alpha: (color.alpha * 255.0) as u8,
+        }
     }
 
     /// Returns a [Config] struct from the widget states
-    fn config_from_widgets(&self) -> Config {
+    /*fn config_from_widgets(&self) -> Config {
         Config {
             external_program: String::from(self.external_program.get_text()),
             border: self.border.get_value(),
@@ -106,10 +104,10 @@ impl PrefWidgets {
             },
             background_color: PrefWidgets::get_color_string(&self.background_color),
         }
-    }
+    }*/
 
     /// Sets widget states based on a [Config] struct which is loaded from file
-    fn load_config(&self) {
+    /*fn load_config(&self) {
         if let Some(config) = Config::from_file() {
             if let Ok(color) = gdk::RGBA::from_str(&config.fretline_color) {
                 self.fretline_color.set_rgba(&color);
@@ -134,24 +132,24 @@ impl PrefWidgets {
                 self.font_chooser.set_font(&font);
             }
         }
-    }
+    }*/
 
     /// Serializes a [Config] struct as toml and saves to disk
-    fn save_prefs(&self) {
+    /*fn save_prefs(&self) {
         let config_file = Config::get_config_file();
         let config_data = self.config_from_widgets();
         config_data.save_to_file(&config_file);
-    }
+    }*/
 
     /// Toggles the centerline color chooser button
     fn toggle_centerline_color(&self) {
-        let state = self.draw_centerline.get_active();
+        let state = self.draw_centerline.is_active();
         self.centerline_color.set_sensitive(state);
     }
 
     /// Toggles the font chooser button
     fn toggle_font_chooser(&self) {
-        let state = self.print_specs.get_active();
+        let state = self.print_specs.is_active();
         self.font_chooser.set_sensitive(state);
     }
 }
@@ -159,7 +157,7 @@ impl PrefWidgets {
 /// Runs the preferences dialog
 pub fn run() {
     let prefs = Rc::new(PrefWidgets::new());
-    prefs.load_config();
+    /*prefs.load_config();
     prefs
         .external_program
         .connect_changed(clone!(@weak prefs => move |_| {
@@ -235,8 +233,16 @@ pub fn run() {
         .background_color
         .connect_color_set(clone!(@weak prefs => move |_| {
             prefs.save_prefs();
+        }));*/
+
+    prefs
+        .prefs_window
+        .connect_response(clone!(@strong prefs => move |_,response| {
+            if response == gtk::ResponseType::Ok {
+                println!("Response accepted");
+                prefs.prefs_window.close();
+            }
         }));
 
-    prefs.prefs_window.run();
-    prefs.prefs_window.close();
+    prefs.prefs_window.show();
 }

@@ -7,7 +7,6 @@ use std::process::Command;
 use svg::node::element::{path::Data, Description, Group, Path};
 use svg::Document;
 
-
 /// When this function runs it either launches the gui or calls run(&specs) to
 /// generate output, based on the command line arguments given to the program
 pub fn run(matches: &ArgMatches) {

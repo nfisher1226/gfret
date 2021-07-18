@@ -3,9 +3,9 @@ use gio::AppInfoExt;
 use gtk::prelude::*;
 
 pub fn run() -> Option<String> {
-    let dialog = gtk::AppChooserDialog::new_for_content_type::<gtk::Window>(
+    let dialog = gtk::AppChooserDialog::for_content_type::<gtk::Window>(
         None,
-        gtk::DialogFlags::empty(),
+        gtk::DialogFlags::MODAL,
         "image/svg+xml",
     );
     let chooser = dialog.get_widget();

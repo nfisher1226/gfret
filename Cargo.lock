@@ -122,9 +122,10 @@ dependencies = [
 [[package]]
 name = "fretboard_layout"
 version = "0.1.0"
-source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git#4bab06439a28af0c85aee740af304b1bede0ef65"
+source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git#98b0bb9bf5cce2d8dee73a4178cd5ac96e86e09f"
 dependencies = [
  "rug",
+ "serde",
  "svg",
 ]
 
@@ -245,7 +246,11 @@ dependencies = [
  "clap",
  "fretboard_layout",
  "gtk4",
+ "lazy_static",
+ "serde",
  "svg",
+ "toml",
+ "xdg-basedir",
 ]
 
 [[package]]
@@ -685,6 +690,20 @@ name = "serde"
 version = "1.0.126"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ec7505abeacaec74ae4778d9d9328fe5a5d04253220a85c4ee022239fc996d03"
+dependencies = [
+ "serde_derive",
+]
+
+[[package]]
+name = "serde_derive"
+version = "1.0.126"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "963a7dbc9895aeac7ac90e74f34a5d5261828f79df35cbed41e10189d3804d43"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
 
 [[package]]
 name = "slab"
@@ -876,6 +895,12 @@ name = "winapi-x86_64-pc-windows-gnu"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
+
+[[package]]
+name = "xdg-basedir"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0095d076939c4f9dc76ea678b45e94cf0a9fe0fc1c1c3c2cb6b1e3a3ccfcbbfc"
 
 [[package]]
 name = "yaml-rust"

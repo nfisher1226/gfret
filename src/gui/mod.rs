@@ -87,7 +87,7 @@ impl Gui {
         let image = self.get_specs().create_document(None).to_string();
         let bytes = gtk::glib::Bytes::from_owned(image.into_bytes());
         let stream = MemoryInputStream::from_bytes(&bytes);
-        let mut width = self.window.size(gtk::Orientation::Horizontal);
+        let mut width = self.image_preview.size(gtk::Orientation::Horizontal);
         if width == 0 { width = 1000 };
         let pixbuf = Pixbuf::from_stream_at_scale::<MemoryInputStream, Cancellable>(
             &stream,
@@ -173,13 +173,11 @@ fn build_ui(application: &Application) {
             gui.draw_preview(false);
         }));
 
-    gui
-        .menu
-        .quit
+    gui.menu.quit
         .connect_clicked(clone!(@strong gui => move |_| {
         //gui.cleanup();
-        gui.window.close();
-    }));
+            gui.window.close();
+        }));
 
     gui.window.show();
 }

@@ -122,10 +122,8 @@ dependencies = [
 [[package]]
 name = "fretboard_layout"
 version = "0.1.0"
-source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git#38071a89c9b3a9883b68566c2d7a1f88ca4f96a7"
+source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git#4bab06439a28af0c85aee740af304b1bede0ef65"
 dependencies = [
- "lazy_static",
- "pango",
  "rug",
  "svg",
 ]

@@ -5,7 +5,9 @@ use gtk::gdk_pixbuf::Pixbuf;
 use gtk::gio::{Cancellable, MemoryInputStream};
 use gtk::glib::clone;
 use gtk::prelude::*;
-use gtk::{Application, ApplicationWindow, Builder, Button, Inhibit, MessageDialog, ResponseType};
+use gtk::{Application, ApplicationWindow, Builder, Button, FileChooserAction,
+    Inhibit, MessageDialog, ResponseType, Window};
+use svg::Document;
 
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -21,6 +23,13 @@ struct Menu {
     quit: gtk::Button,
 }
 
+#[derive(Clone)]
+struct File {
+    saved_once: RefCell<bool>,
+    saved_current: RefCell<bool>,
+    filename: RefCell<String>,
+}
+
 struct Gui {
     window: gtk::Window,
     image_preview: gtk::Picture,
@@ -34,6 +43,7 @@ struct Gui {
     nut_width: gtk::SpinButton,
     bridge_spacing: gtk::SpinButton,
     menu: Menu,
+    file: File,
 }
 
 impl Menu {
@@ -46,6 +56,19 @@ impl Menu {
             preferences: builder.object("preferences").unwrap(),
             quit: builder.object("quit").unwrap(),
         }
+    }
+}
+
+impl File {
+    fn init() -> File {
+        File {
+            saved_once: RefCell::new(false),
+            saved_current: RefCell::new(false),
+            filename: RefCell::new(String::from("")),
+        }
+    }
+
+    fn do_save(&self, filename: String) {
     }
 }
 
@@ -66,6 +89,7 @@ impl Gui {
             nut_width: builder.object("nut_width").unwrap(),
             bridge_spacing: builder.object("bridge_spacing").unwrap(),
             menu: Menu::init(builder),
+            file: File::init(),
         }
     }
 
@@ -90,12 +114,12 @@ impl Gui {
         let image = self.get_specs().create_document(None).to_string();
         let bytes = gtk::glib::Bytes::from_owned(image.into_bytes());
         let stream = MemoryInputStream::from_bytes(&bytes);
-        let mut width = self.image_preview.size(gtk::Orientation::Horizontal);
+        let mut width = self.window.size(gtk::Orientation::Horizontal);
         if width == 0 {
-            width = 1000
+            width = 500;
         };
         let pixbuf = Pixbuf::from_stream_at_scale::<MemoryInputStream, Cancellable>(
-            &stream, width, -1, true, None,
+            &stream, width, 100, true, None,
         );
         self.image_preview.set_pixbuf(Some(&pixbuf.unwrap()));
         //if swap {
@@ -114,6 +138,79 @@ impl Gui {
         } else {
             self.perpendicular_fret.hide();
             self.pfret_label.hide();
+        }
+    }
+
+    /// Check if the file has been saved
+    fn check_saved(&self) -> bool {
+        *self.file.saved_once.borrow()
+    }
+
+    /// Get the current filename
+    fn get_current_filename(&self) -> Option<String> {
+        if self.check_saved() {
+            Some(self.file.filename.borrow().to_string())
+        } else {
+            None
+        }
+    }
+
+    fn run_save_dialog(&self) {
+        let currentfile = match self.get_current_filename() {
+            Some(n) => n,
+            None => String::from("untitled.svg"),
+        };
+        let dialog = gtk::FileChooserDialog::new::<Window>(
+            Some("Save As"),
+            None,
+            FileChooserAction::Save,
+            &[
+                ("_Cancel", ResponseType::Cancel),
+                ("_Ok", ResponseType::Accept),
+            ],
+        );
+        dialog.set_current_name(&currentfile);
+        let file = &self.file;
+        dialog.connect_response(clone!(@strong file => move |dlg,res| {
+            if res == ResponseType::Accept {
+                let filename = match dlg.file() {
+                    Some(f) => {
+                        f.path().and_then(|mut name| {
+                            name.set_extension("svg");
+                            match name.to_str() {
+                                Some(c) => Some(c.to_string()),
+                                None => None,
+                            }
+                        })
+                    },
+                    None => None,
+                };
+                if let Some(f) = filename {
+                    file.do_save(f);
+                }
+            }
+        }));
+        dialog.show();
+        dialog.close();
+    }
+
+    /// Updates the title of the program window with the name of the output file.
+    fn set_window_title(&self) {
+        if !*self.file.saved_once.borrow() {
+            self.window
+                .set_title(Some(&format!("Gfret - {} - <unsaved>", crate_version!())));
+        } else if *self.file.saved_current.borrow() {
+            self.window.set_title(Some(&format!(
+                "Gfret - {} - {}",
+                crate_version!(),
+                self.file.filename.borrow().split('/').last().unwrap()
+            )));
+        } else {
+            self.window.set_title(Some(&format!(
+                "Gfret - {} - {}*",
+                crate_version!(),
+                self.file.filename.borrow().split('/').last().unwrap()
+            )));
         }
     }
 }

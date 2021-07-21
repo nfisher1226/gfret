@@ -75,15 +75,43 @@ impl File {
         }
     }
 
-    fn do_save(&self, filename: String, document: &svg::Document) {
-        match svg::save(&filename, document) {
-            Ok(_) => println!("Output saved as {}.", filename),
-            Err(e) => eprintln!("{}", e),
-        };
+    fn saved(&self) -> bool {
+       *self.saved_once.borrow()
+   }
 
-        self.saved_once.swap(&RefCell::new(true));
-        self.saved_current.swap(&RefCell::new(true));
-        self.filename.swap(&RefCell::new(filename));
+   fn set_saved(&self) {
+       self.saved_once.swap(&RefCell::new(true));
+   }
+
+   fn filename(&self) -> Option<String> {
+       if self.saved() {
+           Some(self.filename.borrow().to_string())
+       } else {
+           None
+       }
+   }
+
+   fn current(&self) -> bool {
+       *self.saved_current.borrow()
+   }
+
+   fn set_current(&self) {
+       self.saved_current.swap(&RefCell::new(true));
+   }
+
+   fn unset_current(&self) {
+       self.saved_current.swap(&RefCell::new(false));
+   }
+
+    fn do_save(&self, filename: String, document: &svg::Document) {
+       match svg::save(&filename, document) {
+           Ok(_) => println!("Output saved as {}.", filename),
+           Err(e) => eprintln!("{}", e),
+       };
+
+       self.set_saved();
+       self.set_current();
+       self.filename.swap(&RefCell::new(filename));
     }
 }
 
@@ -139,10 +167,10 @@ impl Gui {
             &stream, width, 100, true, None,
         );
         self.image_preview.set_pixbuf(Some(&pixbuf.unwrap()));
-        //if swap {
-        //    self.saved_current.swap(&RefCell::new(false));
-        //    self.set_window_title();
-        //}
+        if swap {
+            self.file.unset_current();
+            self.set_window_title();
+        }
     }
 
     fn toggle_multi(&self) {
@@ -155,57 +183,6 @@ impl Gui {
         } else {
             self.perpendicular_fret.hide();
             self.pfret_label.hide();
-        }
-    }
-
-    /// Check if the file has been saved
-    fn check_saved(&self) -> bool {
-        *self.file.saved_once.borrow()
-    }
-
-    /// Get the current filename
-    fn get_current_filename(&self) -> Option<String> {
-        if self.check_saved() {
-            Some(self.file.filename.borrow().to_string())
-        } else {
-            None
-        }
-    }
-
-    fn run_save_dialog(&self) {
-        let currentfile = match self.get_current_filename() {
-            Some(n) => n,
-            None => String::from("untitled.svg"),
-        };
-        let dialog = gtk::FileChooserDialog::new::<Window>(
-            Some("Save As"),
-            Some(&self.window),
-            FileChooserAction::Save,
-            &[
-                ("_Cancel", ResponseType::Cancel),
-                ("_Ok", ResponseType::Accept),
-            ],
-        );
-        dialog.set_current_name(&currentfile);
-        dialog.set_create_folders(true);
-        dialog.set_select_multiple(false);
-        let document = self.get_specs().create_document(None);
-        let file = &self.file;
-        dialog.connect_response(clone!(@strong file => move |dlg,res| {
-            if res == ResponseType::Accept {
-                if let Some(filename) = dlg.current_name() {
-                    file.do_save(filename.to_string(), &document);
-                }
-            }
-            dlg.close();
-        }));
-        dialog.show();
-    }
-
-    fn save(&self) {
-        if let Some(filename) = self.get_current_filename() {
-            let document = self.get_specs().create_document(None);
-            self.file.do_save(filename, &document);
         }
     }
 
@@ -242,7 +219,6 @@ fn build_ui(application: &Application) {
         .set_title(Some(&format!("Gfret - {} - <unsaved>", crate_version!())));
 
     gui.window.set_application(Some(application));
-    //gui.setup_menu();
     gui.toggle_multi();
     gui.draw_preview(false);
 
@@ -279,7 +255,7 @@ fn build_ui(application: &Application) {
     gui.checkbox_multi
         .connect_toggled(clone!(@strong gui => move |_| {
             gui.toggle_multi();
-            gui.draw_preview(false);
+            gui.draw_preview(true);
         }));
 
     gui.menu.template.connect_clicked(clone!(@strong gui => move |_| {
@@ -289,17 +265,41 @@ fn build_ui(application: &Application) {
 
     gui.menu.save.connect_clicked(clone!(@strong gui => move |_| {
         gui.menu.app_menu.popdown();
+        if gui.file.saved() {
+            if let Some(filename) = gui.file.filename() {
+                let document = gui.get_specs().create_document(None);
+                gui.file.do_save(filename, &document);
+                gui.set_window_title();
+            }
+        } else {
+            gui.dialogs.save_as.show();
+        }
+    }));
+
+    gui.menu.save_as.connect_clicked(clone!(@strong gui => move |_| {
+        gui.menu.app_menu.popdown();
         gui.dialogs.save_as.show();
     }));
 
-    /* gui.menu.save.connect_clicked(clone!(@strong gui => move |_| {
-        gui.menu.app_menu.popdown();
-        if gui.check_saved() {
-            gui.save();
-        } else {
-            gui.run_save_dialog();
+    gui.dialogs.save_as.connect_response(clone!(@strong gui => move |dlg,res| {
+        if res == ResponseType::Accept {
+            if let Some(file) = dlg.file() {
+                if let Some(mut path) = file.path() {
+                    path.set_extension("svg");
+                    if let Some(filename) = path.to_str() {
+                        let document = gui.get_specs().create_document(None);
+                        gui.file.do_save(filename.to_string(), &document);
+                        gui.set_window_title();
+                    }
+                }
+            }
         }
-    })); */
+        dlg.hide();
+    }));
+
+    gui.dialogs.open_template.connect_response(clone!(@strong gui => move |dlg,res| {
+        dlg.hide();
+    }));
 
     gui.menu.preferences.connect_clicked(clone!(@strong gui =>move |_| {
         gui.menu.app_menu.popdown();

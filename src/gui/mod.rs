@@ -9,14 +9,14 @@ use gtk::{Application, ApplicationWindow, Builder, Button, FileChooserAction,
     Inhibit, MessageDialog, ResponseType, Window};
 use svg::Document;
 
-use std::cell::RefCell;
 use std::path::PathBuf;
 use std::rc::Rc;
 
 mod dialogs;
-mod prefs;
+mod file;
 
 use dialogs::Dialogs;
+use file::File;
 
 struct Menu {
     app_menu: gtk::Popover,
@@ -26,13 +26,6 @@ struct Menu {
     external: gtk::Button,
     preferences: gtk::Button,
     quit: gtk::Button,
-}
-
-#[derive(Clone)]
-struct File {
-    saved_once: RefCell<bool>,
-    saved_current: RefCell<bool>,
-    filename: RefCell<String>,
 }
 
 struct Gui {
@@ -53,7 +46,7 @@ struct Gui {
 }
 
 impl Menu {
-    fn init(builder: gtk::Builder) -> Menu {
+    fn init(builder: &gtk::Builder) -> Menu {
         Menu {
             app_menu: builder.object("app_menu").unwrap(),
             template: builder.object("template").unwrap(),
@@ -63,55 +56,6 @@ impl Menu {
             preferences: builder.object("preferences").unwrap(),
             quit: builder.object("quit").unwrap(),
         }
-    }
-}
-
-impl File {
-    fn init() -> File {
-        File {
-            saved_once: RefCell::new(false),
-            saved_current: RefCell::new(false),
-            filename: RefCell::new(String::from("")),
-        }
-    }
-
-    fn saved(&self) -> bool {
-       *self.saved_once.borrow()
-   }
-
-   fn set_saved(&self) {
-       self.saved_once.swap(&RefCell::new(true));
-   }
-
-   fn filename(&self) -> Option<String> {
-       if self.saved() {
-           Some(self.filename.borrow().to_string())
-       } else {
-           None
-       }
-   }
-
-   fn current(&self) -> bool {
-       *self.saved_current.borrow()
-   }
-
-   fn set_current(&self) {
-       self.saved_current.swap(&RefCell::new(true));
-   }
-
-   fn unset_current(&self) {
-       self.saved_current.swap(&RefCell::new(false));
-   }
-
-    fn do_save(&self, filename: String, document: &svg::Document) {
-       match svg::save(&filename, document) {
-           Ok(_) => println!("Output saved as {}.", filename),
-           Err(e) => eprintln!("{}", e),
-       };
-
-       self.set_saved();
-       self.set_current();
-       self.filename.swap(&RefCell::new(filename));
     }
 }
 
@@ -132,9 +76,9 @@ impl Gui {
             pfret_label: builder.object("pfret_label").unwrap(),
             nut_width: builder.object("nut_width").unwrap(),
             bridge_spacing: builder.object("bridge_spacing").unwrap(),
-            menu: Menu::init(builder),
+            menu: Menu::init(&builder),
             file: File::init(),
-            dialogs: Dialogs::init(&window),
+            dialogs: Dialogs::init(&window, &builder),
         }
     }
 
@@ -188,21 +132,25 @@ impl Gui {
 
     /// Updates the title of the program window with the name of the output file.
     fn set_window_title(&self) {
-        if !*self.file.saved_once.borrow() {
+        if !self.file.saved() {
             self.window
                 .set_title(Some(&format!("Gfret - {} - <unsaved>", crate_version!())));
-        } else if *self.file.saved_current.borrow() {
-            self.window.set_title(Some(&format!(
-                "Gfret - {} - {}",
-                crate_version!(),
-                self.file.filename.borrow().split('/').last().unwrap()
-            )));
+        } else if self.file.current() {
+            if let Some(filename) = self.file.filename() {
+                self.window.set_title(Some(&format!(
+                    "Gfret - {} - {}",
+                    crate_version!(),
+                    filename
+                )));
+            }
         } else {
-            self.window.set_title(Some(&format!(
-                "Gfret - {} - {}*",
-                crate_version!(),
-                self.file.filename.borrow().split('/').last().unwrap()
-            )));
+            if let Some(filename) = self.file.filename() {
+                self.window.set_title(Some(&format!(
+                    "Gfret - {} - {}*",
+                    crate_version!(),
+                    filename
+                )));
+            }
         }
     }
 }
@@ -301,10 +249,14 @@ fn build_ui(application: &Application) {
         dlg.hide();
     }));
 
-    gui.menu.preferences.connect_clicked(clone!(@strong gui =>move |_| {
+    gui.menu.preferences.connect_clicked(clone!(@strong gui => move |_| {
         gui.menu.app_menu.popdown();
-        prefs::run();
+        gui.dialogs.preferences.show();
     }));
+
+    gui.dialogs.preferences.window().connect_response(move |dlg,res| {
+        dlg.hide();
+    });
 
     gui.menu
         .quit

@@ -10,11 +10,16 @@ use gtk::{Application, ApplicationWindow, Builder, Button, FileChooserAction,
 use svg::Document;
 
 use std::cell::RefCell;
+use std::path::PathBuf;
 use std::rc::Rc;
 
+mod dialogs;
 mod prefs;
 
+use dialogs::Dialogs;
+
 struct Menu {
+    app_menu: gtk::Popover,
     template: gtk::Button,
     save: gtk::Button,
     save_as: gtk::Button,
@@ -44,11 +49,13 @@ struct Gui {
     bridge_spacing: gtk::SpinButton,
     menu: Menu,
     file: File,
+    dialogs: Dialogs,
 }
 
 impl Menu {
     fn init(builder: gtk::Builder) -> Menu {
         Menu {
+            app_menu: builder.object("app_menu").unwrap(),
             template: builder.object("template").unwrap(),
             save: builder.object("save").unwrap(),
             save_as: builder.object("save_as").unwrap(),
@@ -68,16 +75,25 @@ impl File {
         }
     }
 
-    fn do_save(&self, filename: String) {
+    fn do_save(&self, filename: String, document: &svg::Document) {
+        match svg::save(&filename, document) {
+            Ok(_) => println!("Output saved as {}.", filename),
+            Err(e) => eprintln!("{}", e),
+        };
+
+        self.saved_once.swap(&RefCell::new(true));
+        self.saved_current.swap(&RefCell::new(true));
+        self.filename.swap(&RefCell::new(filename));
     }
 }
 
 impl Gui {
     fn init() -> Gui {
         let builder = gtk::Builder::from_string(include_str!("gui.ui"));
+        let window: gtk::Window = builder.object("mainWindow").unwrap();
 
         Gui {
-            window: builder.object("mainWindow").unwrap(),
+            window: window.clone(),
             image_preview: builder.object("image_preview").unwrap(),
             scale: builder.object("scale_course").unwrap(),
             checkbox_multi: builder.object("check_box_multi").unwrap(),
@@ -90,6 +106,7 @@ impl Gui {
             bridge_spacing: builder.object("bridge_spacing").unwrap(),
             menu: Menu::init(builder),
             file: File::init(),
+            dialogs: Dialogs::init(&window),
         }
     }
 
@@ -162,7 +179,7 @@ impl Gui {
         };
         let dialog = gtk::FileChooserDialog::new::<Window>(
             Some("Save As"),
-            None,
+            Some(&self.window),
             FileChooserAction::Save,
             &[
                 ("_Cancel", ResponseType::Cancel),
@@ -170,28 +187,26 @@ impl Gui {
             ],
         );
         dialog.set_current_name(&currentfile);
+        dialog.set_create_folders(true);
+        dialog.set_select_multiple(false);
+        let document = self.get_specs().create_document(None);
         let file = &self.file;
         dialog.connect_response(clone!(@strong file => move |dlg,res| {
             if res == ResponseType::Accept {
-                let filename = match dlg.file() {
-                    Some(f) => {
-                        f.path().and_then(|mut name| {
-                            name.set_extension("svg");
-                            match name.to_str() {
-                                Some(c) => Some(c.to_string()),
-                                None => None,
-                            }
-                        })
-                    },
-                    None => None,
-                };
-                if let Some(f) = filename {
-                    file.do_save(f);
+                if let Some(filename) = dlg.current_name() {
+                    file.do_save(filename.to_string(), &document);
                 }
             }
+            dlg.close();
         }));
         dialog.show();
-        dialog.close();
+    }
+
+    fn save(&self) {
+        if let Some(filename) = self.get_current_filename() {
+            let document = self.get_specs().create_document(None);
+            self.file.do_save(filename, &document);
+        }
     }
 
     /// Updates the title of the program window with the name of the output file.
@@ -267,14 +282,35 @@ fn build_ui(application: &Application) {
             gui.draw_preview(false);
         }));
 
-    gui.menu.preferences.connect_clicked(move |_| {
+    gui.menu.template.connect_clicked(clone!(@strong gui => move |_| {
+        gui.menu.app_menu.popdown();
+        gui.dialogs.open_template.show();
+    }));
+
+    gui.menu.save.connect_clicked(clone!(@strong gui => move |_| {
+        gui.menu.app_menu.popdown();
+        gui.dialogs.save_as.show();
+    }));
+
+    /* gui.menu.save.connect_clicked(clone!(@strong gui => move |_| {
+        gui.menu.app_menu.popdown();
+        if gui.check_saved() {
+            gui.save();
+        } else {
+            gui.run_save_dialog();
+        }
+    })); */
+
+    gui.menu.preferences.connect_clicked(clone!(@strong gui =>move |_| {
+        gui.menu.app_menu.popdown();
         prefs::run();
-    });
+    }));
 
     gui.menu
         .quit
         .connect_clicked(clone!(@strong gui => move |_| {
-        //gui.cleanup();
+            gui.menu.app_menu.popdown();
+            //gui.cleanup();
             gui.window.close();
         }));
 

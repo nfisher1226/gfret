@@ -121,8 +121,8 @@ dependencies = [
 
 [[package]]
 name = "fretboard_layout"
-version = "0.1.0"
-source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git#98b0bb9bf5cce2d8dee73a4178cd5ac96e86e09f"
+version = "0.1.1"
+source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git#a35511422a7687410aa733a736e9686aba3b56a7"
 dependencies = [
  "rug",
  "serde",
@@ -749,9 +749,9 @@ checksum = "e72d8b19ab05827afefcca66bf47040c1e66a0901eb814784c77d4ec118bd309"
 
 [[package]]
 name = "syn"
-version = "1.0.73"
+version = "1.0.74"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f71489ff30030d2ae598524f61326b902466f72a0fb1a8564c001cc63425bcc7"
+checksum = "1873d832550d4588c3dbc20f01361ab00bfe741048f71e3fecf145a7cc18b29c"
 dependencies = [
  "proc-macro2",
  "quote",

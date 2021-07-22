@@ -249,14 +249,21 @@ fn build_ui(application: &Application) {
         dlg.hide();
     }));
 
+    gui.menu.external.connect_clicked(clone!(@strong gui => move |_| {
+        gui.menu.app_menu.popdown();
+    }));
+
     gui.menu.preferences.connect_clicked(clone!(@strong gui => move |_| {
         gui.menu.app_menu.popdown();
         gui.dialogs.preferences.show();
     }));
 
-    gui.dialogs.preferences.window().connect_response(move |dlg,res| {
+    gui.dialogs.preferences.window().connect_response(clone!(@strong gui => move |dlg,res| {
+        if res == ResponseType::Accept {
+            gui.dialogs.preferences.save_prefs();
+        }
         dlg.hide();
-    });
+    }));
 
     gui.menu
         .quit

@@ -1,18 +1,21 @@
 #![warn(clippy::all, clippy::pedantic)]
-use fretboard_layout::color::ReducedRGBA;
+use fretboard_layout::color::{Color, Color::Reduced, ReducedRGBA};
+use fretboard_layout::config::{Font, FontWeight};
 use gtk::glib::clone;
 use gtk::prelude::*;
 use gtk::prelude::*;
 use gtk::{Application, ApplicationWindow, Builder, Button, FileChooserAction,
     Inhibit, MessageDialog, ResponseType, Window};
+use gtk::pango::FontDescription;
 
+use crate::config::GfretConfig;
 
 /// Handles on the widgets in the preferences dialog window for which we need to
 /// save data
+#[derive(Clone)]
 pub struct PrefWidgets {
     window: gtk::Dialog,
-    external_program: gtk::Entry,
-    external_button: gtk::Button,
+    external_button: gtk::AppChooserButton,
     border: gtk::SpinButton,
     line_weight: gtk::SpinButton,
     fretline_color: gtk::ColorButton,
@@ -82,6 +85,16 @@ impl Dialogs {
         dlg.window.add_action_widget(&cancel, gtk::ResponseType::Cancel);
         dlg.window.add_action_widget(&accept, gtk::ResponseType::Accept);
         dlg.window.set_transient_for(Some(window));
+        let dlg_clone = dlg.clone();
+        dlg.draw_centerline.connect_state_set(move |_,_| {
+            dlg_clone.toggle_centerline_color();
+            gtk::Inhibit(false)
+        });
+        let dlg_clone = dlg.clone();
+        dlg.print_specs.connect_state_set(move |_,_| {
+            dlg_clone.toggle_font_chooser();
+            gtk::Inhibit(false)
+        });
         dlg
     }
 }
@@ -95,9 +108,6 @@ impl PrefWidgets {
             window: builder
                 .object("prefs_window")
                 .expect("Error getting 'prefs_window'"),
-            external_program: builder
-                .object("external_program")
-                .expect("Error getting 'external_program'"),
             external_button: builder
                 .object("external_button")
                 .expect("Error getting 'external_button'"),
@@ -133,10 +143,6 @@ impl PrefWidgets {
         self.window.show();
     }
 
-    pub fn hide(&self) {
-        self.window.hide();
-    }
-
     pub fn window(&self) -> gtk::Dialog {
         self.window.clone()
     }
@@ -155,26 +161,52 @@ impl PrefWidgets {
         }
     }
 
+    /// Retreives the commandline for the external editor
+    fn get_external(&self) -> Option<String> {
+        if let Some(app_info) = self.external_button.app_info() {
+            if let Some(commandline) = app_info.commandline() {
+                Some(String::from(commandline.to_str().unwrap()))
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    }
+
     /// Returns a [Config] struct from the widget states
-    /*fn config_from_widgets(&self) -> Config {
-        Config {
-            external_program: String::from(self.external_program.get_text()),
-            border: self.border.get_value(),
-            line_weight: self.line_weight.get_value(),
-            fretline_color: PrefWidgets::get_color_string(&self.fretline_color),
-            fretboard_color: PrefWidgets::get_color_string(&self.fretboard_color),
-            draw_centerline: self.draw_centerline.get_active(),
-            centerline_color: PrefWidgets::get_color_string(&self.centerline_color),
-            print_specs: self.print_specs.get_active(),
+    fn config_from_widgets(&self) -> GfretConfig {
+        GfretConfig {
+            external_program: self.get_external(),
+            border: self.border.value(),
+            line_weight: self.line_weight.value(),
+            fretline_color: Reduced(PrefWidgets::get_color(&self.fretline_color)),
+            fretboard_color: Reduced(PrefWidgets::get_color(&self.fretboard_color)),
+            centerline_color: Some(Reduced(PrefWidgets::get_color(&self.centerline_color))),
             font: {
-                match self.font_chooser.get_font() {
-                    Some(c) => Some(String::from(c)),
+                match self.font_chooser.font() {
+                    Some(f) => {
+                        let font = FontDescription::from_string(&f);
+                        let font_family = match font.family() {
+                            Some(fam) => fam.to_string(),
+                            None => String::from("Sans"),
+                        };
+                        let font_weight = font.style().to_string();
+                        Some(Font {
+                            family: font_family,
+                            weight: {
+                                match FontWeight::from_str(&font_weight) {
+                                    Some(w) => w,
+                                    None => FontWeight::Normal,
+                                }
+                            }
+                        })
+                    },
                     None => None,
                 }
             },
-            background_color: PrefWidgets::get_color_string(&self.background_color),
         }
-    }*/
+    }
 
     /// Sets widget states based on a [Config] struct which is loaded from file
     /*fn load_config(&self) {
@@ -205,11 +237,11 @@ impl PrefWidgets {
     }*/
 
     /// Serializes a [Config] struct as toml and saves to disk
-    /*fn save_prefs(&self) {
-        let config_file = Config::get_config_file();
+    pub fn save_prefs(&self) {
+        let config_file = crate::config::get_config_file();
         let config_data = self.config_from_widgets();
         config_data.save_to_file(&config_file);
-    }*/
+    }
 
     /// Toggles the centerline color chooser button
     fn toggle_centerline_color(&self) {
@@ -223,4 +255,3 @@ impl PrefWidgets {
         self.font_chooser.set_sensitive(state);
     }
 }
-

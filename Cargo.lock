@@ -63,9 +63,9 @@ dependencies = [
 
 [[package]]
 name = "cfg-expr"
-version = "0.7.4"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "30aa9e2ffbb838c6b451db14f3cd8e63ed622bf859f9956bc93845a10fafc26a"
+checksum = "70a1d12766bbdd5d44caab5df04a9bffec9cd855a1b44b15de5665d70c085f94"
 dependencies = [
  "smallvec",
 ]
@@ -122,7 +122,7 @@ dependencies = [
 [[package]]
 name = "fretboard_layout"
 version = "0.1.1"
-source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git#a35511422a7687410aa733a736e9686aba3b56a7"
+source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git#b1d53544b6617c0441f75fe2331e0c0cf14aba4a"
 dependencies = [
  "rug",
  "serde",
@@ -760,9 +760,9 @@ dependencies = [
 
 [[package]]
 name = "system-deps"
-version = "3.1.2"
+version = "3.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7ab7dbd121ce66af2176147a48c7e01aaf1f001837a18a7cf4317858606bbdf8"
+checksum = "480c269f870722b3b08d2f13053ce0c2ab722839f472863c3e2d61ff3a1c2fa6"
 dependencies = [
  "anyhow",
  "cfg-expr",

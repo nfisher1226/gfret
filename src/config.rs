@@ -1,5 +1,5 @@
 #![warn(clippy::all, clippy::pedantic)]
-use fretboard_layout::color::Color;
+use fretboard_layout::color::{Color, HexColor, RGBA, ReducedRGBA};
 use fretboard_layout::config::{Config, Font};
 use serde::{Deserialize, Serialize};
 
@@ -50,6 +50,19 @@ pub struct GfretConfig {
 }
 
 impl GfretConfig {
+    /// Creates a GfretConfig struct with default options
+    pub fn default() -> GfretConfig {
+        GfretConfig {
+            external_program: Some(String::from("inkscape")),
+            border: 10.0,
+            line_weight: 1.0,
+            fretline_color: Color::Reduced(ReducedRGBA::white()),
+            fretboard_color: Color::Reduced(ReducedRGBA::black()),
+            centerline_color: Some(Color::Reduced(ReducedRGBA::blue())),
+            font: Some(Font::default()),
+        }
+    }
+
     /// Saves Template struct as a .toml file
     pub fn save_to_file(&self, file: &Path) {
         let toml_string = toml::to_string(&self).expect("Could not encode TOML value");
@@ -80,6 +93,7 @@ impl GfretConfig {
         Some(config)
     }
 
+    /// Maps a GfretConfig struct to a fretboard_layout::Config struct
     pub fn to_config(&self) -> Config {
         Config {
             border: self.border,

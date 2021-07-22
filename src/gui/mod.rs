@@ -15,6 +15,7 @@ use std::rc::Rc;
 mod dialogs;
 mod file;
 
+use crate::config::GfretConfig;
 use dialogs::Dialogs;
 use file::File;
 
@@ -100,7 +101,10 @@ impl Gui {
     /// Performs a full render of the svg image without saving to disk, and
     /// refreshes the image preview with the new data.
     fn draw_preview(&self, swap: bool) {
-        let image = self.get_specs().create_document(None).to_string();
+        let cfg = GfretConfig::from_file()
+            .unwrap_or(GfretConfig::default())
+            .to_config();
+        let image = self.get_specs().create_document(Some(cfg)).to_string();
         let bytes = gtk::glib::Bytes::from_owned(image.into_bytes());
         let stream = MemoryInputStream::from_bytes(&bytes);
         let mut width = self.window.size(gtk::Orientation::Horizontal);
@@ -215,7 +219,10 @@ fn build_ui(application: &Application) {
         gui.menu.app_menu.popdown();
         if gui.file.saved() {
             if let Some(filename) = gui.file.filename() {
-                let document = gui.get_specs().create_document(None);
+                let cfg = GfretConfig::from_file()
+                    .unwrap_or(GfretConfig::default())
+                    .to_config();
+                let document = gui.get_specs().create_document(Some(cfg));
                 gui.file.do_save(filename, &document);
                 gui.set_window_title();
             }
@@ -235,7 +242,10 @@ fn build_ui(application: &Application) {
                 if let Some(mut path) = file.path() {
                     path.set_extension("svg");
                     if let Some(filename) = path.to_str() {
-                        let document = gui.get_specs().create_document(None);
+                        let cfg = GfretConfig::from_file()
+                            .unwrap_or(GfretConfig::default())
+                            .to_config();
+                        let document = gui.get_specs().create_document(Some(cfg));
                         gui.file.do_save(filename.to_string(), &document);
                         gui.set_window_title();
                     }
@@ -263,6 +273,7 @@ fn build_ui(application: &Application) {
             gui.dialogs.preferences.save_prefs();
         }
         dlg.hide();
+        gui.draw_preview(true);
     }));
 
     gui.menu

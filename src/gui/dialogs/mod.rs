@@ -10,6 +10,8 @@ use gtk::pango::FontDescription;
 
 use crate::config::GfretConfig;
 
+use std::path::PathBuf;
+
 /// Handles on the widgets in the preferences dialog window for which we need to
 /// save data
 #[derive(Clone)]
@@ -100,6 +102,27 @@ impl Dialogs {
             gtk::Inhibit(false)
         });
         dlg
+    }
+
+    pub fn get_template_path(&self) -> Option<PathBuf> {
+        if let Some(file) = self.open_template.file() {
+            if let Some(path) = file.path() {
+                return Some(path.to_path_buf());
+            }
+        }
+        None
+    }
+
+    pub fn get_save_path(&self) -> Option<String> {
+        if let Some(file) = self.save_as.file() {
+            if let Some(mut path) = file.path() {
+                path.set_extension("svg");
+                if let Some(filename) = path.to_str() {
+                    return Some(String::from(filename));
+                }
+            }
+        }
+        None
     }
 }
 

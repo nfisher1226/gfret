@@ -178,15 +178,6 @@ impl Gui {
         }
     }
 
-    fn get_template_path(&self) -> Option<PathBuf> {
-        if let Some(file) = self.dialogs.open_template.file() {
-            if let Some(path) = file.path() {
-                return Some(path.to_path_buf());
-            }
-        }
-        None
-    }
-
     /// Populates an instance of Template from the gui
     #[allow(clippy::cast_sign_loss)]
     fn template_from_gui(&self) -> Template {
@@ -206,9 +197,15 @@ impl Gui {
         }
     }
 
+    /// Saves a template (toml format) to the specified location
+    fn save_template(&self, file: &str) {
+        let data: Template = self.template_from_gui();
+        data.save_to_file(&PathBuf::from(file));
+    }
+
     /// Saves the program state before exiting
     fn cleanup(&self) {
-        let data: Template = self.template_from_gui();
+        let data = self.template_from_gui();
         data.save_statefile();
     }
 }
@@ -285,6 +282,7 @@ fn build_ui(application: &Application) {
                     .unwrap_or(GfretConfig::default())
                     .to_config();
                 let document = gui.get_specs().create_document(Some(cfg));
+                gui.save_template(&filename);
                 gui.file.do_save(filename, &document);
                 gui.set_window_title();
             }
@@ -300,18 +298,14 @@ fn build_ui(application: &Application) {
 
     gui.dialogs.save_as.connect_response(clone!(@strong gui => move |dlg,res| {
         if res == ResponseType::Accept {
-            if let Some(file) = dlg.file() {
-                if let Some(mut path) = file.path() {
-                    path.set_extension("svg");
-                    if let Some(filename) = path.to_str() {
-                        let cfg = GfretConfig::from_file()
-                            .unwrap_or(GfretConfig::default())
-                            .to_config();
-                        let document = gui.get_specs().create_document(Some(cfg));
-                        gui.file.do_save(filename.to_string(), &document);
-                        gui.set_window_title();
-                    }
-                }
+            if let Some(filename) = gui.dialogs.get_save_path() {
+                let cfg = GfretConfig::from_file()
+                    .unwrap_or(GfretConfig::default())
+                    .to_config();
+                let document = gui.get_specs().create_document(Some(cfg));
+                gui.save_template(&filename);
+                gui.file.do_save(filename, &document);
+                gui.set_window_title();
             }
         }
         dlg.hide();
@@ -319,7 +313,7 @@ fn build_ui(application: &Application) {
 
     gui.dialogs.open_template.connect_response(clone!(@strong gui => move |dlg,res| {
         if res == ResponseType::Accept {
-            if let Some(path) = gui.get_template_path() {
+            if let Some(path) = gui.dialogs.get_template_path() {
                 if let Some(template) = Template::load_from_file(path) {
                     gui.load_template(&template);
                 }

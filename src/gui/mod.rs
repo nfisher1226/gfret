@@ -16,6 +16,8 @@ mod dialogs;
 mod file;
 
 use crate::config::GfretConfig;
+use crate::template::Template;
+use crate::CONFIGDIR;
 use dialogs::Dialogs;
 use file::File;
 
@@ -157,6 +159,58 @@ impl Gui {
             }
         }
     }
+
+    /// Sets widget state to match temmplate
+    pub fn load_template(&self, template: &Template) {
+        self.scale.set_value(template.scale);
+        self.fret_count.set_value(template.count.into());
+        if let Some(scale_treble) = template.scale_treble {
+            self.scale_multi_course.set_value(scale_treble);
+            self.checkbox_multi.set_active(true);
+        } else {
+            self.checkbox_multi.set_active(false);
+        }
+        self.toggle_multi();
+        self.nut_width.set_value(template.nut);
+        self.bridge_spacing.set_value(template.bridge);
+        if let Some(pfret) = template.pfret {
+            self.perpendicular_fret.set_value(pfret);
+        }
+    }
+
+    fn get_template_path(&self) -> Option<PathBuf> {
+        if let Some(file) = self.dialogs.open_template.file() {
+            if let Some(path) = file.path() {
+                return Some(path.to_path_buf());
+            }
+        }
+        None
+    }
+
+    /// Populates an instance of Template from the gui
+    #[allow(clippy::cast_sign_loss)]
+    fn template_from_gui(&self) -> Template {
+        Template {
+            scale: self.scale.value(),
+            count: self.fret_count.value_as_int() as u32,
+            scale_treble: {
+                if self.checkbox_multi.is_active() {
+                    Some(self.scale_multi_course.value())
+                } else {
+                    None
+                }
+            },
+            nut: self.nut_width.value(),
+            bridge: self.bridge_spacing.value(),
+            pfret: Some(self.perpendicular_fret.value()),
+        }
+    }
+
+    /// Saves the program state before exiting
+    fn cleanup(&self) {
+        let data: Template = self.template_from_gui();
+        data.save_statefile();
+    }
 }
 
 pub fn main() {
@@ -167,6 +221,14 @@ pub fn main() {
 
 fn build_ui(application: &Application) {
     let gui = Rc::new(Gui::init());
+    let mut statefile = CONFIGDIR.clone();
+    statefile.push("state.toml");
+    if statefile.exists() {
+        if let Some(template) = Template::load_from_file(statefile) {
+            gui.load_template(&template);
+        }
+    }
+
     gui.window
         .set_title(Some(&format!("Gfret - {} - <unsaved>", crate_version!())));
 
@@ -256,6 +318,13 @@ fn build_ui(application: &Application) {
     }));
 
     gui.dialogs.open_template.connect_response(clone!(@strong gui => move |dlg,res| {
+        if res == ResponseType::Accept {
+            if let Some(path) = gui.get_template_path() {
+                if let Some(template) = Template::load_from_file(path) {
+                    gui.load_template(&template);
+                }
+            }
+        }
         dlg.hide();
     }));
 
@@ -280,7 +349,7 @@ fn build_ui(application: &Application) {
         .quit
         .connect_clicked(clone!(@strong gui => move |_| {
             gui.menu.app_menu.popdown();
-            //gui.cleanup();
+            gui.cleanup();
             gui.window.close();
         }));
 

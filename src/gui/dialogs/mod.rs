@@ -74,6 +74,10 @@ impl Dialogs {
         let accept = gtk::Button::with_label("Accept");
         let cancel = gtk::Button::with_label("Cancel");
         dlg.add_action_widget(&cancel, gtk::ResponseType::Cancel);
+        let filter = gtk::FileFilter::new();
+        filter.add_pattern("*.toml");
+        filter.set_name(Some("toml files"));
+        dlg.add_filter(&filter);
         dlg.add_action_widget(&accept, gtk::ResponseType::Accept);
         dlg
     }

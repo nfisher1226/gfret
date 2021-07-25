@@ -81,11 +81,11 @@ pub fn run(matches: &ArgMatches) {
             }
         }
     } else {
-        //let template = if matches.occurrences_of("TEMPLATE") > 0 {
-        //    matches.value_of("TEMPLATE")
-        //} else {
-        //    None
-        //};
+        let template = if matches.occurrences_of("TEMPLATE") > 0 {
+            matches.value_of("TEMPLATE")
+        } else {
+            None
+        };
         crate::gui::main();
     }
 }

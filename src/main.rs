@@ -79,7 +79,7 @@
 //! background_color = rgba String
 //! ```
 
-use clap::{crate_version, load_yaml, App};
+use clap::{App, crate_version, load_yaml};
 use std::path::PathBuf;
 mod backend;
 mod config;

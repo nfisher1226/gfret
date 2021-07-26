@@ -7,17 +7,17 @@ edition = "2018"
 
 [dependencies]
 fretboard_layout = { git = "https://codeberg.org/jeang3nie/fretboard-layout.git" }
-lazy_static = "1.4.*"
-svg = "0.10.*"
-toml = "0.5.*"
-xdg-basedir = "1.0.*"
+lazy_static = "~1.4"
+svg = "~0.10"
+toml = "~0.5"
+xdg-basedir = "~1.0"
 
 [dependencies.clap]
 version = "3.0.0-beta.2"
 features = ["yaml"]
 
 [dependencies.gtk]
-version = "0.1.*"
+version = "~0.1"
 package = "gtk4"
 
 [dependencies.serde]

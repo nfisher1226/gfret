@@ -1,27 +1,30 @@
 name: gfret
 author: The JeanG3nie <jeang3nie@hitchhiker-linux.org>
-about: Generates layout dimensions for a stringed instrument fretboard.
+about: Generates layout dimensions for a stringed instrument fretboard
 args:
     - TEMPLATE:
+        about: A valid Gfret template in toml format
         short: t
         long: template
-        about: A valid Gfret template in toml format
         takes_value: true
 subcommands:
     - cli:
+        about: Output an svg without running the interface
         args:
             - SCALE:
                 about: Scale length in mm.
+                short: s
+                long: scale
                 default_value: "648"
                 takes_value: true
             - MULTI:
-                about: Creates a multiscale fretboard with <MULTI> as the treble scale.
+                about: Multiscale fretboard with <MULTI> as the treble scale
                 short: m
                 long: multi
                 default_value: "610"
                 takes_value: true
             - PERPENDICULAR:
-                about: Set which fret is perpendicular to the centerline
+                about: Which fret is perpendicular to the centerline
                 short: p
                 long: perpendicular
                 default_value: "8"
@@ -46,8 +49,6 @@ subcommands:
                 takes_value: true
             - OUTPUT:
                 about: Name of the output file
-                short: o
-                long: output
                 default_value: output.svg
                 takes_value: true
             - EXTERN:

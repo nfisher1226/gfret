@@ -73,10 +73,12 @@ pub fn run(matches: &ArgMatches) {
                     process::exit(1);
                 }
             };
-            if let Some(cmd) = cli_matches.value_of("EXTERN") {
-                match Command::new(&cmd).args(&[&output]).spawn() {
-                    Ok(_) => (),
-                    Err(e) => eprintln!("{}", e),
+            if cli_matches.occurrences_of("EXTERN") > 0 {
+                if let Some(cmd) = cli_matches.value_of("EXTERN") {
+                    match Command::new(&cmd).args(&[&output]).spawn() {
+                        Ok(_) => (),
+                        Err(e) => eprintln!("{}", e),
+                    }
                 }
             }
         }

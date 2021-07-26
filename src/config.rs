@@ -1,5 +1,5 @@
 #![warn(clippy::all, clippy::pedantic)]
-use fretboard_layout::color::{Color, HexColor, RGBA, ReducedRGBA};
+use fretboard_layout::color::{Color, ReducedRGBA};
 use fretboard_layout::config::{Config, Font};
 use serde::{Deserialize, Serialize};
 

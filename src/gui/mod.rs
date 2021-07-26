@@ -5,9 +5,7 @@ use gtk::gdk_pixbuf::Pixbuf;
 use gtk::gio::{Cancellable, MemoryInputStream};
 use gtk::glib::clone;
 use gtk::prelude::*;
-use gtk::{Application, ApplicationWindow, Builder, Button, FileChooserAction,
-    Inhibit, MessageDialog, ResponseType, Window};
-use svg::Document;
+use gtk::{Application, ResponseType};
 
 use std::path::PathBuf;
 use std::rc::Rc;

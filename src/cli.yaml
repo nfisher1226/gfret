@@ -3,9 +3,9 @@ author: The JeanG3nie <jeang3nie@hitchhiker-linux.org>
 about: Generates layout dimensions for a stringed instrument fretboard.
 args:
     - TEMPLATE:
-        about: A valid Gfret template in toml format
         short: t
         long: template
+        about: A valid Gfret template in toml format
         takes_value: true
 subcommands:
     - cli:

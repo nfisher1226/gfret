@@ -1,11 +1,7 @@
 #![warn(clippy::all, clippy::pedantic)]
-use fretboard_layout::color::{Color, Color::Reduced, ReducedRGBA};
+use fretboard_layout::color::{Color::Reduced, ReducedRGBA};
 use fretboard_layout::config::{Font, FontWeight};
-use gtk::glib::clone;
 use gtk::prelude::*;
-use gtk::prelude::*;
-use gtk::{Application, ApplicationWindow, Builder, Button, FileChooserAction,
-    Inhibit, MessageDialog, ResponseType, Window};
 use gtk::pango::FontDescription;
 
 use crate::config::GfretConfig;

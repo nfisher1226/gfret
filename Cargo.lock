@@ -122,8 +122,10 @@ dependencies = [
 [[package]]
 name = "fretboard_layout"
 version = "0.1.1"
-source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git#b1d53544b6617c0441f75fe2331e0c0cf14aba4a"
+source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git#5da00663b2db01ef93738f037856dc5eb5ea4fb1"
 dependencies = [
+ "hex",
+ "rgba_simple",
  "rug",
  "serde",
  "svg",
@@ -182,6 +184,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "gdk"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "679e22651cd15888e7acd01767950edca2ee9fcd6421fbf5b3c3b420d4e88bb0"
+dependencies = [
+ "bitflags",
+ "cairo-rs",
+ "gdk-pixbuf",
+ "gdk-sys",
+ "gio",
+ "glib",
+ "libc",
+ "pango",
+]
+
+[[package]]
 name = "gdk-pixbuf"
 version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -203,6 +221,23 @@ dependencies = [
  "glib-sys",
  "gobject-sys",
  "libc",
+ "system-deps",
+]
+
+[[package]]
+name = "gdk-sys"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0e091b3d3d6696949ac3b3fb3c62090e5bfd7bd6850bef5c3c5ea701de1b1f1e"
+dependencies = [
+ "cairo-sys-rs",
+ "gdk-pixbuf-sys",
+ "gio-sys",
+ "glib-sys",
+ "gobject-sys",
+ "libc",
+ "pango-sys",
+ "pkg-config",
  "system-deps",
 ]
 
@@ -247,6 +282,7 @@ dependencies = [
  "fretboard_layout",
  "gtk4",
  "lazy_static",
+ "rgba_simple",
  "serde",
  "svg",
  "toml",
@@ -486,6 +522,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "hex"
+version = "0.4.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70"
+
+[[package]]
 name = "indexmap"
 version = "1.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -645,6 +687,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c3d0b9745dc2debf507c8422de05d7226cc1f0644216dfdfead988f9b1ab32a7"
 dependencies = [
  "proc-macro2",
+]
+
+[[package]]
+name = "rgba_simple"
+version = "0.1.0"
+source = "git+https://codeberg.org/jeang3nie/rgba-simple.git#fbc8e03a4965680d05129011a73ed28df4e6d6e3"
+dependencies = [
+ "gdk",
+ "hex",
+ "serde",
 ]
 
 [[package]]

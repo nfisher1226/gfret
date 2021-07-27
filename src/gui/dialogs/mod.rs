@@ -1,5 +1,5 @@
 #![warn(clippy::all, clippy::pedantic)]
-use fretboard_layout::color::{Color::Reduced, ReducedRGBA};
+use rgba_simple::{Color::Reduced, ReducedRGBA};
 use fretboard_layout::config::{Font, FontWeight};
 use gtk::prelude::*;
 use gtk::pango::FontDescription;

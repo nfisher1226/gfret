@@ -82,6 +82,7 @@ impl Dialogs {
 
     fn init_preferences(window: &gtk::Window, builder: &gtk::Builder) -> PrefWidgets {
         let dlg = PrefWidgets::init(builder);
+        dlg.load_config();
         let accept = gtk::Button::with_label("Accept");
         let cancel = gtk::Button::with_label("Cancel");
         dlg.window.add_action_widget(&cancel, gtk::ResponseType::Cancel);
@@ -171,7 +172,7 @@ impl PrefWidgets {
     }
 
     /// Converts the value stored in a [gtk::ColorButton] from a [gdk::RGBA]
-    /// struct into a String suitable for saving in config.toml
+    /// struct into a struct which can be serialized using serde
     #[allow(clippy::cast_sign_loss)]
     #[allow(clippy::cast_possible_truncation)]
     fn get_color(button: &gtk::ColorButton) -> ReducedRGBA {
@@ -232,32 +233,42 @@ impl PrefWidgets {
     }
 
     /// Sets widget states based on a [Config] struct which is loaded from file
-    /*fn load_config(&self) {
-        if let Some(config) = Config::from_file() {
-            if let Ok(color) = gdk::RGBA::from_str(&config.fretline_color) {
-                self.fretline_color.set_rgba(&color);
+    fn load_config(&self) {
+        if let Some(config) = GfretConfig::from_file() {
+            if let Some(color) = &config.fretline_color.to_gdk() {
+                self.fretline_color.set_rgba(color);
             }
-            if let Ok(color) = gdk::RGBA::from_str(&config.centerline_color) {
-                self.centerline_color.set_rgba(&color);
+            if let Some(color) = &config.fretboard_color.to_gdk() {
+                self.fretboard_color.set_rgba(color);
             }
-            if let Ok(color) = gdk::RGBA::from_str(&config.fretboard_color) {
-                self.fretboard_color.set_rgba(&color);
+            match config.centerline_color {
+                Some(c) => {
+                    self.draw_centerline.set_active(true);
+                    if let Some(color) = &c.to_gdk() {
+                        self.centerline_color.set_sensitive(true);
+                        self.centerline_color.set_rgba(color);
+                    }
+                },
+                None => {
+                    self.draw_centerline.set_active(false);
+                    self.centerline_color.set_sensitive(false);
+                },
             }
-            if let Ok(color) = gdk::RGBA::from_str(&config.background_color) {
-                self.background_color.set_rgba(&color);
-            }
-            self.external_program.set_text(&config.external_program);
             self.border.set_value(config.border);
             self.line_weight.set_value(config.line_weight);
-            self.draw_centerline.set_active(config.draw_centerline);
-            self.centerline_color.set_sensitive(config.draw_centerline);
-            self.print_specs.set_active(config.print_specs);
-            self.font_chooser.set_sensitive(config.print_specs);
-            if let Some(font) = config.font {
-                self.font_chooser.set_font(&font);
+            match config.font {
+                Some(f) => {
+                    self.print_specs.set_active(true);
+                    self.font_chooser.set_sensitive(true);
+                    self.font_chooser.set_font(&format!("{} {}", f.family, f.weight));
+                },
+                None => {
+                    self.print_specs.set_active(false);
+                    self.font_chooser.set_sensitive(false);
+                },
             }
         }
-    }*/
+    }
 
     /// Serializes a [Config] struct as toml and saves to disk
     pub fn save_prefs(&self) {

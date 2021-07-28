@@ -184,22 +184,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "gdk"
-version = "0.14.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "679e22651cd15888e7acd01767950edca2ee9fcd6421fbf5b3c3b420d4e88bb0"
-dependencies = [
- "bitflags",
- "cairo-rs",
- "gdk-pixbuf",
- "gdk-sys",
- "gio",
- "glib",
- "libc",
- "pango",
-]
-
-[[package]]
 name = "gdk-pixbuf"
 version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -221,23 +205,6 @@ dependencies = [
  "glib-sys",
  "gobject-sys",
  "libc",
- "system-deps",
-]
-
-[[package]]
-name = "gdk-sys"
-version = "0.14.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0e091b3d3d6696949ac3b3fb3c62090e5bfd7bd6850bef5c3c5ea701de1b1f1e"
-dependencies = [
- "cairo-sys-rs",
- "gdk-pixbuf-sys",
- "gio-sys",
- "glib-sys",
- "gobject-sys",
- "libc",
- "pango-sys",
- "pkg-config",
  "system-deps",
 ]
 
@@ -692,9 +659,9 @@ dependencies = [
 [[package]]
 name = "rgba_simple"
 version = "0.1.0"
-source = "git+https://codeberg.org/jeang3nie/rgba-simple.git#fbc8e03a4965680d05129011a73ed28df4e6d6e3"
+source = "git+https://codeberg.org/jeang3nie/rgba-simple.git#eeee54eebb79f1b210f5cb58ae16dc739e50fcd6"
 dependencies = [
- "gdk",
+ "gtk4",
  "hex",
  "serde",
 ]

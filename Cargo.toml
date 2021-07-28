@@ -26,4 +26,4 @@ features = ["derive"]
 
 [dependencies.rgba_simple]
 git = "https://codeberg.org/jeang3nie/rgba-simple.git"
-features = ["gdk"]
+features = ["gtk"]

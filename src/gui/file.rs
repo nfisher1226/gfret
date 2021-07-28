@@ -45,7 +45,7 @@ impl File {
        self.saved_current.swap(&RefCell::new(false));
    }
 
-    pub fn do_save(&self, filename: String, document: &svg::Document) {
+    pub fn do_save(&self, filename: &str, document: &svg::Document) {
        match svg::save(&filename, document) {
            Ok(_) => println!("Output saved as {}.", filename),
            Err(e) => eprintln!("{}", e),
@@ -53,6 +53,6 @@ impl File {
 
        self.set_saved();
        self.set_current();
-       self.filename.swap(&RefCell::new(filename));
+       self.filename.swap(&RefCell::new(String::from(filename)));
     }
 }

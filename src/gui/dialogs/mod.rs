@@ -188,8 +188,12 @@ impl PrefWidgets {
     /// Retreives the commandline for the external editor
     fn get_external(&self) -> Option<String> {
         if let Some(app_info) = self.external_button.app_info() {
-            if let Some(commandline) = app_info.commandline() {
-                Some(String::from(commandline.to_str().unwrap()))
+            if let Some(cmd) = app_info.commandline() {
+                Some(String::from(cmd.to_str().unwrap())
+                    .split_whitespace()
+                    .next()
+                    .unwrap_or("")
+                    .to_string())
             } else {
                 None
             }

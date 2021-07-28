@@ -8,6 +8,7 @@ use gtk::prelude::*;
 use gtk::{Application, ResponseType};
 
 use std::path::PathBuf;
+use std::process::Command;
 use std::rc::Rc;
 
 mod dialogs;
@@ -281,7 +282,7 @@ fn build_ui(application: &Application) {
                     .to_config();
                 let document = gui.get_specs().create_document(Some(cfg));
                 gui.save_template(&filename);
-                gui.file.do_save(filename, &document);
+                gui.file.do_save(&filename, &document);
                 gui.set_window_title();
             }
         } else {
@@ -302,7 +303,7 @@ fn build_ui(application: &Application) {
                     .to_config();
                 let document = gui.get_specs().create_document(Some(cfg));
                 gui.save_template(&filename);
-                gui.file.do_save(filename, &document);
+                gui.file.do_save(&filename, &document);
                 gui.set_window_title();
             }
         }
@@ -322,6 +323,34 @@ fn build_ui(application: &Application) {
 
     gui.menu.external.connect_clicked(clone!(@strong gui => move |_| {
         gui.menu.app_menu.popdown();
+        if gui.file.saved() {
+            if let Some(filename) = gui.file.filename() {
+                let cfg = GfretConfig::from_file()
+                    .unwrap_or(GfretConfig::default());
+                let document = gui.get_specs().create_document(Some(cfg.to_config()));
+                gui.save_template(&filename);
+                gui.file.do_save(&filename, &document);
+                gui.set_window_title();
+                if let Some(cmd) = cfg.external_program {
+                    match Command::new(&cmd).args(&[&filename]).spawn() {
+                        Ok(_) => (),
+                        Err(e) => eprintln!("{}", e),
+                    }
+                }
+            }
+        } else {
+            gui.dialogs.save_as.show();
+            if let Some(filename) = gui.file.filename() {
+                let cfg = GfretConfig::from_file()
+                    .unwrap_or(GfretConfig::default());
+                if let Some(cmd) = cfg.external_program {
+                    match Command::new(&cmd).args(&[&filename]).spawn() {
+                        Ok(_) => (),
+                        Err(e) => eprintln!("{}", e),
+                    }
+                }
+            }
+        }
     }));
 
     gui.menu.preferences.connect_clicked(clone!(@strong gui => move |_| {

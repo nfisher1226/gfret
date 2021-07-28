@@ -659,7 +659,7 @@ dependencies = [
 [[package]]
 name = "rgba_simple"
 version = "0.1.0"
-source = "git+https://codeberg.org/jeang3nie/rgba-simple.git#3d7247c6b22c919ca11f0346e0c192cc1def5f68"
+source = "git+https://codeberg.org/jeang3nie/rgba-simple.git#c7ebf6152b50b2ba698983270d9933d4d6854a0b"
 dependencies = [
  "gtk4",
  "hex",

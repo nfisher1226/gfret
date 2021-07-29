@@ -4,6 +4,8 @@ use fretboard_layout::Specs;
 use gtk::gdk_pixbuf::Pixbuf;
 use gtk::gio::{Cancellable, MemoryInputStream};
 use gtk::glib::clone;
+use gtk::glib::char::Char;
+use gtk::glib::{OptionArg, OptionFlags};
 use gtk::prelude::*;
 use gtk::{Application, ResponseType};
 
@@ -196,6 +198,35 @@ impl Gui {
         }
     }
 
+    fn save(&self) {
+        if self.file.saved() {
+            if let Some(filename) = self.file.filename() {
+                let cfg = GfretConfig::from_file()
+                    .unwrap_or(GfretConfig::default());
+                let document = self.get_specs().create_document(Some(cfg.to_config()));
+                self.save_template(&filename);
+                self.file.do_save(&filename, &document);
+                self.set_window_title();
+            }
+        } else {
+            self.dialogs.save_as.show();
+        }
+    }
+
+    fn save_as(&self, res: ResponseType) {
+        if res == ResponseType::Accept {
+            if let Some(filename) = self.dialogs.get_save_path() {
+                let cfg = GfretConfig::from_file()
+                    .unwrap_or(GfretConfig::default())
+                    .to_config();
+                let document = self.get_specs().create_document(Some(cfg));
+                self.save_template(&filename);
+                self.file.do_save(&filename, &document);
+                self.set_window_title();
+            }
+        }
+    }
+
     /// Saves a template (toml format) to the specified location
     fn save_template(&self, file: &str) {
         let data: Template = self.template_from_gui();
@@ -224,6 +255,7 @@ impl Gui {
 
 pub fn main() {
     let application = gtk::Application::new(Some("org.hitchhiker-linux.gfret"), Default::default());
+    application.add_main_option("template", Char::from(b't'), OptionFlags::NONE, OptionArg::String, "", None);
     application.connect_activate(build_ui);
     application.run();
 }
@@ -288,19 +320,7 @@ fn build_ui(application: &Application) {
 
     gui.menu.save.connect_clicked(clone!(@strong gui => move |_| {
         gui.menu.app_menu.popdown();
-        if gui.file.saved() {
-            if let Some(filename) = gui.file.filename() {
-                let cfg = GfretConfig::from_file()
-                    .unwrap_or(GfretConfig::default())
-                    .to_config();
-                let document = gui.get_specs().create_document(Some(cfg));
-                gui.save_template(&filename);
-                gui.file.do_save(&filename, &document);
-                gui.set_window_title();
-            }
-        } else {
-            gui.dialogs.save_as.show();
-        }
+        gui.save();
     }));
 
     gui.menu.save_as.connect_clicked(clone!(@strong gui => move |_| {
@@ -309,17 +329,7 @@ fn build_ui(application: &Application) {
     }));
 
     gui.dialogs.save_as.connect_response(clone!(@strong gui => move |dlg,res| {
-        if res == ResponseType::Accept {
-            if let Some(filename) = gui.dialogs.get_save_path() {
-                let cfg = GfretConfig::from_file()
-                    .unwrap_or(GfretConfig::default())
-                    .to_config();
-                let document = gui.get_specs().create_document(Some(cfg));
-                gui.save_template(&filename);
-                gui.file.do_save(&filename, &document);
-                gui.set_window_title();
-            }
-        }
+        gui.save_as(res);
         dlg.hide();
     }));
 
@@ -355,13 +365,11 @@ fn build_ui(application: &Application) {
         gui.draw_preview(true);
     }));
 
-    gui.menu
-        .quit
-        .connect_clicked(clone!(@strong gui => move |_| {
-            gui.menu.app_menu.popdown();
-            gui.cleanup();
-            gui.window.close();
-        }));
+    gui.menu.quit.connect_clicked(clone!(@strong gui => move |_| {
+        gui.menu.app_menu.popdown();
+        gui.cleanup();
+        gui.window.close();
+    }));
 
     gui.window.show();
 }

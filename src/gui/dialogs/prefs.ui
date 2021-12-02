@@ -78,6 +78,31 @@
                   </object>
                 </child>
                 <child>
+                  <object class="GtkComboBoxText" id="combo_box_units">
+                    <property name="active">0</property>
+                    <items>
+                      <item translatable="yes">Metric</item>
+                      <item translatable="yes">Imperial</item>
+                    </items>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="can-focus">0</property>
+                <property name="spacing">5</property>
+                <property name="margin-start">5</property>
+                <property name="margin-end">5</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="can-focus">0</property>
+                    <property name="label" translatable="yes">Border:</property>
+                    <property name="halign">start</property>
+                    <property name="hexpand">1</property>
+                  </object>
+                </child>
+                <child>
                   <object class="GtkSpinButton" id="border">
                     <property name="tooltip-text" translatable="yes">Set the border which will be placed around the rendered image</property>
                     <property name="halign">end</property>

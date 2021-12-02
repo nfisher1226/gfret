@@ -23,6 +23,11 @@ subcommands:
                 long: multi
                 default_value: "610"
                 takes_value: true
+            - LEFT:
+                about: Multiscale fretboard reversed (left hand)
+                short: l
+                long: left
+                takes_value: false
             - PERPENDICULAR:
                 about: Which fret is perpendicular to the centerline
                 short: p

@@ -1,6 +1,6 @@
 #![warn(clippy::all, clippy::pedantic)]
 use clap::crate_version;
-use fretboard_layout::Specs;
+use fretboard_layout::{ Handedness, Specs, Variant };
 use gtk::gdk_pixbuf::Pixbuf;
 use gtk::gio::{Cancellable, MemoryInputStream};
 use gtk::glib::clone;
@@ -36,7 +36,8 @@ struct Gui {
     window: gtk::Window,
     image_preview: gtk::Picture,
     scale: gtk::Scale,
-    checkbox_multi: gtk::CheckButton,
+    variant: gtk::ComboBox,
+    handedness: gtk::ComboBox,
     scale_multi_course: gtk::Scale,
     scale_multi_fine: gtk::SpinButton,
     fret_count: gtk::SpinButton,
@@ -72,7 +73,8 @@ impl Gui {
             window: window.clone(),
             image_preview: builder.object("image_preview").unwrap(),
             scale: builder.object("scale_course").unwrap(),
-            checkbox_multi: builder.object("check_box_multi").unwrap(),
+            variant: builder.object("combo_box_variant").unwrap(),
+            handedness: builder.object("combo_box_handedness").unwrap(),
             scale_multi_course: builder.object("scale_multi_course").unwrap(),
             scale_multi_fine: builder.object("scale_multi_fine").unwrap(),
             fret_count: builder.object("fret_count").unwrap(),
@@ -86,6 +88,24 @@ impl Gui {
         }
     }
 
+    fn get_handedness(&self) -> Handedness {
+        match self.handedness.active() {
+            Some(1) => Handedness::Left,
+            _ => Handedness::Right,
+        }
+    }
+
+    fn get_variant(&self) -> Variant {
+        match self.variant.active() {
+            Some(1) => {
+                let scale = self.scale_multi_course.value();
+                let hand = self.get_handedness();
+                Variant::Multiscale(scale, hand)
+            },
+            _ => Variant::Monoscale,
+        }
+    }
+
     /// Takes the data represented by our Gtk widgets and outputs a Specs struct
     /// which will be used by the backend to render the svg image.
     #[allow(clippy::cast_sign_loss)]
@@ -93,8 +113,7 @@ impl Gui {
         Specs {
             scale: self.scale.value(),
             count: self.fret_count.value_as_int() as u32,
-            multi: self.checkbox_multi.is_active(),
-            scale_treble: self.scale_multi_course.value(),
+            variant: self.get_variant(),
             nut: self.nut_width.value(),
             bridge: self.bridge_spacing.value() + 6.0,
             pfret: self.perpendicular_fret.value(),
@@ -125,7 +144,7 @@ impl Gui {
     }
 
     fn toggle_multi(&self) {
-        let value = self.checkbox_multi.is_active();
+        let value = self.variant.active() == Some(1);
         self.scale_multi_course.set_sensitive(value);
         self.scale_multi_fine.set_sensitive(value);
         if value {
@@ -167,9 +186,9 @@ impl Gui {
         self.fret_count.set_value(template.count.into());
         if let Some(scale_treble) = template.scale_treble {
             self.scale_multi_course.set_value(scale_treble);
-            self.checkbox_multi.set_active(true);
+            self.variant.set_active(Some(1));
         } else {
-            self.checkbox_multi.set_active(false);
+            self.variant.set_active(Some(0));
         }
         self.toggle_multi();
         self.nut_width.set_value(template.nut);
@@ -186,7 +205,7 @@ impl Gui {
             scale: self.scale.value(),
             count: self.fret_count.value_as_int() as u32,
             scale_treble: {
-                if self.checkbox_multi.is_active() {
+                if self.variant.active() == Some(1) {
                     Some(self.scale_multi_course.value())
                 } else {
                     None
@@ -282,6 +301,12 @@ fn build_ui(application: &Application) {
             gui.draw_preview(false);
         }));
 
+    gui.variant
+        .connect_changed(clone!(@strong gui => move |_| {
+            gui.toggle_multi();
+            gui.draw_preview(true);
+        }));
+
     gui.scale_multi_course
         .connect_value_changed(clone!(@strong gui => move |_| {
             gui.draw_preview(true);
@@ -304,12 +329,6 @@ fn build_ui(application: &Application) {
 
     gui.bridge_spacing
         .connect_value_changed(clone!(@strong gui => move |_| {
-            gui.draw_preview(true);
-        }));
-
-    gui.checkbox_multi
-        .connect_toggled(clone!(@strong gui => move |_| {
-            gui.toggle_multi();
             gui.draw_preview(true);
         }));
 

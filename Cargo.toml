@@ -1,12 +1,12 @@
 [package]
 name = "gfret2"
 version = "1.99.0"
-edition = "2018"
+edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-fretboard_layout = { git = "https://codeberg.org/jeang3nie/fretboard-layout.git" }
+fretboard_layout = { git = "https://codeberg.org/jeang3nie/fretboard-layout.git", branch = "loki" }
 lazy_static = "~1.4"
 svg = "~0.10"
 toml = "~0.5"

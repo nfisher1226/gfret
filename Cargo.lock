@@ -26,12 +26,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cdb031dd78e28731d87d56cc8ffef4a8f36ca26c38fe2de700543e627f8a464a"
 
 [[package]]
-name = "az"
-version = "1.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f771a5d1f5503f7f4279a30f3643d3421ba149848b89ecaaec0ea2acf04a5ac4"
-
-[[package]]
 name = "bitflags"
 version = "1.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -129,12 +123,11 @@ dependencies = [
 
 [[package]]
 name = "fretboard_layout"
-version = "0.1.2"
-source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git?branch=loki#6c7f7dfd2e9302fe8e1263bc34ebb4986971d413"
+version = "0.1.3"
+source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git?branch=loki#f493beee8af84895c8feb538eb561b6537a16dfd"
 dependencies = [
  "hex",
  "rgba_simple",
- "rug",
  "serde",
  "svg",
 ]
@@ -250,7 +243,7 @@ dependencies = [
 
 [[package]]
 name = "gfret2"
-version = "1.99.0"
+version = "1.99.1"
 dependencies = [
  "clap",
  "fretboard_layout",
@@ -335,16 +328,6 @@ checksum = "1c1d60554a212445e2a858e42a0e48cece1bd57b311a19a9468f70376cf554ae"
 dependencies = [
  "libc",
  "system-deps 3.2.0",
-]
-
-[[package]]
-name = "gmp-mpfr-sys"
-version = "1.4.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a146a7357ce9573bdcc416fc4a99b960e166e72d8eaffa7c59966d51866b5bfb"
-dependencies = [
- "libc",
- "winapi",
 ]
 
 [[package]]
@@ -680,17 +663,6 @@ dependencies = [
  "gtk4",
  "hex",
  "serde",
-]
-
-[[package]]
-name = "rug"
-version = "1.14.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f5b5ccc39761dbd2f1d64817f6e62eba658b4f35e711a070f55043c0fd1385c7"
-dependencies = [
- "az",
- "gmp-mpfr-sys",
- "libc",
 ]
 
 [[package]]

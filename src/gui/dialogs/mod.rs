@@ -33,7 +33,7 @@ pub struct Dialogs {
 }
 
 impl Dialogs {
-    pub fn init(window: &gtk::Window, builder: &gtk::Builder) -> Dialogs {
+    pub fn init(window: &gtk::ApplicationWindow, builder: &gtk::Builder) -> Dialogs {
         Dialogs {
             save_as: Dialogs::init_save_as(window),
             open_template: Dialogs::init_open_template(window),
@@ -41,7 +41,7 @@ impl Dialogs {
         }
     }
 
-    fn init_save_as(window: &gtk::Window) -> gtk::FileChooserDialog {
+    fn init_save_as(window: &gtk::ApplicationWindow) -> gtk::FileChooserDialog {
         let dlg = gtk::FileChooserDialog::builder()
             .action(gtk::FileChooserAction::Save)
             .name("Gfret - Save As")
@@ -59,7 +59,7 @@ impl Dialogs {
         dlg
     }
 
-    fn init_open_template(window: &gtk::Window) -> gtk::FileChooserDialog {
+    fn init_open_template(window: &gtk::ApplicationWindow) -> gtk::FileChooserDialog {
         let dlg = gtk::FileChooserDialog::builder()
             .action(gtk::FileChooserAction::Open)
             .name("Gfret - Open Template")
@@ -81,7 +81,7 @@ impl Dialogs {
         dlg
     }
 
-    fn init_preferences(window: &gtk::Window, builder: &gtk::Builder) -> PrefWidgets {
+    fn init_preferences(window: &gtk::ApplicationWindow, builder: &gtk::Builder) -> PrefWidgets {
         let dlg = PrefWidgets::init(builder);
         dlg.load_config();
         let accept = gtk::Button::with_label("Accept");

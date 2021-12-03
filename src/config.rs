@@ -1,6 +1,6 @@
 #![warn(clippy::all, clippy::pedantic)]
 use rgba_simple::{Color, ReducedRGBA};
-use fretboard_layout::config::{Config, Font};
+use fretboard_layout::config::{Config, Font, Units};
 use serde::{Deserialize, Serialize};
 
 use crate::CONFIGDIR;
@@ -34,6 +34,7 @@ pub fn get_config_file() -> PathBuf {
 
 #[derive(Clone, Deserialize, Debug, Serialize)]
 pub struct GfretConfig {
+    pub units: Units,
     pub external_program: Option<String>,
     /// The border which will appear around the rendering
     pub border: f64,
@@ -53,6 +54,7 @@ impl GfretConfig {
     /// Creates a GfretConfig struct with default options
     pub fn default() -> GfretConfig {
         GfretConfig {
+            units: Units::default(),
             external_program: Some(String::from("inkscape")),
             border: 10.0,
             line_weight: 1.0,
@@ -96,6 +98,7 @@ impl GfretConfig {
     /// Maps a GfretConfig struct to a fretboard_layout::Config struct
     pub fn to_config(&self) -> Config {
         Config {
+            units: self.units.clone(),
             border: self.border,
             line_weight: self.line_weight,
             fretline_color: self.fretline_color.clone(),

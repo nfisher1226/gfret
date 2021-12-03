@@ -1,6 +1,6 @@
 #![warn(clippy::all, clippy::pedantic)]
 use clap::ArgMatches;
-use fretboard_layout::Specs;
+use fretboard_layout::{ Handedness, Specs, Variant };
 
 use std::process;
 use std::process::Command;
@@ -27,17 +27,22 @@ pub fn run(matches: &ArgMatches) {
                     process::exit(1);
                 }
             },
-            multi: cli_matches.occurrences_of("MULTI") > 0,
-            scale_treble: if cli_matches.occurrences_of("MULTI") > 0 {
-                match cli_matches.value_of_t("MULTI") {
+            variant: if cli_matches.occurrences_of("MULTI") > 0 {
+                let scale = match cli_matches.value_of_t("MULTI") {
                     Ok(c) => c,
                     Err(e) => {
                         eprintln!("{}", e);
                         process::exit(1);
                     }
-                }
+                };
+                let hand = if cli_matches.occurrences_of("LEFT") > 0 {
+                    Handedness::Left
+                } else {
+                    Handedness::Right
+                };
+                Variant::Multiscale(scale, hand)
             } else {
-                scale
+                Variant::Monoscale
             },
             nut: match cli_matches.value_of_t("NUT") {
                 Ok(c) => c,

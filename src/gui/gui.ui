@@ -254,7 +254,6 @@
                 <child>
                   <object class="GtkComboBoxText" id="combo_box_handedness">
                     <property name="active">0</property>
-                    <property name="sensitive">0</property>
                     <layout>
                       <property name="row">1</property>\
                       <property name="column">0</property>
@@ -306,13 +305,6 @@
             <property name="spacing">2</property>
             <property name="margin-start">5</property>
             <property name="margin-end">5</property>
-            <!-- <child>
-              <object class="GtkCheckButton" id="check_box_multi">
-                <property name="label" translatable="yes">Multiscale:</property>
-                <property name="name">checkBoxMulti</property>
-                <property name="tooltip-text" translatable="yes">If checked, create a multiscale fretboard layout.</property>
-              </object>
-            </child> -->
           </object>
         </child>
         <child>

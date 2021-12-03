@@ -1,6 +1,6 @@
 #![warn(clippy::all, clippy::pedantic)]
 use rgba_simple::{Color::Reduced, ReducedRGBA};
-use fretboard_layout::config::{Font, FontWeight};
+use fretboard_layout::config::{ Font, FontWeight, Units };
 use gtk::prelude::*;
 use gtk::pango::FontDescription;
 
@@ -13,6 +13,7 @@ use std::path::PathBuf;
 #[derive(Clone)]
 pub struct PrefWidgets {
     window: gtk::Dialog,
+    units: gtk::ComboBoxText,
     external_button: gtk::AppChooserButton,
     border: gtk::SpinButton,
     line_weight: gtk::SpinButton,
@@ -132,6 +133,9 @@ impl PrefWidgets {
             window: builder
                 .object("prefs_window")
                 .expect("Error getting 'prefs_window'"),
+            units: builder
+                .object("combo_box_units")
+                .expect("Error getting 'units'"),
             external_button: builder
                 .object("external_button")
                 .expect("Error getting 'external_button'"),
@@ -171,6 +175,13 @@ impl PrefWidgets {
         self.window.clone()
     }
 
+    fn units(&self) -> Units {
+        match self.units.active() {
+            Some(1) => Units::Metric,
+            Some(_) | None => Units::Imperial,
+        }
+    }
+
     /// Converts the value stored in a [gtk::ColorButton] from a [gdk::RGBA]
     /// struct into a struct which can be serialized using serde
     #[allow(clippy::cast_sign_loss)]
@@ -205,6 +216,7 @@ impl PrefWidgets {
     /// Returns a [Config] struct from the widget states
     fn config_from_widgets(&self) -> GfretConfig {
         GfretConfig {
+            units: self.units(),
             external_program: self.get_external(),
             border: self.border.value(),
             line_weight: self.line_weight.value(),

@@ -129,7 +129,7 @@ impl Gui {
         let image = self.get_specs().create_document(Some(cfg)).to_string();
         let bytes = gtk::glib::Bytes::from_owned(image.into_bytes());
         let stream = MemoryInputStream::from_bytes(&bytes);
-        let mut width = self.window.size(gtk::Orientation::Horizontal);
+        let mut width = self.image_preview.size(gtk::Orientation::Horizontal);
         if width == 0 {
             width = 500;
         };
@@ -148,9 +148,15 @@ impl Gui {
         self.scale_multi_course.set_sensitive(value);
         self.scale_multi_fine.set_sensitive(value);
         if value {
+            self.handedness.show();
+            self.scale_multi_course.show();
+            self.scale_multi_fine.show();
             self.perpendicular_fret.show();
             self.pfret_label.show();
         } else {
+            self.handedness.hide();
+            self.scale_multi_course.hide();
+            self.scale_multi_fine.hide();
             self.perpendicular_fret.hide();
             self.pfret_label.hide();
         }
@@ -304,6 +310,11 @@ fn build_ui(application: &Application) {
     gui.variant
         .connect_changed(clone!(@strong gui => move |_| {
             gui.toggle_multi();
+            gui.draw_preview(true);
+        }));
+
+    gui.handedness
+        .connect_changed(clone!(@strong gui => move |_| {
             gui.draw_preview(true);
         }));
 

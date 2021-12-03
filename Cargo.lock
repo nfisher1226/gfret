@@ -58,7 +58,7 @@ checksum = "b448b876970834fda82ba3aeaccadbd760206b75388fc5c1b02f1e343b697570"
 dependencies = [
  "glib-sys",
  "libc",
- "system-deps",
+ "system-deps 3.2.0",
 ]
 
 [[package]]
@@ -66,6 +66,15 @@ name = "cfg-expr"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b412e83326147c2bb881f8b40edfbf9905b9b8abaebd0e47ca190ba62fda8f0e"
+dependencies = [
+ "smallvec",
+]
+
+[[package]]
+name = "cfg-expr"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "edae0b9625d1fce32f7d64b71784d9b1bf8469ec1a9c417e44aaf16a9cbd7571"
 dependencies = [
  "smallvec",
 ]
@@ -121,7 +130,7 @@ dependencies = [
 [[package]]
 name = "fretboard_layout"
 version = "0.1.2"
-source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git?branch=loki#2cc87a4c4781493579bdd7269e0f64b0d08d3722"
+source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git?branch=loki#6c7f7dfd2e9302fe8e1263bc34ebb4986971d413"
 dependencies = [
  "hex",
  "rgba_simple",
@@ -203,14 +212,14 @@ dependencies = [
  "glib-sys",
  "gobject-sys",
  "libc",
- "system-deps",
+ "system-deps 3.2.0",
 ]
 
 [[package]]
 name = "gdk4"
-version = "0.2.0"
+version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8ce41092cc569129a0afa34926e6dd1cf8411e25652d87febdea36859f7ff7ba"
+checksum = "f97a162c17214d1bf981af3f683156a0b1667dd1927057c4f0a68513251ecf0f"
 dependencies = [
  "bitflags",
  "cairo-rs",
@@ -224,9 +233,9 @@ dependencies = [
 
 [[package]]
 name = "gdk4-sys"
-version = "0.2.0"
+version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ce39c71861b5bcde319fd4711a74e1bd6f4f474911170d51096597fef0b56011"
+checksum = "9498f4e06969fb96a4e4234dfe1d308a3ac6b120b3c6d93e3ec5c77fe88bc6d5"
 dependencies = [
  "cairo-sys-rs",
  "gdk-pixbuf-sys",
@@ -236,7 +245,7 @@ dependencies = [
  "graphene-sys",
  "libc",
  "pango-sys",
- "system-deps",
+ "system-deps 5.0.0",
 ]
 
 [[package]]
@@ -280,7 +289,7 @@ dependencies = [
  "glib-sys",
  "gobject-sys",
  "libc",
- "system-deps",
+ "system-deps 3.2.0",
  "winapi",
 ]
 
@@ -325,7 +334,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1c1d60554a212445e2a858e42a0e48cece1bd57b311a19a9468f70376cf554ae"
 dependencies = [
  "libc",
- "system-deps",
+ "system-deps 3.2.0",
 ]
 
 [[package]]
@@ -346,7 +355,7 @@ checksum = "aa92cae29759dae34ab5921d73fff5ad54b3d794ab842c117e36cafc7994c3f5"
 dependencies = [
  "glib-sys",
  "libc",
- "system-deps",
+ "system-deps 3.2.0",
 ]
 
 [[package]]
@@ -369,14 +378,14 @@ dependencies = [
  "glib-sys",
  "libc",
  "pkg-config",
- "system-deps",
+ "system-deps 3.2.0",
 ]
 
 [[package]]
 name = "gsk4"
-version = "0.2.0"
+version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "64932b730eaad3340378a03d633616eeed6d6705b59b81c9f579c88be8932475"
+checksum = "eff59ca46c4fc5087fd7a0c3770a71ea4b6e94f8c24c12e2c2e8538f9f6fd764"
 dependencies = [
  "bitflags",
  "cairo-rs",
@@ -390,9 +399,9 @@ dependencies = [
 
 [[package]]
 name = "gsk4-sys"
-version = "0.2.0"
+version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "685ffc776bedd91d68f47b41239525778b669432889721d7050d045270549b9a"
+checksum = "13aa53ce70234da02f9954339d988d5ab853d746a8f47a4ae17735ff873545b5"
 dependencies = [
  "cairo-sys-rs",
  "gdk4-sys",
@@ -401,14 +410,14 @@ dependencies = [
  "graphene-sys",
  "libc",
  "pango-sys",
- "system-deps",
+ "system-deps 5.0.0",
 ]
 
 [[package]]
 name = "gtk4"
-version = "0.2.0"
+version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c49e0311dac847a8ebc05e31f5c44c596314ee3b16c5f638ccfe24086d24bf1b"
+checksum = "58a04f421d1485ba4739e723199f5828bca05ab4e622ed39a96a342b6b1a6a3d"
 dependencies = [
  "bitflags",
  "cairo-rs",
@@ -429,9 +438,9 @@ dependencies = [
 
 [[package]]
 name = "gtk4-macros"
-version = "0.2.0"
+version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bbe4b77996bcf1ef20208c00043edda854ca2091b4be5e6a7c367f0f3846fa67"
+checksum = "5068d4354af02454f44687adc613100aa98ae11e273cdcac84f89dc08be2b4a1"
 dependencies = [
  "anyhow",
  "heck",
@@ -445,9 +454,9 @@ dependencies = [
 
 [[package]]
 name = "gtk4-sys"
-version = "0.2.0"
+version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3737e91619cf4257d8a07834f7a2c035d4daeaf9ad8e3958e56b2c411dbdca18"
+checksum = "e20a64c8f0ddcff8902ff04c130747f2fb7834a43530f75d03d6c71335733b49"
 dependencies = [
  "cairo-sys-rs",
  "gdk-pixbuf-sys",
@@ -459,7 +468,7 @@ dependencies = [
  "gsk4-sys",
  "libc",
  "pango-sys",
- "system-deps",
+ "system-deps 5.0.0",
 ]
 
 [[package]]
@@ -581,7 +590,7 @@ dependencies = [
  "glib-sys",
  "gobject-sys",
  "libc",
- "system-deps",
+ "system-deps 3.2.0",
 ]
 
 [[package]]
@@ -666,7 +675,7 @@ dependencies = [
 [[package]]
 name = "rgba_simple"
 version = "0.1.0"
-source = "git+https://codeberg.org/jeang3nie/rgba-simple.git#ff57afeafee3cbe77ca656a95b1e2b49cf4d3ac9"
+source = "git+https://codeberg.org/jeang3nie/rgba-simple.git#de12ee2f0639991d0f1b108a414412387daef206"
 dependencies = [
  "gtk4",
  "hex",
@@ -675,9 +684,9 @@ dependencies = [
 
 [[package]]
 name = "rug"
-version = "1.12.0"
+version = "1.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "32f75e07492c4d17d12f226d17e689fdb698db7a1e875fca0fac15626283bf24"
+checksum = "f5b5ccc39761dbd2f1d64817f6e62eba658b4f35e711a070f55043c0fd1385c7"
 dependencies = [
  "az",
  "gmp-mpfr-sys",
@@ -791,13 +800,26 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "480c269f870722b3b08d2f13053ce0c2ab722839f472863c3e2d61ff3a1c2fa6"
 dependencies = [
  "anyhow",
- "cfg-expr",
+ "cfg-expr 0.8.1",
  "heck",
  "itertools",
  "pkg-config",
  "strum",
  "strum_macros",
  "thiserror",
+ "toml",
+ "version-compare",
+]
+
+[[package]]
+name = "system-deps"
+version = "5.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "18db855554db7bd0e73e06cf7ba3df39f97812cb11d3f75e71c39bf45171797e"
+dependencies = [
+ "cfg-expr 0.9.0",
+ "heck",
+ "pkg-config",
  "toml",
  "version-compare",
 ]

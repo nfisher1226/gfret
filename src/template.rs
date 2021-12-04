@@ -1,5 +1,6 @@
 #![warn(clippy::all, clippy::pedantic)]
 use crate::CONFIGDIR;
+use fretboard_layout::Handedness;
 use serde::{Deserialize, Serialize};
 
 use std::fs;
@@ -12,6 +13,7 @@ pub struct Template {
     pub scale: f64,
     pub count: u32,
     pub scale_treble: Option<f64>,
+    pub handedness: Option<Handedness>,
     pub nut: f64,
     pub bridge: f64,
     pub pfret: Option<f64>,

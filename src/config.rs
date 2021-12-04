@@ -34,7 +34,9 @@ pub fn get_config_file() -> PathBuf {
 
 #[derive(Clone, Deserialize, Debug, Serialize)]
 pub struct GfretConfig {
+    /// Whether to use Metric (mm) or Imperial (in) measurements
     pub units: Units,
+    /// An optional external program that can edit svg images
     pub external_program: Option<String>,
     /// The border which will appear around the rendering
     pub border: f64,

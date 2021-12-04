@@ -241,12 +241,17 @@ impl Gui {
     pub fn load_template(&self, template: &Template) {
         self.scale.set_value(template.scale);
         self.fret_count.set_value(template.count.into());
-        if let Some(scale_treble) = template.scale_treble {
-            self.scale_multi_course.set_value(scale_treble);
-            self.variant.set_active(Some(1));
-        } else {
-            self.variant.set_active(Some(0));
-        }
+        match template.scale_treble {
+            Some(s) => {
+                self.scale_multi_course.set_value(s);
+                self.variant.set_active(Some(1));
+            },
+            None => self.variant.set_active(Some(0)),
+        };
+        match template.handedness {
+            Some(Handedness::Left) => self.handedness.set_active(Some(1)),
+            _ => self.handedness.set_active(Some(0)),
+        };
         self.toggle_multi();
         self.nut_width.set_value(template.nut);
         self.bridge_spacing.set_value(template.bridge);
@@ -261,12 +266,16 @@ impl Gui {
         Template {
             scale: self.scale.value(),
             count: self.fret_count.value_as_int() as u32,
-            scale_treble: {
-                if self.variant.active() == Some(1) {
-                    Some(self.scale_multi_course.value())
-                } else {
-                    None
-                }
+            scale_treble: match self.variant.active() {
+                Some(1) => Some(self.scale_multi_course.value()),
+                _ => None,
+            },
+            handedness: match self.variant.active() {
+                Some(1) => match self.handedness.active() {
+                    Some(1) => Some(Handedness::Left),
+                    _ => Some(Handedness::Right),
+                },
+                _ => None,
             },
             nut: self.nut_width.value(),
             bridge: self.bridge_spacing.value(),

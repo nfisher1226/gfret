@@ -52,7 +52,7 @@
 //! | Ctrl/Shift/S | save file as |
 //! | Ctrl/E | open with an external program |
 //! | Ctrl/O | load a template from file |
-//! | Ctrl/P | open the preferences dialog |
+//! | Ctrl/Shift/P | open the preferences dialog |
 //! | Ctrl/Q | quit the program |
 //! ## Templates
 //! Along with the svg output, Gfret will save the specifications used to
@@ -79,7 +79,7 @@
 //! background_color = rgba String
 //! ```
 
-use clap::{App, crate_version, load_yaml};
+use clap::{crate_version, load_yaml, App};
 use std::path::PathBuf;
 mod backend;
 mod config;

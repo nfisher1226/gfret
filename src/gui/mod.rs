@@ -1,10 +1,10 @@
 #![warn(clippy::all, clippy::pedantic)]
 use clap::crate_version;
-use fretboard_layout::{ Handedness, Specs, Variant };
+use fretboard_layout::{Handedness, Specs, Variant};
 use gtk::gdk_pixbuf::Pixbuf;
 use gtk::gio::{Cancellable, MemoryInputStream, SimpleAction};
-use gtk::glib::clone;
 use gtk::glib::char::Char;
+use gtk::glib::clone;
 use gtk::glib::{OptionArg, OptionFlags};
 use gtk::prelude::*;
 use gtk::{Application, ResponseType};
@@ -39,6 +39,64 @@ struct Gui {
     dialogs: Dialogs,
 }
 
+struct Actions {
+    open_template: SimpleAction,
+    save: SimpleAction,
+    save_as: SimpleAction,
+    open_external: SimpleAction,
+    preferences: SimpleAction,
+    quit: SimpleAction,
+}
+
+impl Actions {
+    fn init() -> Actions {
+        Actions {
+            open_template: SimpleAction::new("open_template", None),
+            save: SimpleAction::new("save", None),
+            save_as: SimpleAction::new("save_as", None),
+            open_external: SimpleAction::new("open_external", None),
+            preferences: SimpleAction::new("preferences", None),
+            quit: SimpleAction::new("quit", None),
+        }
+    }
+
+    fn connect(&self, gui: &Rc<Gui>) {
+        self.open_template
+            .connect_activate(clone!(@strong gui => move |_, _| {
+                gui.dialogs.open_template.show();
+            }));
+
+        self.save
+            .connect_activate(clone!(@strong gui => move |_, _| {
+                gui.save();
+            }));
+
+        self.save_as
+            .connect_activate(clone!(@strong gui => move |_, _| {
+                gui.dialogs.save_as.show();
+            }));
+
+        self.open_external
+            .connect_activate(clone!(@strong gui => move |_, _| {
+                if !gui.file.saved() {
+                    gui.dialogs.save_as.show();
+                }
+                gui.open_external();
+            }));
+
+        self.preferences
+            .connect_activate(clone!(@strong gui => move |_, _| {
+                gui.dialogs.preferences.show();
+            }));
+
+        self.quit
+            .connect_activate(clone!(@strong gui => move |_, _| {
+                gui.cleanup();
+                gui.window.close();
+            }));
+    }
+}
+
 impl Gui {
     fn init() -> Gui {
         let builder = gtk::Builder::from_string(include_str!("gui.ui"));
@@ -62,6 +120,25 @@ impl Gui {
         }
     }
 
+    fn add_actions(&self, app: &gtk::Application) -> Actions {
+        let actions = Actions::init();
+
+        app.set_accels_for_action("win.open_template", &["<primary>O"]);
+        app.set_accels_for_action("win.save", &["<primary>S"]);
+        app.set_accels_for_action("win.save_as", &["<primary><shift>S"]);
+        app.set_accels_for_action("win.open_external", &["<primary>E"]);
+        app.set_accels_for_action("win.preferences", &["<primary><shift>P"]);
+        app.set_accels_for_action("win.quit", &["<primary>Q"]);
+
+        self.window.add_action(&actions.open_template);
+        self.window.add_action(&actions.save);
+        self.window.add_action(&actions.save_as);
+        self.window.add_action(&actions.open_external);
+        self.window.add_action(&actions.preferences);
+        self.window.add_action(&actions.quit);
+        actions
+    }
+
     fn get_handedness(&self) -> Handedness {
         match self.handedness.active() {
             Some(1) => Handedness::Left,
@@ -75,7 +152,7 @@ impl Gui {
                 let scale = self.scale_multi_course.value();
                 let hand = self.get_handedness();
                 Variant::Multiscale(scale, hand)
-            },
+            }
             _ => Variant::Monoscale,
         }
     }
@@ -200,8 +277,7 @@ impl Gui {
     fn save(&self) {
         if self.file.saved() {
             if let Some(filename) = self.file.filename() {
-                let cfg = GfretConfig::from_file()
-                    .unwrap_or(GfretConfig::default());
+                let cfg = GfretConfig::from_file().unwrap_or(GfretConfig::default());
                 let document = self.get_specs().create_document(Some(cfg.to_config()));
                 self.save_template(&filename);
                 self.file.do_save(&filename, &document);
@@ -234,8 +310,7 @@ impl Gui {
 
     fn open_external(&self) {
         if let Some(filename) = self.file.filename() {
-            let cfg = GfretConfig::from_file()
-                .unwrap_or(GfretConfig::default());
+            let cfg = GfretConfig::from_file().unwrap_or(GfretConfig::default());
             if let Some(cmd) = cfg.external_program {
                 match Command::new(&cmd).args(&[&filename]).spawn() {
                     Ok(_) => (),
@@ -252,9 +327,16 @@ impl Gui {
     }
 }
 
-pub fn main() {
+pub fn run() {
     let application = gtk::Application::new(Some("org.hitchhiker-linux.gfret"), Default::default());
-    application.add_main_option("template", Char::from(b't'), OptionFlags::NONE, OptionArg::String, "", None);
+    application.add_main_option(
+        "template",
+        Char::from(b't'),
+        OptionFlags::NONE,
+        OptionArg::String,
+        "",
+        None,
+    );
     application.connect_activate(build_ui);
     application.run();
 }
@@ -269,53 +351,7 @@ fn build_ui(application: &Application) {
         }
     }
 
-    application.set_accels_for_action("win.open_template", &["<primary>O"]);
-    application.set_accels_for_action("win.save", &["<primary>S"]);
-    application.set_accels_for_action("win.save_as", &["<primary><shift>S"]);
-    application.set_accels_for_action("win.open_external", &["<primary>E"]);
-    application.set_accels_for_action("win.preferences", &["<primary><shift>P"]);
-    application.set_accels_for_action("win.quit", &["<primary>Q"]);
-
-    let action_open_template = SimpleAction::new("open_template", None);
-    action_open_template.connect_activate(clone!(@strong gui => move |_, _| {
-        gui.dialogs.open_template.show();
-    }));
-
-    let action_save = SimpleAction::new("save", None);
-    action_save.connect_activate(clone!(@strong gui => move |_, _| {
-        gui.save();
-    }));
-
-    let action_save_as = SimpleAction::new("save_as", None);
-    action_save_as.connect_activate(clone!(@strong gui => move |_, _| {
-        gui.dialogs.save_as.show();
-    }));
-
-    let action_open_external = SimpleAction::new("open_external", None);
-    action_open_external.connect_activate(clone!(@strong gui => move |_, _| {
-        if !gui.file.saved() {
-            gui.dialogs.save_as.show();
-        }
-        gui.open_external();
-    }));
-
-    let action_preferences = SimpleAction::new("preferences", None);
-    action_preferences.connect_activate(clone!(@strong gui => move |_, _| {
-        gui.dialogs.preferences.show();
-    }));
-
-    let action_quit = SimpleAction::new("quit", None);
-    action_quit.connect_activate(clone!(@strong gui => move |_, _| {
-        gui.cleanup();
-        gui.window.close();
-    }));
-
-    gui.window.add_action(&action_open_template);
-    gui.window.add_action(&action_save);
-    gui.window.add_action(&action_save_as);
-    gui.window.add_action(&action_open_external);
-    gui.window.add_action(&action_preferences);
-    gui.window.add_action(&action_quit);
+    gui.add_actions(application).connect(&gui);
 
     gui.window
         .set_title(Some(&format!("Gfret - {} - <unsaved>", crate_version!())));
@@ -329,11 +365,10 @@ fn build_ui(application: &Application) {
             gui.draw_preview(false);
         }));
 
-    gui.variant
-        .connect_changed(clone!(@strong gui => move |_| {
-            gui.toggle_multi();
-            gui.draw_preview(true);
-        }));
+    gui.variant.connect_changed(clone!(@strong gui => move |_| {
+        gui.toggle_multi();
+        gui.draw_preview(true);
+    }));
 
     gui.handedness
         .connect_changed(clone!(@strong gui => move |_| {
@@ -365,29 +400,36 @@ fn build_ui(application: &Application) {
             gui.draw_preview(true);
         }));
 
-    gui.dialogs.save_as.connect_response(clone!(@strong gui => move |dlg,res| {
-        gui.save_as(res);
-        dlg.hide();
-    }));
+    gui.dialogs
+        .save_as
+        .connect_response(clone!(@strong gui => move |dlg,res| {
+            gui.save_as(res);
+            dlg.hide();
+        }));
 
-    gui.dialogs.open_template.connect_response(clone!(@strong gui => move |dlg,res| {
-        if res == ResponseType::Accept {
-            if let Some(path) = gui.dialogs.get_template_path() {
-                if let Some(template) = Template::load_from_file(path) {
-                    gui.load_template(&template);
+    gui.dialogs
+        .open_template
+        .connect_response(clone!(@strong gui => move |dlg,res| {
+            if res == ResponseType::Accept {
+                if let Some(path) = gui.dialogs.get_template_path() {
+                    if let Some(template) = Template::load_from_file(path) {
+                        gui.load_template(&template);
+                    }
                 }
             }
-        }
-        dlg.hide();
-    }));
+            dlg.hide();
+        }));
 
-    gui.dialogs.preferences.window().connect_response(clone!(@strong gui => move |dlg,res| {
-        if res == ResponseType::Accept {
-            gui.dialogs.preferences.save_prefs();
-        }
-        dlg.hide();
-        gui.draw_preview(true);
-    }));
+    gui.dialogs
+        .preferences
+        .window()
+        .connect_response(clone!(@strong gui => move |dlg,res| {
+            if res == ResponseType::Accept {
+                gui.dialogs.preferences.save_prefs();
+            }
+            dlg.hide();
+            gui.draw_preview(true);
+        }));
 
     gui.window.show();
 }

@@ -1,6 +1,6 @@
 #![warn(clippy::all, clippy::pedantic)]
 use clap::ArgMatches;
-use fretboard_layout::{ Handedness, Specs, Variant };
+use fretboard_layout::{Handedness, Specs, Variant};
 
 use std::process;
 use std::process::Command;
@@ -91,6 +91,6 @@ pub fn run(matches: &ArgMatches) {
         if let Some(tmpl) = matches.value_of("TEMPLATE") {
             Template::to_statefile(tmpl.to_string());
         }
-        crate::gui::main();
+        crate::gui::run();
     }
 }

@@ -1,8 +1,8 @@
 #![warn(clippy::all, clippy::pedantic)]
-use rgba_simple::{Color::Reduced, ReducedRGBA};
-use fretboard_layout::config::{ Font, FontWeight, Units };
-use gtk::prelude::*;
+use fretboard_layout::config::{Font, FontWeight, Units};
 use gtk::pango::FontDescription;
+use gtk::prelude::*;
+use rgba_simple::{Color::Reduced, ReducedRGBA};
 
 use crate::config::GfretConfig;
 
@@ -86,16 +86,18 @@ impl Dialogs {
         dlg.load_config();
         let accept = gtk::Button::with_label("Accept");
         let cancel = gtk::Button::with_label("Cancel");
-        dlg.window.add_action_widget(&cancel, gtk::ResponseType::Cancel);
-        dlg.window.add_action_widget(&accept, gtk::ResponseType::Accept);
+        dlg.window
+            .add_action_widget(&cancel, gtk::ResponseType::Cancel);
+        dlg.window
+            .add_action_widget(&accept, gtk::ResponseType::Accept);
         dlg.window.set_transient_for(Some(window));
         let dlg_clone = dlg.clone();
-        dlg.draw_centerline.connect_state_set(move |_,_| {
+        dlg.draw_centerline.connect_state_set(move |_, _| {
             dlg_clone.toggle_centerline_color();
             gtk::Inhibit(false)
         });
         let dlg_clone = dlg.clone();
-        dlg.print_specs.connect_state_set(move |_,_| {
+        dlg.print_specs.connect_state_set(move |_, _| {
             dlg_clone.toggle_font_chooser();
             gtk::Inhibit(false)
         });
@@ -200,11 +202,13 @@ impl PrefWidgets {
     fn get_external(&self) -> Option<String> {
         if let Some(app_info) = self.external_button.app_info() {
             if let Some(cmd) = app_info.commandline() {
-                Some(String::from(cmd.to_str().unwrap())
-                    .split_whitespace()
-                    .next()
-                    .unwrap_or("")
-                    .to_string())
+                Some(
+                    String::from(cmd.to_str().unwrap())
+                        .split_whitespace()
+                        .next()
+                        .unwrap_or("")
+                        .to_string(),
+                )
             } else {
                 None
             }
@@ -239,9 +243,9 @@ impl PrefWidgets {
                                     Some(w) => w,
                                     None => FontWeight::Normal,
                                 }
-                            }
+                            },
                         })
-                    },
+                    }
                     None => None,
                 }
             },
@@ -264,11 +268,11 @@ impl PrefWidgets {
                         self.centerline_color.set_sensitive(true);
                         self.centerline_color.set_rgba(color);
                     }
-                },
+                }
                 None => {
                     self.draw_centerline.set_active(false);
                     self.centerline_color.set_sensitive(false);
-                },
+                }
             }
             self.border.set_value(config.border);
             self.line_weight.set_value(config.line_weight);
@@ -276,12 +280,13 @@ impl PrefWidgets {
                 Some(f) => {
                     self.print_specs.set_active(true);
                     self.font_chooser.set_sensitive(true);
-                    self.font_chooser.set_font(&format!("{} {}", f.family, f.weight));
-                },
+                    self.font_chooser
+                        .set_font(&format!("{} {}", f.family, f.weight));
+                }
                 None => {
                     self.print_specs.set_active(false);
                     self.font_chooser.set_sensitive(false);
-                },
+                }
             }
         }
     }

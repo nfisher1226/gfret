@@ -245,7 +245,7 @@ impl Gui {
             Some(s) => {
                 self.scale_multi_course.set_value(s);
                 self.variant.set_active(Some(1));
-            },
+            }
             None => self.variant.set_active(Some(0)),
         };
         match template.handedness {

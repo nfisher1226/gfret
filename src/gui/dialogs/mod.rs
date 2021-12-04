@@ -179,27 +179,13 @@ impl PrefWidgets {
 
     fn units(&self) -> Units {
         match self.units.active() {
-            Some(1) => Units::Metric,
-            Some(_) | None => Units::Imperial,
-        }
-    }
-
-    /// Converts the value stored in a [gtk::ColorButton] from a [gdk::RGBA]
-    /// struct into a struct which can be serialized using serde
-    #[allow(clippy::cast_sign_loss)]
-    #[allow(clippy::cast_possible_truncation)]
-    fn get_color(button: &gtk::ColorButton) -> ReducedRGBA {
-        let color = button.rgba();
-        ReducedRGBA {
-            red: (color.red * 255.0) as u8,
-            green: (color.green * 255.0) as u8,
-            blue: (color.blue * 255.0) as u8,
-            alpha: (color.alpha * 255.0) as u8,
+            Some(1) => Units::Imperial,
+            Some(_) | None => Units::Metric,
         }
     }
 
     /// Retreives the commandline for the external editor
-    fn get_external(&self) -> Option<String> {
+    fn external(&self) -> Option<String> {
         if let Some(app_info) = self.external_button.app_info() {
             if let Some(cmd) = app_info.commandline() {
                 Some(
@@ -217,42 +203,58 @@ impl PrefWidgets {
         }
     }
 
-    /// Returns a [Config] struct from the widget states
-    fn config_from_widgets(&self) -> GfretConfig {
-        GfretConfig {
-            units: self.units(),
-            external_program: self.get_external(),
-            border: self.border.value(),
-            line_weight: self.line_weight.value(),
-            fretline_color: Reduced(PrefWidgets::get_color(&self.fretline_color)),
-            fretboard_color: Reduced(PrefWidgets::get_color(&self.fretboard_color)),
-            centerline_color: Some(Reduced(PrefWidgets::get_color(&self.centerline_color))),
-            font: {
-                match self.font_chooser.font() {
-                    Some(f) => {
-                        let font = FontDescription::from_string(&f);
-                        let font_family = match font.family() {
-                            Some(fam) => fam.to_string(),
-                            None => String::from("Sans"),
-                        };
-                        let font_weight = font.style().to_string();
-                        Some(Font {
-                            family: font_family,
-                            weight: {
-                                match FontWeight::from_str(&font_weight) {
-                                    Some(w) => w,
-                                    None => FontWeight::Normal,
-                                }
-                            },
-                        })
-                    }
-                    None => None,
-                }
-            },
+    /// Converts the value stored in a [gtk::ColorButton] from a [gtk::gdk::RGBA]
+    /// struct into a struct which can be serialized using serde
+    #[allow(clippy::cast_sign_loss)]
+    #[allow(clippy::cast_possible_truncation)]
+    fn color(button: &gtk::ColorButton) -> ReducedRGBA {
+        let color = button.rgba();
+        ReducedRGBA {
+            red: (color.red * 255.0) as u8,
+            green: (color.green * 255.0) as u8,
+            blue: (color.blue * 255.0) as u8,
+            alpha: (color.alpha * 255.0) as u8,
         }
     }
 
-    /// Sets widget states based on a [Config] struct which is loaded from file
+    fn font(&self) -> Option<Font> {
+        match self.font_chooser.font() {
+            Some(f) => {
+                let font = FontDescription::from_string(&f);
+                let font_family = match font.family() {
+                    Some(fam) => fam.to_string(),
+                    None => String::from("Sans"),
+                };
+                let font_weight = font.style().to_string();
+                Some(Font {
+                    family: font_family,
+                    weight: {
+                        match FontWeight::from_str(&font_weight) {
+                            Some(w) => w,
+                            None => FontWeight::Normal,
+                        }
+                    },
+                })
+            }
+            None => None,
+        }
+    }
+
+    /// Returns a [GfretConfig] struct from the widget states
+    fn config_from_widgets(&self) -> GfretConfig {
+        GfretConfig {
+            units: self.units(),
+            external_program: self.external(),
+            border: self.border.value(),
+            line_weight: self.line_weight.value(),
+            fretline_color: Reduced(PrefWidgets::color(&self.fretline_color)),
+            fretboard_color: Reduced(PrefWidgets::color(&self.fretboard_color)),
+            centerline_color: Some(Reduced(PrefWidgets::color(&self.centerline_color))),
+            font: self.font(),
+        }
+    }
+
+    /// Sets widget states based on a [GfretConfig] struct which is loaded from file
     fn load_config(&self) {
         if let Some(config) = GfretConfig::from_file() {
             if let Some(color) = &config.fretline_color.to_gdk() {
@@ -274,6 +276,10 @@ impl PrefWidgets {
                     self.centerline_color.set_sensitive(false);
                 }
             }
+            match config.units {
+                Units::Metric => self.units.set_active(Some(0)),
+                Units::Imperial => self.units.set_active(Some(1)),
+            };
             self.border.set_value(config.border);
             self.line_weight.set_value(config.line_weight);
             match config.font {
@@ -291,7 +297,7 @@ impl PrefWidgets {
         }
     }
 
-    /// Serializes a [Config] struct as toml and saves to disk
+    /// Serializes a [GfretConfig] struct as toml and saves to disk
     pub fn save_prefs(&self) {
         let config_file = crate::config::get_config_file();
         let config_data = self.config_from_widgets();

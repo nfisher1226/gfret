@@ -20,10 +20,11 @@ pub struct PrefWidgets {
     fretline_color: gtk::ColorButton,
     fretboard_color: gtk::ColorButton,
     draw_centerline: gtk::Switch,
+    centerline_box: gtk::Box,
     centerline_color: gtk::ColorButton,
     print_specs: gtk::Switch,
+    font_box: gtk::Box,
     font_chooser: gtk::FontButton,
-    background_color: gtk::ColorButton,
 }
 
 pub struct Dialogs {
@@ -154,18 +155,21 @@ impl PrefWidgets {
             draw_centerline: builder
                 .object("draw_centerline")
                 .expect("Error getting 'draw_centerline'"),
+            centerline_box: builder
+                .object("centerline_box")
+                .expect("Error getting 'centerline_box'"),
             centerline_color: builder
                 .object("centerline_color")
                 .expect("Error getting 'centerline_color'"),
             print_specs: builder
                 .object("print_specs")
                 .expect("Error getting 'print_specs'"),
+            font_box: builder
+                .object("font_box")
+                .expect("Error getting 'font_box'"),
             font_chooser: builder
                 .object("font_chooser")
                 .expect("Error getting 'font_chooser'"),
-            background_color: builder
-                .object("background_color")
-                .expect("Error getting 'background_color'"),
         }
     }
 
@@ -306,13 +310,19 @@ impl PrefWidgets {
 
     /// Toggles the centerline color chooser button
     fn toggle_centerline_color(&self) {
-        let state = self.draw_centerline.is_active();
-        self.centerline_color.set_sensitive(state);
+        if self.draw_centerline.is_active() {
+            self.centerline_box.show();
+        } else {
+            self.centerline_box.hide();
+        }
     }
 
     /// Toggles the font chooser button
     fn toggle_font_chooser(&self) {
-        let state = self.print_specs.is_active();
-        self.font_chooser.set_sensitive(state);
+        if self.print_specs.is_active() {
+            self.font_box.show();
+        } else {
+            self.font_box.hide();
+        }
     }
 }

@@ -72,7 +72,7 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="can-focus">0</property>
-                    <property name="label" translatable="yes">Border:</property>
+                    <property name="label" translatable="yes">Units:</property>
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
                   </object>
@@ -214,7 +214,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="centerline_box">
                 <property name="can-focus">0</property>
                 <property name="margin-start">5</property>
                 <property name="margin-end">5</property>
@@ -261,7 +261,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="font_box">
                 <property name="can-focus">0</property>
                 <property name="margin-start">5</property>
                 <property name="margin-end">5</property>
@@ -283,30 +283,6 @@
                     <property name="language">en-us</property>
                     <property name="preview-text"></property>
                     <property name="use-font">1</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="can-focus">0</property>
-                <property name="margin-start">5</property>
-                <property name="margin-end">5</property>
-                <property name="spacing">3</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="can-focus">0</property>
-                    <property name="label" translatable="yes">Background Color:</property>
-                    <property name="halign">start</property>
-                    <property name="hexpand">1</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkColorButton" id="background_color">
-                    <property name="receives-default">1</property>
-                    <property name="tooltip-text" translatable="yes">The color of the viewport background Does not affect rendered image. Requires restart to take effect.</property>
-                    <property name="halign">end</property>
-                    <property name="rgba">rgb(119,118,123)</property>
                   </object>
                 </child>
               </object>

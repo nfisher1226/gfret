@@ -7,6 +7,7 @@ use rgba_simple::{Color::Reduced, ReducedRGBA};
 use crate::config::GfretConfig;
 
 use std::path::PathBuf;
+use std::str::FromStr;
 
 /// Handles on the widgets in the preferences dialog window for which we need to
 /// save data
@@ -108,7 +109,7 @@ impl Dialogs {
     pub fn get_template_path(&self) -> Option<PathBuf> {
         if let Some(file) = self.open_template.file() {
             if let Some(path) = file.path() {
-                return Some(path.to_path_buf());
+                return Some(path);
             }
         }
         None
@@ -191,23 +192,19 @@ impl PrefWidgets {
     /// Retreives the commandline for the external editor
     fn external(&self) -> Option<String> {
         if let Some(app_info) = self.external_button.app_info() {
-            if let Some(cmd) = app_info.commandline() {
-                Some(
-                    String::from(cmd.to_str().unwrap())
-                        .split_whitespace()
-                        .next()
-                        .unwrap_or("")
-                        .to_string(),
-                )
-            } else {
-                None
-            }
+            app_info.commandline().map(|cmd| {
+                String::from(cmd.to_str().unwrap())
+                    .split_whitespace()
+                    .next()
+                    .unwrap_or("")
+                    .to_string()
+            })
         } else {
             None
         }
     }
 
-    /// Converts the value stored in a [gtk::ColorButton] from a [gtk::gdk::RGBA]
+    /// Converts the value stored in a `gtk::ColorButton` from a `gtk::gdk::RGBA`
     /// struct into a struct which can be serialized using serde
     #[allow(clippy::cast_sign_loss)]
     #[allow(clippy::cast_possible_truncation)]
@@ -234,8 +231,11 @@ impl PrefWidgets {
                     family: font_family,
                     weight: {
                         match FontWeight::from_str(&font_weight) {
-                            Some(w) => w,
-                            None => FontWeight::Normal,
+                            Ok(w) => w,
+                            Err(e) => {
+                                eprintln!("Error: {}", e);
+                                FontWeight::default()
+                            }
                         }
                     },
                 })
@@ -244,7 +244,7 @@ impl PrefWidgets {
         }
     }
 
-    /// Returns a [GfretConfig] struct from the widget states
+    /// Returns a `GfretConfig` struct from the widget states
     fn config_from_widgets(&self) -> GfretConfig {
         GfretConfig {
             units: self.units(),
@@ -258,7 +258,7 @@ impl PrefWidgets {
         }
     }
 
-    /// Sets widget states based on a [GfretConfig] struct which is loaded from file
+    /// Sets widget states based on a `GfretConfig` struct which is loaded from file
     fn load_config(&self) {
         if let Some(config) = GfretConfig::from_file() {
             if let Some(color) = &config.fretline_color.to_gdk() {
@@ -267,18 +267,15 @@ impl PrefWidgets {
             if let Some(color) = &config.fretboard_color.to_gdk() {
                 self.fretboard_color.set_rgba(color);
             }
-            match config.centerline_color {
-                Some(c) => {
-                    self.draw_centerline.set_active(true);
-                    if let Some(color) = &c.to_gdk() {
-                        self.centerline_color.set_sensitive(true);
-                        self.centerline_color.set_rgba(color);
-                    }
+            if let Some(c) = config.centerline_color {
+                self.draw_centerline.set_active(true);
+                if let Some(color) = &c.to_gdk() {
+                    self.centerline_color.set_sensitive(true);
+                    self.centerline_color.set_rgba(color);
                 }
-                None => {
-                    self.draw_centerline.set_active(false);
-                    self.centerline_color.set_sensitive(false);
-                }
+            } else {
+                self.draw_centerline.set_active(false);
+                self.centerline_color.set_sensitive(false);
             }
             match config.units {
                 Units::Metric => self.units.set_active(Some(0)),
@@ -286,22 +283,19 @@ impl PrefWidgets {
             };
             self.border.set_value(config.border);
             self.line_weight.set_value(config.line_weight);
-            match config.font {
-                Some(f) => {
-                    self.print_specs.set_active(true);
-                    self.font_chooser.set_sensitive(true);
-                    self.font_chooser
-                        .set_font(&format!("{} {}", f.family, f.weight));
-                }
-                None => {
-                    self.print_specs.set_active(false);
-                    self.font_chooser.set_sensitive(false);
-                }
+            if let Some(f) = config.font {
+                self.print_specs.set_active(true);
+                self.font_chooser.set_sensitive(true);
+                self.font_chooser
+                    .set_font(&format!("{} {}", f.family, f.weight));
+            } else {
+                self.print_specs.set_active(false);
+                self.font_chooser.set_sensitive(false);
             }
         }
     }
 
-    /// Serializes a [GfretConfig] struct as toml and saves to disk
+    /// Serializes a `GfretConfig` struct as toml and saves to disk
     pub fn save_prefs(&self) {
         let config_file = crate::config::get_config_file();
         let config_data = self.config_from_widgets();

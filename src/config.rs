@@ -52,9 +52,8 @@ pub struct GfretConfig {
     pub font: Option<Font>,
 }
 
-impl GfretConfig {
-    /// Creates a GfretConfig struct with default options
-    pub fn default() -> GfretConfig {
+impl Default for GfretConfig {
+    fn default() -> Self {
         GfretConfig {
             units: Units::default(),
             external_program: Some(String::from("inkscape")),
@@ -66,14 +65,16 @@ impl GfretConfig {
             font: Some(Font::default()),
         }
     }
+}
 
+impl GfretConfig {
     /// Saves Template struct as a .toml file
     pub fn save_to_file(&self, file: &Path) {
         let toml_string = toml::to_string(&self).expect("Could not encode TOML value");
         fs::write(file, toml_string).expect("Could not write to file!");
     }
 
-    /// Deserializes config.toml into a [GfretConfig] struct
+    /// Deserializes config.toml into a `GfretConfig` struct
     pub fn from_file() -> Option<GfretConfig> {
         let config_file = get_config_file();
         let config_file = if config_file.exists() {
@@ -97,7 +98,7 @@ impl GfretConfig {
         Some(config)
     }
 
-    /// Maps a GfretConfig struct to a fretboard_layout::Config struct
+    /// Maps a `GfretConfig` struct to a `fretboard_layout::Config` struct
     pub fn to_config(&self) -> Config {
         Config {
             units: self.units.clone(),

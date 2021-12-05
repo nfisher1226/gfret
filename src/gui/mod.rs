@@ -174,9 +174,7 @@ impl Gui {
     /// Performs a full render of the svg image without saving to disk, and
     /// refreshes the image preview with the new data.
     fn draw_preview(&self, swap: bool) {
-        let cfg = GfretConfig::from_file()
-            .unwrap_or(GfretConfig::default())
-            .to_config();
+        let cfg = GfretConfig::from_file().unwrap_or_default().to_config();
         let image = self.get_specs().create_document(Some(cfg)).to_string();
         let bytes = gtk::glib::Bytes::from_owned(image.into_bytes());
         let stream = MemoryInputStream::from_bytes(&bytes);
@@ -226,14 +224,12 @@ impl Gui {
                     filename
                 )));
             }
-        } else {
-            if let Some(filename) = self.file.filename() {
-                self.window.set_title(Some(&format!(
-                    "Gfret - {} - {}*",
-                    crate_version!(),
-                    filename
-                )));
-            }
+        } else if let Some(filename) = self.file.filename() {
+            self.window.set_title(Some(&format!(
+                "Gfret - {} - {}*",
+                crate_version!(),
+                filename
+            )));
         }
     }
 
@@ -286,8 +282,8 @@ impl Gui {
     fn save(&self) {
         if self.file.saved() {
             if let Some(filename) = self.file.filename() {
-                let cfg = GfretConfig::from_file().unwrap_or(GfretConfig::default());
-                let document = self.get_specs().create_document(Some(cfg.to_config()));
+                let cfg = GfretConfig::from_file().unwrap_or_default().to_config();
+                let document = self.get_specs().create_document(Some(cfg));
                 self.save_template(&filename);
                 self.file.do_save(&filename, &document);
                 self.set_window_title();
@@ -300,9 +296,7 @@ impl Gui {
     fn save_as(&self, res: ResponseType) {
         if res == ResponseType::Accept {
             if let Some(filename) = self.dialogs.get_save_path() {
-                let cfg = GfretConfig::from_file()
-                    .unwrap_or(GfretConfig::default())
-                    .to_config();
+                let cfg = GfretConfig::from_file().unwrap_or_default().to_config();
                 let document = self.get_specs().create_document(Some(cfg));
                 self.save_template(&filename);
                 self.file.do_save(&filename, &document);
@@ -319,7 +313,7 @@ impl Gui {
 
     fn open_external(&self) {
         if let Some(filename) = self.file.filename() {
-            let cfg = GfretConfig::from_file().unwrap_or(GfretConfig::default());
+            let cfg = GfretConfig::from_file().unwrap_or_default();
             if let Some(cmd) = cfg.external_program {
                 match Command::new(&cmd).args(&[&filename]).spawn() {
                     Ok(_) => (),
@@ -337,7 +331,10 @@ impl Gui {
 }
 
 pub fn run() {
-    let application = gtk::Application::new(Some("org.hitchhiker-linux.gfret"), Default::default());
+    let application = gtk::Application::new(
+        Some("org.hitchhiker-linux.gfret"),
+        gtk::gio::ApplicationFlags::default(),
+    );
     application.add_main_option(
         "template",
         Char::from(b't'),

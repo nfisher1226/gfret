@@ -233,7 +233,8 @@ impl PrefWidgets {
                         match FontWeight::from_str(&font_weight) {
                             Ok(w) => w,
                             Err(e) => {
-                                eprintln!("Error: {}", e);
+                                eprintln!("Error parsing FontWeight: {}", e);
+                                eprintln!("FontWeight was: {}", &font_weight);
                                 FontWeight::default()
                             }
                         }

@@ -124,7 +124,7 @@ dependencies = [
 [[package]]
 name = "fretboard_layout"
 version = "0.1.4"
-source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git#8617478ab02ffac199b79e0fe297a4600e3d393b"
+source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git#9b60da0172e9300f63f22d080b45310852e9b132"
 dependencies = [
  "hex",
  "rgba_simple",

@@ -123,8 +123,8 @@ dependencies = [
 
 [[package]]
 name = "fretboard_layout"
-version = "0.1.5"
-source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git#e27fe92841a8c307c6cfa3c99b901523c783152c"
+version = "0.1.6"
+source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git#38f425c8a3098de5cb012f56374a9befd56a399f"
 dependencies = [
  "hex",
  "rgba_simple",
@@ -657,8 +657,8 @@ dependencies = [
 
 [[package]]
 name = "rgba_simple"
-version = "0.3.0"
-source = "git+https://codeberg.org/jeang3nie/rgba-simple.git#dac5586d25c17987f21efd1b32bdf9361669f4bd"
+version = "0.3.1"
+source = "git+https://codeberg.org/jeang3nie/rgba-simple.git#6eb1a8fe96a01be25819ef34f0b17a8ce32bfaeb"
 dependencies = [
  "gtk4",
  "hex",

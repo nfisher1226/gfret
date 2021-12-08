@@ -2,7 +2,7 @@
 use fretboard_layout::config::{Font, FontWeight, Units};
 use gtk::pango::FontDescription;
 use gtk::prelude::*;
-use rgba_simple::{Color::Reduced, ReducedRGBA};
+use rgba_simple::{Color::Reduced, Convert, ReducedRGBA};
 
 use crate::config::GfretConfig;
 

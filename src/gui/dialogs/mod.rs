@@ -262,15 +262,15 @@ impl PrefWidgets {
     /// Sets widget states based on a `GfretConfig` struct which is loaded from file
     fn load_config(&self) {
         if let Some(config) = GfretConfig::from_file() {
-            if let Some(color) = &config.fretline_color.to_gdk() {
+            if let Ok(color) = &config.fretline_color.to_gdk() {
                 self.fretline_color.set_rgba(color);
             }
-            if let Some(color) = &config.fretboard_color.to_gdk() {
+            if let Ok(color) = &config.fretboard_color.to_gdk() {
                 self.fretboard_color.set_rgba(color);
             }
             if let Some(c) = config.centerline_color {
                 self.draw_centerline.set_active(true);
-                if let Some(color) = &c.to_gdk() {
+                if let Ok(color) = &c.to_gdk() {
                     self.centerline_color.set_sensitive(true);
                     self.centerline_color.set_rgba(color);
                 }

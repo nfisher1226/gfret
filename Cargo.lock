@@ -123,8 +123,8 @@ dependencies = [
 
 [[package]]
 name = "fretboard_layout"
-version = "0.1.4"
-source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git#9b60da0172e9300f63f22d080b45310852e9b132"
+version = "0.1.5"
+source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git#e27fe92841a8c307c6cfa3c99b901523c783152c"
 dependencies = [
  "hex",
  "rgba_simple",
@@ -243,7 +243,7 @@ dependencies = [
 
 [[package]]
 name = "gfret2"
-version = "1.99.3"
+version = "1.99.4"
 dependencies = [
  "clap",
  "fretboard_layout",
@@ -496,9 +496,9 @@ dependencies = [
 
 [[package]]
 name = "itertools"
-version = "0.10.1"
+version = "0.10.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "69ddb889f9d0d08a67338271fa9b62996bc788c7796a5c18cf057420aaed5eaf"
+checksum = "a9a9d19fa1e79b6215ff29b9d6880b706147f16e9b1dbb1e4e5947b5b02bc5e3"
 dependencies = [
  "either",
 ]
@@ -599,9 +599,9 @@ checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
 
 [[package]]
 name = "pkg-config"
-version = "0.3.22"
+version = "0.3.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "12295df4f294471248581bc09bef3c38a5e46f1e36d6a37353621a0c6c357e1f"
+checksum = "d1a3ea4f0dd7f1f3e512cf97bf100819aa547f36a6eccac8dbaae839eb92363e"
 
 [[package]]
 name = "proc-macro-crate"
@@ -657,8 +657,8 @@ dependencies = [
 
 [[package]]
 name = "rgba_simple"
-version = "0.1.1"
-source = "git+https://codeberg.org/jeang3nie/rgba-simple.git#5c80154851f3771ab780d8b9abb8266a664f05c4"
+version = "0.3.0"
+source = "git+https://codeberg.org/jeang3nie/rgba-simple.git#dac5586d25c17987f21efd1b32bdf9361669f4bd"
 dependencies = [
  "gtk4",
  "hex",

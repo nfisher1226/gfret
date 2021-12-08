@@ -1,6 +1,6 @@
 #![warn(clippy::all, clippy::pedantic)]
 use fretboard_layout::config::{Config, Font, Units};
-use rgba_simple::{Color, ReducedRGBA};
+use rgba_simple::{Color, Primary, ReducedRGBA};
 use serde::{Deserialize, Serialize};
 
 use crate::CONFIGDIR;

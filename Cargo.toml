@@ -1,7 +1,11 @@
 [package]
-name = "gfret2"
-version = "1.99.4"
+name = "gfret"
+version = "1.99.5"
 edition = "2021"
+description = "Generates an svg template of a musical instrument fretboard"
+repository = "https://codeberg.org/jeang3nie/gfret"
+keywords = ["graphics", "design", "vector-graphics", "lutherie"]
+categories = ["graphics", "multimedia::images", "mathematics", "simulation"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

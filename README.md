@@ -1,71 +1,143 @@
 # Gfret
+<!-- cargo-sync-readme start -->
+
 Contents
 ========
 * [Introduction](#introduction)
 * [Usage](#usage)
-  * [Cli Flags](#cli-flags)
-* [Preferences](#preferences)
+  * [Cli](#running-the-command-line-interface)
+  * [Gui](#running-the-gui)
+    * [Keybindings](#keybindings)
+  * [Templates](#templates)
+* [Configuration](#configuration)
+* [Building](#building)
 * [Roadmap](#roadmap)
 
 ## Introduction
-This is a fretBoard layout tool. Given a set of parameters gfret will
-calculate the fret, nut, and bridge locations and output an svg template suitable
-for using as a pattern for a fretted stringed instrument. Multiscale designs are
-supported. Measurements are currently expected to be in millimeters.
+Gfret renders an svg image template of a fretboard for a stringed instrument.
+It has a Gtk interface as well as a command line interface and can produce
+templates for instruments ranging from a piccolo mandolin to an upright bass.
+Multiscale designs are also supported. Currently, all measurements are
+expressed in metric units only.
+## Running the gui
+Calling the program by invoking ```gfret``` without any arguments will run
+the Gtk interface. Additionally, a .desktop file and icon are included and
+will be installed if the program is installed using the included
+```Makefile```, and can be used for launching the program from desktop menus
+or creating shortcuts.
+## Running the command line interface
+```Bash
+gfret-cli
+
+Output an svg without running the interface
+
+USAGE:
+   gfret cli [OPTIONS] [OUTPUT]
+
+ARGS:
+   <OUTPUT>    Name of the output file [default: output.svg]
+
+OPTIONS:
+   -b, --bridge <BRIDGE>
+           Bridge spacing [default: 56]
+
+   -c, --count <COUNT>
+           Total fret count [default: 24]
+
+   -e, --external <EXTERN>
+           Open output file in external program [default: inkscape]
+
+   -h, --help
+           Print help information
+
+   -l, --left
+           Multiscale fretboard reversed (left handed)
+
+   -m, --multi <MULTI>
+           Creates a multiscale fretboard with <MULTI> as the treble scale. [default: 610]
+
+   -n, --nut <NUT>
+           Nut width [default: 43]
+
+   -o, --output <OUTPUT>
+           Name of the output file [default: output.svg]
+
+   -p, --perpendicular <PERPENDICULAR>
+           Set which fret is perpendicular to the centerline [default: 8]
+   -s, --scale <SCALE>
+           Scale length in mm [default: 648]
+```rust
+## Keybindings
+| Key | Action |
+| --- | --- |
+| Ctrl/S | save file |
+| Ctrl/Shift/S | save file as |
+| Ctrl/E | open with an external program |
+| Ctrl/O | load a template from file |
+| Ctrl/Shift/P | open the preferences dialog |
+| Ctrl/Q | quit the program |
+## Templates
+Along with the svg output, Gfret will save the specifications used to
+generate the rendering in a Toml file with it's name corresponding to the
+name of the svg file. These templates can be loaded later, either as an
+argument when invoking the program, in which case the output will be
+immediately generated, or else loaded from the Gui interface for further
+editing. This is useful for sharing a common scale among multiple designs to
+use as a starting point.
+## Configuration
+On Unix systems the default configuration directory is ```~/.config/gfret```.
+Gfret will maintain a configuration file here in [Toml](https://github.com/toml-lang/toml)
+format, with the following fields:
+```Toml
+## must match either "Metric" or "Imperial"
+units = "Metric"
+## the command line to run
+external_program = "inkscape"
+## the size of the border around the image
+border = 10.0
+## how thick the lines are
+line_weight = 1.0
+
+[fretline_color]
+## Colors must be "Hex", "Reduced" or "RGBA"
+## "Reduced" will take a whole number between 0 and 255 for each channel,
+## while "RGBA" takes a decimal between 0.0 and 1.0.
+
+## "Hex" will have a <color> field and an <alpha> field
+## ColorType = "Hex"
+## color = "#00ff00"
+## alpha = 1.0
+ColorType = "Reduced"
+red = <u8>
+green = <u8>
+blue = <u8>
+alpha = <u8>
+
+[fretboard_color]
+ColorType = "Reduced"
+red = 36
+green = 31
+blue = 49
+alpha = 255
+
+[centerline_color]
+ColorType = "Reduced"
+red = 0
+green = 0
+blue = 255
+alpha = 255
+
+## Fonts take a family and weight (style), but size is ignored
+[font]
+family = "Sans"
+weight = "Normal"
+```rust
+> Note: The graphical interface has a preferences dialog and will take care
+> of maintaining the preferences file for you. There will be no need to edit
+> this file by hand in normal use.
 ## Building
 You will need a Rust toolchain installed, including cargo. Gtk+3x is also
 required. To build the program, run ```cargo build --release``` to build a
 release binary in target/release.
 
-Alternatively, you can use the included Makefile to build and install the
-program, adjusting the installation path with the PREFIX and DESTDIR variables.
-
-## Usage
-By default the Gtk based gui will run. If desired, the program can be run in
-standalone cli mode by using the ```cli``` subcommand. The first argument to the
-cli is the scale length in millimeters. If the -m, or --multiscale argument is
-also given, this becomes the bass side scale length.
-#### Cli Flags
-* -m, --multiscale <scale> - creates a multiscale design where [scale] is
-the treble side scale.
-* -c, --count <count> - the total number of frets to plot.
-* -p, --perpendicular <fret> - which fret is to be perpendicular to the centerline.
-* -b, --bridge <spacing> - string spacing at the bridge. This is usually given as
-the actual string spacing, while the nut is given as the physical width of the
-nut. Therefore, this number is padded by 6mm to give approximately 3mm overhang
-of the fretboard in relation to the two outer strings.
-* -n, --nut <width> - the width of the nut. On multiscale designs this will be an
-approximation, as the nut is slanted.
-* -o, --output <file> - the name of the output file.
-* -e, --external <program> - open the output file in an external program
-## Preferences
-Some useful defaults can be set for the rendered image by editing the file
-```~/.config/gfret/config.toml```. A sample of this file would look like this:
-``` Toml
-# An external program which can edit svg files <String>
-external_program = "inkscape"
-# The border to be placed around the rendered image <f64>
-border = 5.0
-# The line weight, in mm <f64>
-line_weight = 0.5000000000000001
-# The color of the fret lines in RGBA format
-fretline_color = "rgba(255,255,255,1)"
-# The background fill color of the fretboard, in RGBA format
-fretboard_color = "rgba(0,0,0,1)"
-# Whether or not to draw the dashed centerline <bool>
-draw_centerline = true
-# The color of the dashed centerline, in RGBA format
-centerline_color = "rgba(165,29,45,1)"
-# Whether or not to print the specifications used onto the image rendering <bool>
-print_specs = true
-# The font used to print the specifications
-font = "sans 12"
-```
-If running the gui, all of these settings can be adjusted using the preferences
-dialog.
-## Roadmap
-* For the gui, it would be nice to save state and allow loading specs from and saving
-to templates. **partial implementation 4/7/21** | **completed 5/5/21**
-* Port to Gtk4
-* Support changing from metric to imperial measurements
-* Support left handed multiscale fretboards
+<!-- cargo-sync-readme end -->

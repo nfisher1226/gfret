@@ -1,6 +1,5 @@
 #![warn(clippy::all, clippy::pedantic)]
-use clap::crate_version;
-use fretboard_layout::{Handedness, Specs, Variant};
+use fretboard_layout::{Handedness, Specs, Units, Variant};
 use gtk::gdk_pixbuf::Pixbuf;
 use gtk::gio::{Cancellable, MemoryInputStream, SimpleAction};
 use gtk::glib::char::Char;
@@ -13,12 +12,14 @@ use std::path::PathBuf;
 use std::process::Command;
 use std::rc::Rc;
 
+mod adjustments;
 mod dialogs;
 mod file;
 
 use crate::config::GfretConfig;
 use crate::template::Template;
 use crate::CONFIGDIR;
+use adjustments::Adjustments;
 use dialogs::Dialogs;
 use file::File;
 
@@ -37,6 +38,7 @@ struct Gui {
     bridge_spacing: gtk::SpinButton,
     file: File,
     dialogs: Dialogs,
+    adjustments: Adjustments,
 }
 
 struct Actions {
@@ -117,6 +119,7 @@ impl Gui {
             bridge_spacing: builder.object("bridge_spacing").unwrap(),
             file: File::init(),
             dialogs: Dialogs::init(&window, &builder),
+            adjustments: Adjustments::init(&builder),
         }
     }
 
@@ -166,7 +169,10 @@ impl Gui {
             count: self.fret_count.value_as_int() as u32,
             variant: self.get_variant(),
             nut: self.nut_width.value(),
-            bridge: self.bridge_spacing.value() + 6.0,
+            bridge: match GfretConfig::from_file().unwrap_or_default().units {
+                Units::Metric => self.bridge_spacing.value() + 6.0,
+                Units::Imperial => self.bridge_spacing.value() + (6.0 / 20.4),
+            },
             pfret: self.perpendicular_fret.value(),
         }
     }
@@ -215,19 +221,19 @@ impl Gui {
     fn set_window_title(&self) {
         if !self.file.saved() {
             self.window
-                .set_title(Some(&format!("Gfret - {} - <unsaved>", crate_version!())));
+                .set_title(Some(&format!("Gfret - {} - <unsaved>", env!("CARGO_PKG_VERSION"))));
         } else if self.file.current() {
             if let Some(filename) = self.file.filename() {
                 self.window.set_title(Some(&format!(
                     "Gfret - {} - {}",
-                    crate_version!(),
+                    env!("CARGO_PKG_VERSION"),
                     filename
                 )));
             }
         } else if let Some(filename) = self.file.filename() {
             self.window.set_title(Some(&format!(
                 "Gfret - {} - {}*",
-                crate_version!(),
+                env!("CARGO_PKG_VERSION"),
                 filename
             )));
         }
@@ -323,6 +329,22 @@ impl Gui {
         }
     }
 
+    fn to_metric(&self) {
+        self.adjustments.to_metric();
+        self.bridge_spacing.set_value(self.bridge_spacing.value() * 20.4);
+        self.nut_width.set_value(self.nut_width.value() * 20.4);
+        self.scale.set_value(self.scale.value() * 20.4);
+        self.scale_multi_fine.set_value(self.scale_multi_fine.value() * 20.4);
+    }
+
+    fn to_imperial(&self) {
+        self.adjustments.to_imperial();
+        self.bridge_spacing.set_value(self.bridge_spacing.value() / 20.4);
+        self.nut_width.set_value(self.nut_width.value() / 20.4);
+        self.scale.set_value(self.scale.value() / 20.4);
+        self.scale_multi_fine.set_value(self.scale_multi_fine.value() / 20.4);
+    }
+
     /// Saves the program state before exiting
     fn cleanup(&self) {
         let data = self.template_from_gui();
@@ -349,6 +371,10 @@ pub fn run() {
 
 fn build_ui(application: &Application) {
     let gui = Rc::new(Gui::init());
+    let units = GfretConfig::from_file().unwrap_or_default().units;
+    if units == Units::Imperial {
+        gui.adjustments.to_imperial();
+    }
     let mut statefile = CONFIGDIR.clone();
     statefile.push("state.toml");
     if statefile.exists() {
@@ -360,7 +386,7 @@ fn build_ui(application: &Application) {
     gui.add_actions(application).connect(&gui);
 
     gui.window
-        .set_title(Some(&format!("Gfret - {} - <unsaved>", crate_version!())));
+        .set_title(Some(&format!("Gfret - {} - <unsaved>", env!("CARGO_PKG_VERSION"))));
 
     gui.window.set_application(Some(application));
     gui.toggle_multi();
@@ -431,7 +457,16 @@ fn build_ui(application: &Application) {
         .window()
         .connect_response(clone!(@strong gui => move |dlg,res| {
             if res == ResponseType::Accept {
+                let units = GfretConfig::from_file().unwrap_or_default().units;
                 gui.dialogs.preferences.save_prefs();
+                let new = GfretConfig::from_file().unwrap().units;
+                if units != new {
+                    if new == Units::Metric {
+                        gui.to_metric();
+                    } else {
+                        gui.to_imperial();
+                    }
+                }
             }
             dlg.hide();
             gui.draw_preview(true);

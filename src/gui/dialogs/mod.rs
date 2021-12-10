@@ -94,6 +94,13 @@ impl Dialogs {
             .add_action_widget(&accept, gtk::ResponseType::Accept);
         dlg.window.set_transient_for(Some(window));
         let dlg_clone = dlg.clone();
+        dlg.units.connect_changed(move |_| {
+            match dlg_clone.units() {
+                Units::Metric => dlg_clone.to_metric(),
+                Units::Imperial => dlg_clone.to_imperial(),
+            };
+        });
+        let dlg_clone = dlg.clone();
         dlg.draw_centerline.connect_state_set(move |_, _| {
             dlg_clone.toggle_centerline_color();
             gtk::Inhibit(false)
@@ -187,6 +194,38 @@ impl PrefWidgets {
             Some(1) => Units::Imperial,
             Some(_) | None => Units::Metric,
         }
+    }
+
+    fn to_metric(&self) {
+        let mut val = self.border.value();
+        let mut adjustment = self.border.adjustment();
+        adjustment.set_upper(40.0);
+        adjustment.set_step_increment(0.10);
+        adjustment.set_page_increment(5.0);
+        self.border.set_value(val * 20.4);
+
+        val = self.line_weight.value();
+        adjustment = self.line_weight.adjustment();
+        adjustment.set_upper(2.0);
+        adjustment.set_step_increment(0.10);
+        adjustment.set_page_increment(0.50);
+        self.line_weight.set_value(val * 20.4);
+    }
+
+    fn to_imperial(&self) {
+        let mut val = self.border.value();
+        let mut adjustment = self.border.adjustment();
+        adjustment.set_upper(40.0 / 20.4);
+        adjustment.set_step_increment(0.01);
+        adjustment.set_page_increment(0.10);
+        self.border.set_value(val / 20.4);
+
+        val = self.line_weight.value();
+        adjustment = self.line_weight.adjustment();
+        adjustment.set_upper(0.098);
+        adjustment.set_step_increment(0.01);
+        adjustment.set_page_increment(0.05);
+        self.line_weight.set_value(val / 20.4);
     }
 
     /// Retreives the commandline for the external editor

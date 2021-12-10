@@ -14,7 +14,6 @@ xdg-basedir = "~1.0"
 
 [dependencies.clap]
 version = "3.0.0-beta.2"
-features = ["yaml"]
 
 [dependencies.gtk]
 version = "~0.3"

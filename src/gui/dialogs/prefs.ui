@@ -4,14 +4,14 @@
   <object class="GtkAdjustment" id="border_adjustment">
     <property name="upper">40</property>
     <property name="value">10</property>
-    <property name="step-increment">0.09999999999999974</property>
+    <property name="step-increment">0.10</property>
     <property name="page-increment">5</property>
   </object>
   <object class="GtkAdjustment" id="weight_adjustment">
     <property name="upper">2</property>
     <property name="value">1</property>
     <property name="step-increment">0.10</property>
-    <property name="page-increment">1</property>
+    <property name="page-increment">0.50</property>
   </object>
   <object class="GtkDialog" id="prefs_window">
     <property name="can-focus">0</property>

@@ -140,4 +140,13 @@ You will need a Rust toolchain installed, including cargo. Gtk+3x is also
 required. To build the program, run ```cargo build --release``` to build a
 release binary in target/release.
 
+Alternatively, you can use the included Makefile to build and install the
+program, adjusting the installation path with the PREFIX and DESTDIR variables.
+
+## Roadmap
+* For the gui, it would be nice to save state and allow loading specs from and saving
+to templates. **partial implementation 4/7/21** | **completed 5/5/21**
+* Port to Gtk4 **completed 12/21**
+* Support changing from metric to imperial measurements **completed 12/21**
+* Support left handed multiscale fretboards **completed 12/21**
 <!-- cargo-sync-readme end -->

@@ -47,6 +47,7 @@ struct Actions {
     save_as: SimpleAction,
     open_external: SimpleAction,
     preferences: SimpleAction,
+    about: SimpleAction,
     quit: SimpleAction,
 }
 
@@ -58,6 +59,7 @@ impl Actions {
             save_as: SimpleAction::new("save_as", None),
             open_external: SimpleAction::new("open_external", None),
             preferences: SimpleAction::new("preferences", None),
+            about: SimpleAction::new("about", None),
             quit: SimpleAction::new("quit", None),
         }
     }
@@ -89,6 +91,11 @@ impl Actions {
         self.preferences
             .connect_activate(clone!(@strong gui => move |_, _| {
                 gui.dialogs.preferences.show();
+            }));
+
+        self.about
+            .connect_activate(clone!(@strong gui => move |_, _| {
+                gui.dialogs.about.show();
             }));
 
         self.quit
@@ -131,6 +138,7 @@ impl Gui {
         app.set_accels_for_action("win.save_as", &["<primary><shift>S"]);
         app.set_accels_for_action("win.open_external", &["<primary>E"]);
         app.set_accels_for_action("win.preferences", &["<primary><shift>P"]);
+        app.set_accels_for_action("win.about", &["<primary>A"]);
         app.set_accels_for_action("win.quit", &["<primary>Q"]);
 
         self.window.add_action(&actions.open_template);
@@ -138,6 +146,7 @@ impl Gui {
         self.window.add_action(&actions.save_as);
         self.window.add_action(&actions.open_external);
         self.window.add_action(&actions.preferences);
+        self.window.add_action(&actions.about);
         self.window.add_action(&actions.quit);
         actions
     }

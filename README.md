@@ -66,7 +66,7 @@ OPTIONS:
            Set which fret is perpendicular to the centerline [default: 8]
    -s, --scale <SCALE>
            Scale length in mm [default: 648]
-```rust
+```
 ## Keybindings
 | Key | Action |
 | --- | --- |
@@ -131,7 +131,7 @@ alpha = 255
 [font]
 family = "Sans"
 weight = "Normal"
-```rust
+```
 > Note: The graphical interface has a preferences dialog and will take care
 > of maintaining the preferences file for you. There will be no need to edit
 > this file by hand in normal use.

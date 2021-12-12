@@ -69,6 +69,10 @@
         <attribute name="label">Preferences</attribute>
         <attribute name="action">win.preferences</attribute>
       </item>
+      <item>
+        <attribute name="label">About</attribute>
+        <attribute name="action">win.about</attribute>
+      </item>
     </section>
     <item>
       <attribute name="label">Quit</attribute>

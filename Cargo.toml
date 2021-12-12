@@ -3,6 +3,7 @@ name = "gfret"
 version = "1.99.5"
 edition = "2021"
 description = "Generates an svg template of a musical instrument fretboard"
+authors = ["Nathan Fisher"]
 repository = "https://codeberg.org/jeang3nie/gfret"
 keywords = ["graphics", "design", "vector-graphics", "lutherie"]
 categories = ["graphics", "multimedia::images", "mathematics", "simulation"]
@@ -10,7 +11,7 @@ categories = ["graphics", "multimedia::images", "mathematics", "simulation"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-fretboard_layout = { git = "https://codeberg.org/jeang3nie/fretboard-layout.git" }
+fretboard_layout = "~0.1"
 lazy_static = "~1.4"
 svg = "~0.10"
 toml = "~0.5"
@@ -28,5 +29,5 @@ version = "~1.0"
 features = ["derive"]
 
 [dependencies.rgba_simple]
-git = "https://codeberg.org/jeang3nie/rgba-simple.git"
+version = "~0.3"
 features = ["gtk"]

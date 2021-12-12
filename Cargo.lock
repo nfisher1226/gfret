@@ -75,9 +75,9 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "3.0.0-rc.3"
+version = "3.0.0-rc.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "098d281b47bf725a0bddd829e0070ee76560faab8af123050a86c440d7f0a1fd"
+checksum = "967965e82fc46fee1a88147a7a977a66d615ed5f83eb95b18577b342c08f90ff"
 dependencies = [
  "atty",
  "bitflags",
@@ -106,8 +106,9 @@ dependencies = [
 
 [[package]]
 name = "fretboard_layout"
-version = "0.1.7"
-source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git#2d380411030fc2eceea1637ed0134d6c0eab4a09"
+version = "0.1.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5d5861ffb1dfce29498f299fc576955a1994ac7bc52054566eb9d51b72ffa7aa"
 dependencies = [
  "hex",
  "rgba_simple",
@@ -454,9 +455,9 @@ dependencies = [
 
 [[package]]
 name = "hermit-abi"
-version = "0.1.20"
+version = "0.1.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c7a30908dbce072eca83216eab939d2290080e00ca71611b96a09e5cdce5f3fa"
+checksum = "62b467343b94ba476dcb2500d242dadbb39557df889310ac77c5d99100aaac33"
 dependencies = [
  "libc",
 ]
@@ -494,9 +495,9 @@ checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "libc"
-version = "0.2.110"
+version = "0.2.109"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b58a4469763e4e3a906c4ed786e1c70512d16aa88f84dded826da42640fc6a1c"
+checksum = "f98a04dce437184842841303488f70d0188c5f51437d2a834dc097eafa909a01"
 
 [[package]]
 name = "memchr"
@@ -634,8 +635,9 @@ dependencies = [
 
 [[package]]
 name = "rgba_simple"
-version = "0.3.1"
-source = "git+https://codeberg.org/jeang3nie/rgba-simple.git#6eb1a8fe96a01be25819ef34f0b17a8ce32bfaeb"
+version = "0.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e289509b94e9299e14b0b98a60a39a4a556f2cd07873976ea2d8b0d7f1673480"
 dependencies = [
  "gtk4",
  "hex",

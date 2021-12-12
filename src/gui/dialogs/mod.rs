@@ -29,6 +29,7 @@ pub struct PrefWidgets {
 }
 
 pub struct Dialogs {
+    pub about: gtk::AboutDialog,
     pub save_as: gtk::FileChooserDialog,
     pub open_template: gtk::FileChooserDialog,
     pub preferences: PrefWidgets,
@@ -37,10 +38,28 @@ pub struct Dialogs {
 impl Dialogs {
     pub fn init(window: &gtk::ApplicationWindow, builder: &gtk::Builder) -> Dialogs {
         Dialogs {
+            about: Dialogs::init_about(window),
             save_as: Dialogs::init_save_as(window),
             open_template: Dialogs::init_open_template(window),
             preferences: Dialogs::init_preferences(window, builder),
         }
+    }
+
+    fn init_about(window: &gtk::ApplicationWindow) -> gtk::AboutDialog {
+        let dlg = gtk::AboutDialog::builder()
+            .program_name("Gfret")
+            .authors(vec!("the JeanG3nie".to_string()))
+            .artists(vec!("the JeanG3nie".to_string()))
+            .version(env!("CARGO_PKG_VERSION"))
+            .license(include_str!(r"../../../LICENSE"))
+            .wrap_license(true)
+            .comments("A tool for lutherie\nBuilt using Rust and Gtk+")
+            .logo_icon_name("gfret")
+            .copyright("©2020 by Nathan Fisher (the JeanG3nie)")
+            .website("https://codeberg.org/jeang3nie/gfret")
+            .transient_for(window)
+            .build();
+        dlg
     }
 
     fn init_save_as(window: &gtk::ApplicationWindow) -> gtk::FileChooserDialog {

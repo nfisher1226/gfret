@@ -29,5 +29,5 @@ version = "~1.0"
 features = ["derive"]
 
 [dependencies.rgba_simple]
-version = "~0.3"
-features = ["gtk"]
+version = "~0.4"
+features = ["gdk"]

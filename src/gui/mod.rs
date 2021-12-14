@@ -94,7 +94,7 @@ impl Actions {
             }));
 
         self.about
-            .connect_activate(clone!(@weak gui => move |_, _| {
+            .connect_activate(clone!(@strong gui => move |_, _| {
                 gui.dialogs.about.show();
             }));
 

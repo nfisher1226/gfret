@@ -1,6 +1,6 @@
 [package]
 name = "gfret"
-version = "1.99.5"
+version = "1.99.6"
 edition = "2021"
 description = "Generates an svg template of a musical instrument fretboard"
 authors = ["Nathan Fisher"]

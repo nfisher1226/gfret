@@ -3,8 +3,8 @@ use fretboard_layout::{Handedness, Specs, Units, Variant};
 use gtk::gdk_pixbuf::Pixbuf;
 use gtk::gio::{Cancellable, MemoryInputStream, SimpleAction};
 use gtk::glib::char::Char;
-use gtk::glib::clone;
-use gtk::glib::{OptionArg, OptionFlags};
+use gtk::glib;
+use gtk::glib::{clone, OptionArg, OptionFlags};
 use gtk::prelude::*;
 use gtk::{Application, ResponseType};
 
@@ -66,22 +66,22 @@ impl Actions {
 
     fn connect(&self, gui: &Rc<Gui>) {
         self.open_template
-            .connect_activate(clone!(@strong gui => move |_, _| {
+            .connect_activate(clone!(@weak gui => move |_, _| {
                 gui.dialogs.open_template.show();
             }));
 
         self.save
-            .connect_activate(clone!(@strong gui => move |_, _| {
+            .connect_activate(clone!(@weak gui => move |_, _| {
                 gui.save();
             }));
 
         self.save_as
-            .connect_activate(clone!(@strong gui => move |_, _| {
+            .connect_activate(clone!(@weak gui => move |_, _| {
                 gui.dialogs.save_as.show();
             }));
 
         self.open_external
-            .connect_activate(clone!(@strong gui => move |_, _| {
+            .connect_activate(clone!(@weak gui => move |_, _| {
                 if !gui.file.saved() {
                     gui.dialogs.save_as.show();
                 }
@@ -89,17 +89,17 @@ impl Actions {
             }));
 
         self.preferences
-            .connect_activate(clone!(@strong gui => move |_, _| {
+            .connect_activate(clone!(@weak gui => move |_, _| {
                 gui.dialogs.preferences.show();
             }));
 
         self.about
-            .connect_activate(clone!(@strong gui => move |_, _| {
+            .connect_activate(clone!(@weak gui => move |_, _| {
                 gui.dialogs.about.show();
             }));
 
         self.quit
-            .connect_activate(clone!(@strong gui => move |_, _| {
+            .connect_activate(clone!(@weak gui => move |_, _| {
                 gui.cleanup();
                 gui.window.close();
             }));
@@ -402,55 +402,55 @@ fn build_ui(application: &Application) {
     gui.draw_preview(false);
 
     gui.scale
-        .connect_value_changed(clone!(@strong gui => move |_| {
+        .connect_value_changed(clone!(@weak gui => move |_| {
             gui.draw_preview(false);
         }));
 
-    gui.variant.connect_changed(clone!(@strong gui => move |_| {
+    gui.variant.connect_changed(clone!(@weak gui => move |_| {
         gui.toggle_multi();
         gui.draw_preview(true);
     }));
 
     gui.handedness
-        .connect_changed(clone!(@strong gui => move |_| {
+        .connect_changed(clone!(@weak gui => move |_| {
             gui.draw_preview(true);
         }));
 
     gui.scale_multi_course
-        .connect_value_changed(clone!(@strong gui => move |_| {
+        .connect_value_changed(clone!(@weak gui => move |_| {
             gui.draw_preview(true);
         }));
 
     gui.fret_count
-        .connect_value_changed(clone!(@strong gui => move |_| {
+        .connect_value_changed(clone!(@weak gui => move |_| {
             gui.draw_preview(true);
         }));
 
     gui.perpendicular_fret
-        .connect_value_changed(clone!(@strong gui => move |_| {
+        .connect_value_changed(clone!(@weak gui => move |_| {
             gui.draw_preview(true);
         }));
 
     gui.nut_width
-        .connect_value_changed(clone!(@strong gui => move |_| {
+        .connect_value_changed(clone!(@weak gui => move |_| {
             gui.draw_preview(true);
         }));
 
     gui.bridge_spacing
-        .connect_value_changed(clone!(@strong gui => move |_| {
+        .connect_value_changed(clone!(@weak gui => move |_| {
             gui.draw_preview(true);
         }));
 
     gui.dialogs
         .save_as
-        .connect_response(clone!(@strong gui => move |dlg,res| {
+        .connect_response(clone!(@weak gui => move |dlg,res| {
             gui.save_as(res);
             dlg.hide();
         }));
 
     gui.dialogs
         .open_template
-        .connect_response(clone!(@strong gui => move |dlg,res| {
+        .connect_response(clone!(@weak gui => move |dlg,res| {
             if res == ResponseType::Accept {
                 if let Some(path) = gui.dialogs.get_template_path() {
                     if let Some(template) = Template::load_from_file(path) {
@@ -464,7 +464,7 @@ fn build_ui(application: &Application) {
     gui.dialogs
         .preferences
         .window()
-        .connect_response(clone!(@strong gui => move |dlg,res| {
+        .connect_response(clone!(@weak gui => move |dlg,res| {
             if res == ResponseType::Accept {
                 let units = GfretConfig::from_file().unwrap_or_default().units;
                 gui.dialogs.preferences.save_prefs();

@@ -24,9 +24,8 @@ expressed in metric units only.
 [codeberg.org](https://codeberg.org/jeang3nie/gfret) with mirrors at
 [gitlab](https://gitlab.com/jeang3nie/gfret) and
 [gibub.com](https://github.com/nfisher1226/gfret). Releases are recommended.
-=====
-Usage
-=====
+## Usage
+*Gfret* can be used from the command line or using the Gtk+ interface.
 ## Running the command line interface
 ```Bash
 gfret-cli

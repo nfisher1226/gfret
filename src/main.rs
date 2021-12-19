@@ -23,6 +23,7 @@
 //! [codeberg.org](https://codeberg.org/jeang3nie/gfret) with mirrors at
 //! [gitlab](https://gitlab.com/jeang3nie/gfret) and
 //! [gibub.com](https://github.com/nfisher1226/gfret). Releases are recommended.
+//! =====
 //! Usage
 //! =====
 //! ## Running the command line interface

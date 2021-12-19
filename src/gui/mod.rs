@@ -193,12 +193,9 @@ impl Gui {
         let image = self.get_specs().create_document(Some(cfg)).to_string();
         let bytes = gtk::glib::Bytes::from_owned(image.into_bytes());
         let stream = MemoryInputStream::from_bytes(&bytes);
-        let mut width = self.image_preview.size(gtk::Orientation::Horizontal);
-        if width == 0 {
-            width = 500;
-        };
+        let width = self.image_preview.size(gtk::Orientation::Horizontal);
         let pixbuf = Pixbuf::from_stream_at_scale::<MemoryInputStream, Cancellable>(
-            &stream, width, 100, true, None,
+            &stream, width, -1, true, None,
         );
         self.image_preview.set_pixbuf(Some(&pixbuf.unwrap()));
         if swap {

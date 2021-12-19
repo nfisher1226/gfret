@@ -6,6 +6,7 @@ use rgba_simple::{Color::Reduced, Convert, ReducedRGBA};
 
 use crate::config::GfretConfig;
 
+use std::env;
 use std::path::PathBuf;
 use std::str::FromStr;
 

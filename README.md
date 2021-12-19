@@ -1,9 +1,9 @@
 # Gfret
 <!-- cargo-sync-readme start -->
-
 Contents
 ========
 * [Introduction](#introduction)
+* [Getting Gfret](#getting-gfret)
 * [Usage](#usage)
   * [Cli](#running-the-command-line-interface)
   * [Gui](#running-the-gui)
@@ -19,12 +19,13 @@ It has a Gtk interface as well as a command line interface and can produce
 templates for instruments ranging from a piccolo mandolin to an upright bass.
 Multiscale designs are also supported. Currently, all measurements are
 expressed in metric units only.
-## Running the gui
-Calling the program by invoking ```gfret``` without any arguments will run
-the Gtk interface. Additionally, a .desktop file and icon are included and
-will be installed if the program is installed using the included
-```Makefile```, and can be used for launching the program from desktop menus
-or creating shortcuts.
+## Getting Gfret
+*Gfret* is distributed primarily in source form. The main repo is at
+[codeberg.org](https://codeberg.org/jeang3nie/gfret) with mirrors at
+[gitlab](https://gitlab.com/jeang3nie/gfret) and
+[gibub.com](https://github.com/nfisher1226/gfret). Releases are recommended.
+Usage
+=====
 ## Running the command line interface
 ```Bash
 gfret-cli
@@ -67,6 +68,12 @@ OPTIONS:
    -s, --scale <SCALE>
            Scale length in mm [default: 648]
 ```
+## Running the gui
+Calling the program by invoking ```gfret``` without any arguments will run
+the Gtk interface. Additionally, a .desktop file and icon are included and
+will be installed if the program is installed using the included
+```Makefile```, and can be used for launching the program from desktop menus
+or creating shortcuts.
 ## Keybindings
 | Key | Action |
 | --- | --- |
@@ -131,7 +138,7 @@ alpha = 255
 [font]
 family = "Sans"
 weight = "Normal"
-```
+```rust
 > Note: The graphical interface has a preferences dialog and will take care
 > of maintaining the preferences file for you. There will be no need to edit
 > this file by hand in normal use.
@@ -149,4 +156,5 @@ to templates. **partial implementation 4/7/21** | **completed 5/5/21**
 * Port to Gtk4 **completed 12/21**
 * Support changing from metric to imperial measurements **completed 12/21**
 * Support left handed multiscale fretboards **completed 12/21**
+
 <!-- cargo-sync-readme end -->

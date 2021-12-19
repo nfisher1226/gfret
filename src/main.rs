@@ -2,6 +2,7 @@
 //! Contents
 //! ========
 //! * [Introduction](#introduction)
+//! * [Getting Gfret](#getting-gfret)
 //! * [Usage](#usage)
 //!   * [Cli](#running-the-command-line-interface)
 //!   * [Gui](#running-the-gui)
@@ -17,12 +18,13 @@
 //! templates for instruments ranging from a piccolo mandolin to an upright bass.
 //! Multiscale designs are also supported. Currently, all measurements are
 //! expressed in metric units only.
-//! ## Running the gui
-//! Calling the program by invoking ```gfret``` without any arguments will run
-//! the Gtk interface. Additionally, a .desktop file and icon are included and
-//! will be installed if the program is installed using the included
-//! ```Makefile```, and can be used for launching the program from desktop menus
-//! or creating shortcuts.
+//! ## Getting Gfret
+//! *Gfret* is distributed primarily in source form. The main repo is at
+//! [codeberg.org](https://codeberg.org/jeang3nie/gfret) with mirrors at
+//! [gitlab](https://gitlab.com/jeang3nie/gfret) and
+//! [gibub.com](https://github.com/nfisher1226/gfret). Releases are recommended.
+//! Usage
+//! =====
 //! ## Running the command line interface
 //! ```Bash
 //! gfret-cli
@@ -65,6 +67,12 @@
 //!    -s, --scale <SCALE>
 //!            Scale length in mm [default: 648]
 //! ```
+//! ## Running the gui
+//! Calling the program by invoking ```gfret``` without any arguments will run
+//! the Gtk interface. Additionally, a .desktop file and icon are included and
+//! will be installed if the program is installed using the included
+//! ```Makefile```, and can be used for launching the program from desktop menus
+//! or creating shortcuts.
 //! ## Keybindings
 //! | Key | Action |
 //! | --- | --- |

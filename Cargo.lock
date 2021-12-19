@@ -226,7 +226,7 @@ dependencies = [
 
 [[package]]
 name = "gfret"
-version = "1.99.6"
+version = "2.0.0"
 dependencies = [
  "clap",
  "fretboard_layout",

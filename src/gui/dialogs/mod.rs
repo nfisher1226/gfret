@@ -49,8 +49,7 @@ impl Dialogs {
     fn init_about(window: &gtk::ApplicationWindow) -> gtk::AboutDialog {
         let dlg = gtk::AboutDialog::builder()
             .program_name("Gfret")
-            .authors(vec!("the JeanG3nie".to_string()))
-            .artists(vec!("the JeanG3nie".to_string()))
+            .authors(vec!("Nathan Fisher".to_string()))
             .version(env!("CARGO_PKG_VERSION"))
             .license(include_str!(r"../../../LICENSE"))
             .wrap_license(true)

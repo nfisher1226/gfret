@@ -15,7 +15,6 @@ fretboard_layout = "~0.1"
 lazy_static = "~1.4"
 svg = "~0.10"
 toml = "~0.5"
-xdg-basedir = "~1.0"
 
 [dependencies.clap]
 version = "3.0.0-beta.2"

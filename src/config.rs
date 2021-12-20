@@ -6,17 +6,11 @@ use serde::{Deserialize, Serialize};
 use crate::CONFIGDIR;
 
 use std::path::{Path, PathBuf};
-use std::{fs, process};
+use std::fs;
 
 /// Returns an OS appropriate configuration directory path
 pub fn get_config_dir() -> PathBuf {
-    let mut configdir: PathBuf = match xdg_basedir::get_config_home() {
-        Ok(c) => c,
-        Err(e) => {
-            eprintln!("{}", e);
-            process::exit(1);
-        }
-    };
+    let mut configdir: PathBuf = gtk::glib::user_config_dir();
     let progname = env!("CARGO_PKG_NAME");
     configdir.push(progname);
     if !configdir.exists() {

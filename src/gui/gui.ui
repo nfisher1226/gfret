@@ -90,6 +90,7 @@
           <object class="GtkMenuButton">
             <property name="icon-name">open-menu-symbolic</property>
             <property name="menu-model">actionMenu</property>
+            <property name="tooltip-text" translatable="yes">Opens the application menu.</property>
           </object>
         </child>
       </object>
@@ -142,6 +143,7 @@
                 <child>
                   <object class="GtkComboBoxText" id="combo_box_variant">
                     <property name="active">0</property>
+                    <property name="tooltip-text" translatable="yes">Whether the neck has a single scale for both sides or a &quot;Multiscale&quot;, or fanned fret, layout.</property>
                     <layout>
                       <property name="row">0</property>\
                       <property name="column">0</property>
@@ -155,7 +157,7 @@
                 <child>
                   <object class="GtkScale" id="scale_course">
                     <property name="name">scaleCourse</property>
-                    <property name="tooltip-text" translatable="yes">Scale length course adjustment. If &quot;Multiscale&quot; is checked, this is the bass side scale length.</property>
+                    <property name="tooltip-text" translatable="yes">Scale length course adjustment. If &quot;Multiscale&quot; is selected, this is the bass side scale length.</property>
                     <property name="hexpand">1</property>
                     <property name="adjustment">scaleAdjustment</property>
                     <layout>
@@ -182,6 +184,7 @@
                 <child>
                   <object class="GtkComboBoxText" id="combo_box_handedness">
                     <property name="active">0</property>
+                    <property name="tooltip-text" translatable="yes">Selects between right and left handed necks.</property>
                     <layout>
                       <property name="row">1</property>\
                       <property name="column">0</property>

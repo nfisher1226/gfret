@@ -59,6 +59,7 @@
                     <property name="modal">true</property>
                     <property name="show-default-item">true</property>
                     <property name="show-dialog-item">true</property>
+                    <property name="tooltip-text" translatable="yes">Choose an external editor to run for svg files.</property>
                   </object>
                 </child>
               </object>
@@ -80,6 +81,7 @@
                 <child>
                   <object class="GtkComboBoxText" id="combo_box_units">
                     <property name="active">0</property>
+                    <property name="tooltip-text" translatable="yes">Metric units takes millimeters for input, while Imperial takes inches.</property>
                     <items>
                       <item translatable="yes">Metric</item>
                       <item translatable="yes">Imperial</item>
@@ -206,7 +208,7 @@
                 </child>
                 <child>
                   <object class="GtkSwitch" id="draw_centerline">
-                    <property name="tooltip-text" translatable="yes">If enabled, a dashed horizontal centerline will be added to the rendered image</property>
+                    <property name="tooltip-text" translatable="yes">If enabled, a dashed horizontal centerline will be added to the rendered image to aid in alignment.</property>
                     <property name="halign">end</property>
                     <property name="active">1</property>
                   </object>

@@ -13,7 +13,7 @@
 //! * [Roadmap](#roadmap)
 //!
 //! ## Introduction
-//! Gfret renders an svg image template of a fretboard for a stringed instrument.
+//! *Gfret* renders an svg image template of a fretboard for a stringed instrument.
 //! It has a Gtk interface as well as a command line interface and can produce
 //! templates for instruments ranging from a piccolo mandolin to an upright bass.
 //! Multiscale designs are also supported. Currently, all measurements are
@@ -80,7 +80,8 @@
 //! | Ctrl/Shift/S | save file as |
 //! | Ctrl/E | open with an external program |
 //! | Ctrl/O | load a template from file |
-//! | Ctrl/Shift/P | open the preferences dialog |
+//! | Ctrl/Shift/P | open the `preferences` dialog |
+//! | Ctrl/A | open the `about` dialog |
 //! | Ctrl/Q | quit the program |
 //! ## Templates
 //! Along with the svg output, Gfret will save the specifications used to

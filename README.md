@@ -136,7 +136,7 @@ weight = "Normal"
 > of maintaining the preferences file for you. There will be no need to edit
 > this file by hand in normal use.
 ## Building
-You will need a Rust toolchain installed, including cargo. Gtk+3x is also
+You will need a Rust toolchain installed, including cargo. Gtk+4x is also
 required. To build the program, run ```cargo build --release``` to build a
 release binary in target/release.
 

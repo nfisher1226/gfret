@@ -225,11 +225,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "getopt"
+version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "56e7f04e0bbffb8dbc03791970f0501b5740b11447482ebd1eb9ea4ce12da33b"
+
+[[package]]
 name = "gfret"
 version = "2.0.0"
 dependencies = [
  "clap",
  "fretboard_layout",
+ "getopt",
  "gtk4",
  "lazy_static",
  "rgba_simple",

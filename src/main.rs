@@ -158,7 +158,8 @@
 //! * Support left handed multiscale fretboards **completed 12/21**
 
 use clap::{App, Arg};
-use std::path::PathBuf;
+use fretboard_layout::Config;
+use std::sync::Mutex;
 /// Takes the command line arguments and launches either the gui or the cli
 mod backend;
 /// Handles getting the configuration data to and from disk
@@ -172,7 +173,11 @@ mod template;
 extern crate lazy_static;
 
 lazy_static! {
-    static ref CONFIGDIR: PathBuf = config::get_config_dir();
+    static ref CONFIG: Mutex<Config> = Mutex::new(
+        config::GfretConfig::from_file()
+        .unwrap_or_default()
+        .to_config()
+    );
 }
 
 fn main() {

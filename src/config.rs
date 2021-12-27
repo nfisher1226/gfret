@@ -1,9 +1,7 @@
 #![warn(clippy::all, clippy::pedantic)]
-use fretboard_layout::config::{Config, Font, Units};
+use fretboard_layout::{Config, Font, Units};
 use rgba_simple::{Color, Primary, ReducedRGBA};
 use serde::{Deserialize, Serialize};
-
-use crate::CONFIGDIR;
 
 use std::path::{Path, PathBuf};
 use std::fs;
@@ -21,7 +19,7 @@ pub fn get_config_dir() -> PathBuf {
 
 /// Returns the path to config.toml
 pub fn get_config_file() -> PathBuf {
-    let mut file = CONFIGDIR.clone();
+    let mut file = get_config_dir();
     file.push("config.toml");
     file
 }

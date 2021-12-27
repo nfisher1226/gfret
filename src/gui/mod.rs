@@ -16,9 +16,10 @@ mod adjustments;
 mod dialogs;
 mod file;
 
+use crate::CONFIG;
+use crate::config;
 use crate::config::GfretConfig;
 use crate::template::Template;
-use crate::CONFIGDIR;
 use adjustments::Adjustments;
 use dialogs::Dialogs;
 use file::File;
@@ -173,23 +174,23 @@ impl Gui {
     /// which will be used by the backend to render the svg image.
     #[allow(clippy::cast_sign_loss)]
     fn get_specs(&self) -> Specs {
-        Specs {
-            scale: self.scale.value(),
-            count: self.fret_count.value_as_int() as u32,
-            variant: self.get_variant(),
-            nut: self.nut_width.value(),
-            bridge: match GfretConfig::from_file().unwrap_or_default().units {
+        Specs::init(
+            self.scale.value(),
+            self.fret_count.value_as_int() as u32,
+            self.get_variant(),
+            self.nut_width.value(),
+            match CONFIG.lock().unwrap().units {
                 Units::Metric => self.bridge_spacing.value() + 6.0,
                 Units::Imperial => self.bridge_spacing.value() + (6.0 / 20.4),
             },
-            pfret: self.perpendicular_fret.value(),
-        }
+            self.perpendicular_fret.value(),
+        )
     }
 
     /// Performs a full render of the svg image without saving to disk, and
     /// refreshes the image preview with the new data.
     fn draw_preview(&self, swap: bool) {
-        let cfg = GfretConfig::from_file().unwrap_or_default().to_config();
+        let cfg = CONFIG.lock().unwrap().clone();
         let image = self.get_specs().create_document(Some(cfg)).to_string();
         let bytes = gtk::glib::Bytes::from_owned(image.into_bytes());
         let stream = MemoryInputStream::from_bytes(&bytes);
@@ -294,7 +295,7 @@ impl Gui {
     fn save(&self) {
         if self.file.saved() {
             if let Some(filename) = self.file.filename() {
-                let cfg = GfretConfig::from_file().unwrap_or_default().to_config();
+                let cfg = CONFIG.lock().unwrap().clone();
                 let document = self.get_specs().create_document(Some(cfg));
                 self.save_template(&filename);
                 self.file.do_save(&filename, &document);
@@ -308,7 +309,7 @@ impl Gui {
     fn save_as(&self, res: ResponseType) {
         if res == ResponseType::Accept {
             if let Some(filename) = self.dialogs.get_save_path() {
-                let cfg = GfretConfig::from_file().unwrap_or_default().to_config();
+                let cfg = CONFIG.lock().unwrap().clone();
                 let document = self.get_specs().create_document(Some(cfg));
                 self.save_template(&filename);
                 self.file.do_save(&filename, &document);
@@ -377,11 +378,12 @@ pub fn run() {
 
 fn build_ui(application: &Application) {
     let gui = Rc::new(Gui::init());
-    let units = GfretConfig::from_file().unwrap_or_default().units;
+    let cfg = CONFIG.lock().unwrap().clone();
+    let units = cfg.units;
     if units == Units::Imperial {
         gui.adjustments.to_imperial();
     }
-    let mut statefile = CONFIGDIR.clone();
+    let mut statefile = config::get_config_dir();
     statefile.push("state.toml");
     if statefile.exists() {
         if let Some(template) = Template::load_from_file(statefile) {
@@ -463,7 +465,7 @@ fn build_ui(application: &Application) {
         .window()
         .connect_response(clone!(@weak gui => move |dlg,res| {
             if res == ResponseType::Accept {
-                let units = GfretConfig::from_file().unwrap_or_default().units;
+                let units = CONFIG.lock().unwrap().units;
                 gui.dialogs.preferences.save_prefs();
                 let new = GfretConfig::from_file().unwrap().units;
                 if units != new {

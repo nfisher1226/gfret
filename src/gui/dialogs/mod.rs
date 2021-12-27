@@ -1,9 +1,10 @@
 #![warn(clippy::all, clippy::pedantic)]
-use fretboard_layout::config::{Font, FontWeight, Units};
+use fretboard_layout::{Font, FontWeight, Units};
 use gtk::pango::FontDescription;
 use gtk::prelude::*;
 use rgba_simple::{Color::Reduced, Convert, ReducedRGBA};
 
+use crate::CONFIG;
 use crate::config::GfretConfig;
 
 use std::env;
@@ -358,6 +359,8 @@ impl PrefWidgets {
     pub fn save_prefs(&self) {
         let config_file = crate::config::get_config_file();
         let config_data = self.config_from_widgets();
+        let mut cfg = CONFIG.lock().unwrap();
+        *cfg = config_data.to_config();
         config_data.save_to_file(&config_file);
     }
 

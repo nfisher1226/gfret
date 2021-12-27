@@ -1,7 +1,7 @@
 #![warn(clippy::all, clippy::pedantic)]
-use crate::CONFIGDIR;
 use fretboard_layout::Handedness;
 use serde::{Deserialize, Serialize};
+use crate::config;
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -52,7 +52,7 @@ impl Template {
     }
     /// Saves the program state on exit
     pub fn save_statefile(&self) {
-        let mut statefile = CONFIGDIR.clone();
+        let mut statefile = config::get_config_dir();
         statefile.push("state.toml");
         self.save_to_file(&statefile);
     }

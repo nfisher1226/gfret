@@ -18,54 +18,52 @@ pub fn run(matches: &ArgMatches) {
                 process::exit(1);
             }
         };
-        let specs = Specs {
-            scale,
-            count: match cli_matches.value_of_t("COUNT") {
-                Ok(c) => c,
-                Err(e) => {
-                    eprintln!("{}", e);
-                    process::exit(1);
-                }
-            },
-            variant: if cli_matches.occurrences_of("MULTI") > 0 {
-                let scale = match cli_matches.value_of_t("MULTI") {
-                    Ok(c) => c,
-                    Err(e) => {
-                        eprintln!("{}", e);
-                        process::exit(1);
-                    }
-                };
-                let hand = if cli_matches.occurrences_of("LEFT") > 0 {
-                    Handedness::Left
-                } else {
-                    Handedness::Right
-                };
-                Variant::Multiscale(scale, hand)
-            } else {
-                Variant::Monoscale
-            },
-            nut: match cli_matches.value_of_t("NUT") {
-                Ok(c) => c,
-                Err(e) => {
-                    eprintln!("{}", e);
-                    process::exit(1);
-                }
-            },
-            bridge: match cli_matches.value_of_t::<f64>("BRIDGE") {
-                Ok(c) => c + 6.0,
-                Err(e) => {
-                    eprintln!("{}", e);
-                    process::exit(1);
-                }
-            },
-            pfret: match cli_matches.value_of_t("PERPENDICULAR") {
-                Ok(c) => c,
-                Err(e) => {
-                    eprintln!("{}", e);
-                    process::exit(1);
-                }
-            },
+        let count = match cli_matches.value_of_t("COUNT") {
+            Ok(c) => c,
+            Err(e) => {
+                eprintln!("{}", e);
+                process::exit(1);
+            }
         };
+        let variant = if cli_matches.occurrences_of("MULTI") > 0 {
+            let scale = match cli_matches.value_of_t("MULTI") {
+                Ok(c) => c,
+                Err(e) => {
+                    eprintln!("{}", e);
+                    process::exit(1);
+                }
+            };
+            let hand = if cli_matches.occurrences_of("LEFT") > 0 {
+                Handedness::Left
+            } else {
+                Handedness::Right
+            };
+            Variant::Multiscale(scale, hand)
+        } else {
+            Variant::Monoscale
+        };
+        let nut = match cli_matches.value_of_t("NUT") {
+            Ok(c) => c,
+            Err(e) => {
+                eprintln!("{}", e);
+                process::exit(1);
+            }
+        };
+        let bridge = match cli_matches.value_of_t::<f64>("BRIDGE") {
+            Ok(c) => c + 6.0,
+            Err(e) => {
+                eprintln!("{}", e);
+                process::exit(1);
+            }
+        };
+        let pfret = match cli_matches.value_of_t("PERPENDICULAR") {
+            Ok(c) => c,
+            Err(e) => {
+                eprintln!("{}", e);
+                process::exit(1);
+            }
+        };
+        let specs = Specs::init(scale, count, variant, nut, bridge, pfret);
         let doc = specs.create_document(None);
         let output = cli_matches.value_of("OUTPUT").unwrap().to_string();
         if output == "-" {

@@ -12,7 +12,7 @@ license = "BSD-2-Clause"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-fretboard_layout = { git = "https://codeberg.org/jeang3nie/fretboard-layout.git", branch = "loki" }
+fretboard_layout = "~0.2"
 lazy_static = "~1.4"
 svg = "~0.10"
 toml = "~0.5"

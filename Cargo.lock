@@ -107,7 +107,8 @@ dependencies = [
 [[package]]
 name = "fretboard_layout"
 version = "0.2.0"
-source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git?branch=loki#7a61ac69ab98d3522a59507274a6897e00a226af"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "358ce78eea62caaba4a3ecb7ce2eea36f778abc7cd9c4daa9889e54dd275ebbd"
 dependencies = [
  "rgba_simple",
  "serde",

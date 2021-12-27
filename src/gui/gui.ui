@@ -171,7 +171,7 @@
                     <property name="name">scaleFine</property>
                     <property name="tooltip-text" translatable="yes">Scale length fine adjustment. If &quot;Multiscale&quot; is selected, then this will be the bass side scale length.</property>
                     <property name="adjustment">scaleAdjustment</property>
-                    <property name="digits">1</property>
+                    <property name="digits">2</property>
                     <property name="numeric">1</property>
                     <property name="update-policy">if-valid</property>
                     <property name="value">655</property>
@@ -215,7 +215,7 @@
                     <property name="tooltip-text" translatable="yes">Treble scale length fine adjustment</property>
                     <property name="text" translatable="yes">610.0</property>
                     <property name="adjustment">trebleScaleAdjustment</property>
-                    <property name="digits">1</property>
+                    <property name="digits">2</property>
                     <property name="numeric">1</property>
                     <property name="update-policy">if-valid</property>
                     <property name="value">610</property>

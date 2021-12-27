@@ -28,6 +28,7 @@ struct Gui {
     window: gtk::ApplicationWindow,
     image_preview: gtk::Picture,
     scale: gtk::Scale,
+    scale_fine: gtk::SpinButton,
     variant: gtk::ComboBox,
     handedness: gtk::ComboBox,
     scale_multi_course: gtk::Scale,
@@ -116,6 +117,7 @@ impl Gui {
             window: window.clone(),
             image_preview: builder.object("image_preview").unwrap(),
             scale: builder.object("scale_course").unwrap(),
+            scale_fine: builder.object("scale_fine").unwrap(),
             variant: builder.object("combo_box_variant").unwrap(),
             handedness: builder.object("combo_box_handedness").unwrap(),
             scale_multi_course: builder.object("scale_multi_course").unwrap(),
@@ -342,6 +344,10 @@ impl Gui {
         self.nut_width.set_value(self.nut_width.value() * 20.4);
         self.scale.set_value(self.scale.value() * 20.4);
         self.scale_multi_fine.set_value(self.scale_multi_fine.value() * 20.4);
+        self.bridge_spacing.set_digits(2);
+        self.nut_width.set_digits(2);
+        self.scale_fine.set_digits(2);
+        self.scale_multi_fine.set_digits(2);
     }
 
     fn to_imperial(&self) {
@@ -350,6 +356,10 @@ impl Gui {
         self.nut_width.set_value(self.nut_width.value() / 20.4);
         self.scale.set_value(self.scale.value() / 20.4);
         self.scale_multi_fine.set_value(self.scale_multi_fine.value() / 20.4);
+        self.bridge_spacing.set_digits(3);
+        self.nut_width.set_digits(3);
+        self.scale_fine.set_digits(3);
+        self.scale_multi_fine.set_digits(3);
     }
 
     /// Saves the program state before exiting

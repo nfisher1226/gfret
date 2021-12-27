@@ -110,7 +110,7 @@
                     <property name="halign">end</property>
                     <property name="text" translatable="yes">10</property>
                     <property name="adjustment">border_adjustment</property>
-                    <property name="digits">1</property>
+                    <property name="digits">2</property>
                     <property name="numeric">1</property>
                     <property name="value">10</property>
                   </object>

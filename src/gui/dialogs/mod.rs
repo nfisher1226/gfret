@@ -223,6 +223,7 @@ impl PrefWidgets {
         adjustment.set_step_increment(0.10);
         adjustment.set_page_increment(5.0);
         self.border.set_value(val * 20.4);
+        self.border.set_digits(2);
 
         val = self.line_weight.value();
         adjustment = self.line_weight.adjustment();
@@ -230,6 +231,7 @@ impl PrefWidgets {
         adjustment.set_step_increment(0.10);
         adjustment.set_page_increment(0.50);
         self.line_weight.set_value(val * 20.4);
+        self.line_weight.set_digits(2);
     }
 
     fn to_imperial(&self) {
@@ -239,6 +241,7 @@ impl PrefWidgets {
         adjustment.set_step_increment(0.01);
         adjustment.set_page_increment(0.10);
         self.border.set_value(val / 20.4);
+        self.border.set_digits(3);
 
         val = self.line_weight.value();
         adjustment = self.line_weight.adjustment();
@@ -246,6 +249,7 @@ impl PrefWidgets {
         adjustment.set_step_increment(0.01);
         adjustment.set_page_increment(0.05);
         self.line_weight.set_value(val / 20.4);
+        self.line_weight.set_digits(3);
     }
 
     /// Retreives the commandline for the external editor

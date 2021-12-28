@@ -51,15 +51,22 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkAppChooserButton" id="external_button">
+                  <object class="GtkEntry" id="external_entry">
+                    <property name="halign">fill</property>
+                    <property name="editable">false</property>
+                    <property name="text">inkscape</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="external_button">
                     <property name="receives-default">1</property>
                     <property name="halign">end</property>
-                    <property name="content-type">image/svg+xml</property>
-                    <property name="heading">Gfret - Choose external editor</property>
-                    <property name="modal">true</property>
-                    <property name="show-default-item">true</property>
-                    <property name="show-dialog-item">true</property>
                     <property name="tooltip-text" translatable="yes">Choose an external editor to run for svg files.</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="icon-name">folder</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>

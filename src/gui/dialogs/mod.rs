@@ -2,6 +2,7 @@
 use fretboard_layout::{Font, FontWeight, Units};
 use gtk::pango::FontDescription;
 use gtk::prelude::*;
+use gtk::ResponseType;
 use rgba_simple::{Color::Reduced, Convert, ReducedRGBA};
 
 use crate::CONFIG;
@@ -17,7 +18,8 @@ use std::str::FromStr;
 pub struct PrefWidgets {
     window: gtk::Dialog,
     units: gtk::ComboBoxText,
-    external_button: gtk::AppChooserButton,
+    external_entry: gtk::Entry,
+    external_button: gtk::Button,
     border: gtk::SpinButton,
     line_weight: gtk::SpinButton,
     fretline_color: gtk::ColorButton,
@@ -30,21 +32,53 @@ pub struct PrefWidgets {
     font_chooser: gtk::FontButton,
 }
 
+#[derive(Clone)]
 pub struct Dialogs {
     pub about: gtk::AboutDialog,
     pub save_as: gtk::FileChooserDialog,
     pub open_template: gtk::FileChooserDialog,
+    pub app_chooser: gtk::AppChooserDialog,
     pub preferences: PrefWidgets,
 }
 
 impl Dialogs {
-    pub fn init(window: &gtk::ApplicationWindow, builder: &gtk::Builder) -> Dialogs {
-        Dialogs {
-            about: Dialogs::init_about(window),
-            save_as: Dialogs::init_save_as(window),
-            open_template: Dialogs::init_open_template(window),
-            preferences: Dialogs::init_preferences(window, builder),
-        }
+    pub fn init(window: &gtk::ApplicationWindow, builder: &gtk::Builder) -> Self {
+        let prefs = Self::init_preferences(window, builder);
+
+        let dialogs = Self {
+            about: Self::init_about(window),
+            save_as: Self::init_save_as(window),
+            open_template: Self::init_open_template(window),
+            app_chooser: Self::init_app_chooser(&prefs.window),
+            preferences: prefs,
+        };
+
+        let chooser = dialogs.app_chooser.clone();
+        dialogs.preferences
+            .external_button
+            .connect_clicked(move |_| {
+                chooser.show();
+            });
+
+        let preferences = dialogs.preferences.clone();
+        dialogs.app_chooser.connect_response(move |dlg,res| {
+            if res == ResponseType::Ok {
+                if let Some(app_info) = dlg.app_info() {
+                    if let Some(txt) = app_info.commandline().map(|cmd| {
+                        String::from(cmd.to_str().unwrap())
+                            .split_whitespace()
+                            .next()
+                            .unwrap_or("")
+                            .to_string()
+                    }) {
+                        preferences.set_external(&txt);
+                    }
+                };
+            };
+            dlg.hide();
+        });
+
+        dialogs
     }
 
     fn init_about(window: &gtk::ApplicationWindow) -> gtk::AboutDialog {
@@ -103,6 +137,16 @@ impl Dialogs {
         dlg
     }
 
+    fn init_app_chooser(window: &gtk::Dialog) -> gtk::AppChooserDialog {
+        let dlg = gtk::AppChooserDialog::builder()
+            .content_type("image/svg+xml")
+            .modal(true)
+            .destroy_with_parent(true)
+            .transient_for(window)
+            .build();
+        dlg
+    }
+
     fn init_preferences(window: &gtk::ApplicationWindow, builder: &gtk::Builder) -> PrefWidgets {
         let dlg = PrefWidgets::init(builder);
         dlg.load_config();
@@ -157,7 +201,7 @@ impl Dialogs {
 
 impl PrefWidgets {
     /// Returns a struct of pointers to the widgets that contain state
-    fn init(builder: &gtk::Builder) -> PrefWidgets {
+    fn init(builder: &gtk::Builder) -> Self {
         let ui_src = include_str!("prefs.ui");
         builder.add_from_string(ui_src).unwrap();
         PrefWidgets {
@@ -167,6 +211,9 @@ impl PrefWidgets {
             units: builder
                 .object("combo_box_units")
                 .expect("Error getting 'units'"),
+            external_entry: builder
+                .object("external_entry")
+                .expect("Error getting 'external_entry'"),
             external_button: builder
                 .object("external_button")
                 .expect("Error getting 'external_button'"),
@@ -207,6 +254,10 @@ impl PrefWidgets {
 
     pub fn window(&self) -> gtk::Dialog {
         self.window.clone()
+    }
+
+    fn set_external(&self, txt: &str) {
+        self.external_entry.buffer().set_text(&txt);
     }
 
     fn units(&self) -> Units {
@@ -252,19 +303,8 @@ impl PrefWidgets {
         self.line_weight.set_digits(3);
     }
 
-    /// Retreives the commandline for the external editor
     fn external(&self) -> Option<String> {
-        if let Some(app_info) = self.external_button.app_info() {
-            app_info.commandline().map(|cmd| {
-                String::from(cmd.to_str().unwrap())
-                    .split_whitespace()
-                    .next()
-                    .unwrap_or("")
-                    .to_string()
-            })
-        } else {
-            None
-        }
+        Some(self.external_entry.buffer().text())
     }
 
     /// Converts the value stored in a `gtk::ColorButton` from a `gtk::gdk::RGBA`

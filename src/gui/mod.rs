@@ -109,11 +109,11 @@ impl Actions {
 }
 
 impl Gui {
-    fn init() -> Gui {
+    fn init() -> Self {
         let builder = gtk::Builder::from_string(include_str!("gui.ui"));
         let window: gtk::ApplicationWindow = builder.object("mainWindow").unwrap();
 
-        Gui {
+        Self {
             window: window.clone(),
             image_preview: builder.object("image_preview").unwrap(),
             scale: builder.object("scale_course").unwrap(),

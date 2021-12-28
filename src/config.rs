@@ -60,10 +60,10 @@ impl Default for GfretConfig {
 }
 
 impl GfretConfig {
-    /// Saves Template struct as a .toml file
+    /// Saves Config struct as a .toml file
     pub fn save_to_file(&self, file: &Path) {
         let toml_string = toml::to_string(&self).expect("Could not encode TOML value");
-        fs::write(file, toml_string).expect("Could not write to file!");
+        fs::write(file.clone(), toml_string).expect("Could not write to file!");
     }
 
     /// Deserializes config.toml into a `GfretConfig` struct

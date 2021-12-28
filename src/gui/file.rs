@@ -9,8 +9,8 @@ pub struct File {
 }
 
 impl File {
-    pub fn init() -> File {
-        File {
+    pub fn init() -> Self {
+        Self {
             saved_once: RefCell::new(false),
             saved_current: RefCell::new(false),
             filename: RefCell::new(String::from("")),

@@ -1,7 +1,15 @@
 Contents
 ========
-* [2.0.1](2.0.1-release
+* [2.0.2](2.0.2-release)
+* [2.0.1](2.0.1-release)
 * [2.0](2.0-release)
+
+## 2.0.2 release
+* Preferences dialog updated around external application
+* The external application now remains consistent the next time the dialog is
+  opened
+* Spinbutton fields now change precision to track better against Metric vs
+  Imperial units
 
 ## 2.0.1 release
 * Update `fretboard_layout` crate with cleaned up backend code

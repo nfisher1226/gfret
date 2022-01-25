@@ -1,4 +1,5 @@
 #![warn(clippy::all, clippy::pedantic)]
+#![feature(explicit_generic_args_with_impl_trait)]
 //! Contents
 //! ========
 //! * [Introduction](#introduction)

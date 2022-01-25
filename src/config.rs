@@ -1,6 +1,6 @@
 #![warn(clippy::all, clippy::pedantic)]
 use fretboard_layout::{Config, Font, Units};
-use rgba_simple::{Color, Primary, ReducedRGBA};
+use rgba_simple::{Color, Primary, PrimaryColor, ReducedRGBA};
 use serde::{Deserialize, Serialize};
 
 use std::path::{Path, PathBuf};
@@ -51,9 +51,9 @@ impl Default for GfretConfig {
             external_program: Some(String::from("inkscape")),
             border: 10.0,
             line_weight: 1.0,
-            fretline_color: Color::Reduced(ReducedRGBA::white()),
-            fretboard_color: Color::Reduced(ReducedRGBA::black()),
-            centerline_color: Some(Color::Reduced(ReducedRGBA::blue())),
+            fretline_color: Color::Reduced(ReducedRGBA::primary(PrimaryColor::White)),
+            fretboard_color: Color::Reduced(ReducedRGBA::primary(PrimaryColor::Black)),
+            centerline_color: Some(Color::Reduced(ReducedRGBA::primary(PrimaryColor::Blue))),
             font: Some(Font::default()),
         }
     }

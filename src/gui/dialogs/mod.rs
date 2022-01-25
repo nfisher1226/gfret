@@ -314,10 +314,10 @@ impl PrefWidgets {
     fn color(button: &gtk::ColorButton) -> ReducedRGBA {
         let color = button.rgba();
         ReducedRGBA {
-            red: (color.red * 255.0) as u8,
-            green: (color.green * 255.0) as u8,
-            blue: (color.blue * 255.0) as u8,
-            alpha: (color.alpha * 255.0) as u8,
+            red: (color.red() * 255.0) as u8,
+            green: (color.green() * 255.0) as u8,
+            blue: (color.blue() * 255.0) as u8,
+            alpha: (color.alpha() * 255.0) as u8,
         }
     }
 

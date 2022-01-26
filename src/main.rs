@@ -158,6 +158,7 @@
 //! - [x] Port to Gtk4 **completed 12/21**
 //! - [x] Support changing from metric to imperial measurements **completed 12/21**
 //! - [x] Support left handed multiscale fretboards **completed 12/21**
+//! - [x] Orient left handed output with bass strings on top **completed 1/22**
 
 use clap::{App, Arg};
 use fretboard_layout::Config;

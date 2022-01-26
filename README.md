@@ -152,10 +152,12 @@ Alternatively, you can use the included Makefile to build and install the
 program, adjusting the installation path with the PREFIX and DESTDIR variables.
 
 ## Roadmap
-* For the gui, it would be nice to save state and allow loading specs from and saving
-to templates. **partial implementation 4/7/21** | **completed 5/5/21**
-* Port to Gtk4 **completed 12/21**
-* Support changing from metric to imperial measurements **completed 12/21**
-* Support left handed multiscale fretboards **completed 12/21**
+- [x] For the gui, it would be nice to save state and allow loading specs
+  from and saving to templates. **partial implementation 4/7/21** |
+  **completed 5/5/21**
+- [x] Port to Gtk4 **completed 12/21**
+- [x] Support changing from metric to imperial measurements **completed 12/21**
+- [x] Support left handed multiscale fretboards **completed 12/21**
+- [x] Orient left handed output with bass strings on top **completed 1/22**
 
 <!-- cargo-sync-readme end -->

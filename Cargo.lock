@@ -66,9 +66,9 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "3.0.0-rc.8"
+version = "3.0.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "484f17839417b695a6f4a75c20e49820ba0a1d00aa41ebd8ba0e5dfe0fbc3b74"
+checksum = "2afefa54b5c7dd40918dc1e09f213a171ab5937aadccab45e804780b238f9f43"
 dependencies = [
  "atty",
  "bitflags",
@@ -91,8 +91,9 @@ dependencies = [
 
 [[package]]
 name = "fretboard_layout"
-version = "0.2.1"
-source = "git+https://codeberg.org/jeang3nie/fretboard-layout.git#ff7cc684a9b03f26b44d841675a42db7c7eb8e7c"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "edc367e8dc62d41f1bf6071b894c81275e0690172e44b26179be3e710d437d6b"
 dependencies = [
  "rgba_simple",
  "serde",
@@ -211,7 +212,7 @@ dependencies = [
 
 [[package]]
 name = "gfret"
-version = "2.0.2"
+version = "2.1.0"
 dependencies = [
  "clap",
  "fretboard_layout",
@@ -609,7 +610,8 @@ dependencies = [
 [[package]]
 name = "rgba_simple"
 version = "0.5.0"
-source = "git+https://codeberg.org/jeang3nie/rgba-simple.git#c05a47f57b1595469a7943ccdd7e2c8417068a99"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "424be68a7aeac0f151545d661426545e54dee8f19e61ff983ad821334fcfd6b2"
 dependencies = [
  "gdk4",
  "serde",

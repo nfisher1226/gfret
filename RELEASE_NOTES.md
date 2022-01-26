@@ -1,8 +1,14 @@
 Contents
 ========
+* [2.1](2.1-release)
 * [2.0.2](2.0.2-release)
 * [2.0.1](2.0.1-release)
 * [2.0](2.0-release)
+
+## 2.1 release
+* Update to `gtk4-rs` version `0.4`
+* Orient left handed output with bass strings on top (via `fretboard-layout` crate)
+* Update `clap` to 3.0 release branch
 
 ## 2.0.2 release
 * Preferences dialog updated around external application

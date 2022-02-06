@@ -48,22 +48,24 @@
     <property name="page-increment">10</property>
   </object>
   <menu id="actionMenu">
-    <item>
-      <attribute name="label">Open Template</attribute>
-      <attribute name="action">win.open_template</attribute>
-    </item>
-    <item>
-      <attribute name="label">Save</attribute>
-      <attribute name="action">win.save</attribute>
-    </item>
-    <item>
-      <attribute name="label">Save As</attribute>
-      <attribute name="action">win.save_as</attribute>
-    </item>
-    <item>
-      <attribute name="label">Open External</attribute>
-      <attribute name="action">win.open_external</attribute>
-    </item>
+    <section>
+      <item>
+        <attribute name="label">Open Template</attribute>
+        <attribute name="action">win.open_template</attribute>
+      </item>
+      <item>
+        <attribute name="label">Save</attribute>
+        <attribute name="action">win.save</attribute>
+      </item>
+      <item>
+        <attribute name="label">Save As</attribute>
+        <attribute name="action">win.save_as</attribute>
+      </item>
+      <item>
+        <attribute name="label">Open External</attribute>
+        <attribute name="action">win.open_external</attribute>
+      </item>
+    </section>
     <section>
       <item>
         <attribute name="label">Preferences</attribute>
@@ -74,10 +76,12 @@
         <attribute name="action">win.about</attribute>
       </item>
     </section>
-    <item>
-      <attribute name="label">Quit</attribute>
-      <attribute name="action">win.quit</attribute>
-    </item>
+    <section>
+      <item>
+        <attribute name="label">Quit</attribute>
+        <attribute name="action">win.quit</attribute>
+      </item>
+    </section>
   </menu>
   <object id="mainWindow" class="GtkApplicationWindow">
     <property name="title">Gfret - &lt;unsaved&gt;</property>

@@ -56,12 +56,4 @@ impl Template {
         statefile.push("state.toml");
         self.save_to_file(&statefile);
     }
-
-    /// Pushes a template file to the statefile
-    pub fn to_statefile(filename: String) {
-        let path = PathBuf::from(filename);
-        if let Some(template) = Template::load_from_file(path) {
-            template.save_statefile();
-        }
-    }
 }

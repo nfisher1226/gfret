@@ -5,8 +5,6 @@ use fretboard_layout::{Handedness, Specs, Variant};
 use std::process;
 use std::process::Command;
 
-use crate::template::Template;
-
 /// When this function runs it either launches the gui or calls run(&specs) to
 /// generate output, based on the command line arguments given to the program
 pub fn run(matches: &ArgMatches) {
@@ -86,9 +84,6 @@ pub fn run(matches: &ArgMatches) {
             }
         }
     } else {
-        if let Some(tmpl) = matches.value_of("TEMPLATE") {
-            Template::to_statefile(tmpl.to_string());
-        }
-        crate::gui::run();
+        crate::gui::run(matches.value_of("TEMPLATE"));
     }
 }

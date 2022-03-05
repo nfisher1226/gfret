@@ -369,7 +369,11 @@ impl Gui {
     }
 }
 
-pub fn run() {
+pub fn run(template: Option<&str>) {
+    let template = match template {
+        Some(t) => t.to_string(),
+        None => String::from(""),
+    };
     let application = gtk::Application::new(
         Some("org.hitchhiker-linux.gfret"),
         gtk::gio::ApplicationFlags::default(),
@@ -382,11 +386,18 @@ pub fn run() {
         "",
         None,
     );
-    application.connect_activate(build_ui);
+    application.connect_activate(move |app| {
+        let gui = build_ui(app);
+        if &template != "" {
+            if let Some(template) = Template::load_from_file(PathBuf::from(template.clone())) {
+                gui.load_template(&template);
+            }
+        }
+    });
     application.run();
 }
 
-fn build_ui(application: &Application) {
+fn build_ui(application: &Application) -> Rc<Gui> {
     let gui = Rc::new(Gui::init());
     let cfg = CONFIG.lock().unwrap().clone();
     let units = cfg.units;
@@ -491,4 +502,5 @@ fn build_ui(application: &Application) {
         }));
 
     gui.window.show();
+    gui
 }

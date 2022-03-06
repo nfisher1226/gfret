@@ -370,10 +370,7 @@ impl Gui {
 }
 
 pub fn run(template: Option<&str>) {
-    let template = match template {
-        Some(t) => t.to_string(),
-        None => String::from(""),
-    };
+    let template = template.map(|x| x.to_string());
     let application = gtk::Application::new(
         Some("org.hitchhiker-linux.gfret"),
         gtk::gio::ApplicationFlags::default(),
@@ -388,7 +385,7 @@ pub fn run(template: Option<&str>) {
     );
     application.connect_activate(move |app| {
         let gui = build_ui(app);
-        if &template != "" {
+        if let Some(template) = &template {
             if let Some(template) = Template::load_from_file(PathBuf::from(template.clone())) {
                 gui.load_template(&template);
             }

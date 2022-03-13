@@ -53,16 +53,16 @@ $(ICONDIR)/scalable/apps/$(PROGNAME).svg: $(PROGNAME).svg | $(ICONDIR)/scalable/
 	install -m644 $< $@
 
 $(ICON128): $(PROGNAME).svg | $(ICON128DIR)
-	inkscape $< -w 128 -h 128 -o $@
+	rsvg-convert $< -w 128 -h 128 -o $@
 
 $(ICON64): $(PROGNAME).svg | $(ICON64DIR)
-	inkscape $< -w 64 -h 64 -o $@
+	rsvg-convert $< -w 64 -h 64 -o $@
 
 $(ICON48): $(PROGNAME).svg | $(ICON48DIR)
-	inkscape $< -w 48 -h 48 -o $@
+	rsvg-convert $< -w 48 -h 48 -o $@
 
 $(ICON32): $(PROGNAME).svg | $(ICON32DIR)
-	inkscape $< -w 32 -h 32 -o $@
+	rsvg-convert $< -w 32 -h 32 -o $@
 
 $(INSTALLDIRS):
 	install -d $@

@@ -1,10 +1,13 @@
 #![warn(clippy::all, clippy::pedantic)]
-use fretboard_layout::Handedness;
-use serde::{Deserialize, Serialize};
-use crate::config;
-
-use std::fs;
-use std::path::{Path, PathBuf};
+use {
+    crate::config,
+    fretboard_layout::Handedness,
+    serde::{Deserialize, Serialize},
+    std::{
+        fs,
+        path::{Path, PathBuf},
+    },
+};
 
 /// The Template struct defines a data set that can be loaded to return to some
 /// previous state in the program or to save a common design to return to later

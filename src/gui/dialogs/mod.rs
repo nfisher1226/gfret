@@ -1,16 +1,23 @@
 #![warn(clippy::all, clippy::pedantic)]
-use fretboard_layout::{Font, FontWeight, Units};
-use gtk::pango::FontDescription;
-use gtk::prelude::*;
-use gtk::ResponseType;
-use rgba_simple::{Color::Reduced, Convert, ReducedRGBA};
-
-use crate::CONFIG;
-use crate::config::GfretConfig;
-
-use std::env;
-use std::path::PathBuf;
-use std::str::FromStr;
+use {
+    fretboard_layout::{Font, FontWeight, Units},
+    gtk::{
+        pango::FontDescription,
+        prelude::*,
+        DialogFlags,
+        ResponseType
+    },
+    rgba_simple::{Color::Reduced, Convert, ReducedRGBA},
+    crate::{
+        config::GfretConfig,
+        CONFIG,
+    },
+    std::{
+        env,
+        path::PathBuf,
+        str::FromStr,
+    },
+};
 
 /// Handles on the widgets in the preferences dialog window for which we need to
 /// save data
@@ -54,14 +61,15 @@ impl Dialogs {
         };
 
         let chooser = dialogs.app_chooser.clone();
-        dialogs.preferences
+        dialogs
+            .preferences
             .external_button
             .connect_clicked(move |_| {
                 chooser.show();
             });
 
         let preferences = dialogs.preferences.clone();
-        dialogs.app_chooser.connect_response(move |dlg,res| {
+        dialogs.app_chooser.connect_response(move |dlg, res| {
             if res == ResponseType::Ok {
                 if let Some(app_info) = dlg.app_info() {
                     if let Some(txt) = app_info.commandline().map(|cmd| {
@@ -84,7 +92,7 @@ impl Dialogs {
     fn init_about(window: &gtk::ApplicationWindow) -> gtk::AboutDialog {
         let dlg = gtk::AboutDialog::builder()
             .program_name("Gfret")
-            .authors(vec!("Nathan Fisher".to_string()))
+            .authors(vec!["Nathan Fisher".to_string()])
             .version(env!("CARGO_PKG_VERSION"))
             .license(include_str!(r"../../../LICENSE"))
             .wrap_license(true)
@@ -138,13 +146,7 @@ impl Dialogs {
     }
 
     fn init_app_chooser(window: &gtk::Dialog) -> gtk::AppChooserDialog {
-        let dlg = gtk::AppChooserDialog::builder()
-            .content_type("image/svg+xml")
-            .modal(true)
-            .destroy_with_parent(true)
-            .transient_for(window)
-            .build();
-        dlg
+        gtk::AppChooserDialog::for_content_type(Some(window), DialogFlags::all(), "image/svg+xml")
     }
 
     fn init_preferences(window: &gtk::ApplicationWindow, builder: &gtk::Builder) -> PrefWidgets {

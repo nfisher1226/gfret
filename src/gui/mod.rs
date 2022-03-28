@@ -1,28 +1,24 @@
 #![warn(clippy::all, clippy::pedantic)]
-use fretboard_layout::{Handedness, Specs, Units, Variant};
-use gtk::gdk_pixbuf::Pixbuf;
-use gtk::gio::{Cancellable, MemoryInputStream, SimpleAction};
-use gtk::glib::char::Char;
-use gtk::glib;
-use gtk::glib::{clone, OptionArg, OptionFlags};
-use gtk::prelude::*;
-use gtk::{Application, ResponseType};
-
-use std::path::PathBuf;
-use std::process::Command;
-use std::rc::Rc;
-
 mod adjustments;
 mod dialogs;
 mod file;
 
-use crate::CONFIG;
-use crate::config;
-use crate::config::GfretConfig;
-use crate::template::Template;
-use adjustments::Adjustments;
-use dialogs::Dialogs;
-use file::File;
+use {
+    crate::{config, config::GfretConfig, template::Template, CONFIG},
+    adjustments::Adjustments,
+    dialogs::Dialogs,
+    file::File,
+    fretboard_layout::{Handedness, Specs, Units, Variant},
+    gtk::{
+        gdk_pixbuf::Pixbuf,
+        gio::{Cancellable, MemoryInputStream, SimpleAction},
+        glib,
+        glib::{char::Char, clone, OptionArg, OptionFlags},
+        prelude::*,
+        Application, ResponseType,
+    },
+    std::{path::PathBuf, process::Command, rc::Rc},
+};
 
 struct Gui {
     window: gtk::ApplicationWindow,
@@ -72,10 +68,9 @@ impl Actions {
                 gui.dialogs.open_template.show();
             }));
 
-        self.save
-            .connect_activate(clone!(@weak gui => move |_, _| {
-                gui.save();
-            }));
+        self.save.connect_activate(clone!(@weak gui => move |_, _| {
+            gui.save();
+        }));
 
         self.save_as
             .connect_activate(clone!(@weak gui => move |_, _| {
@@ -100,11 +95,10 @@ impl Actions {
                 gui.dialogs.about.show();
             }));
 
-        self.quit
-            .connect_activate(clone!(@weak gui => move |_, _| {
-                gui.cleanup();
-                gui.window.close();
-            }));
+        self.quit.connect_activate(clone!(@weak gui => move |_, _| {
+            gui.cleanup();
+            gui.window.close();
+        }));
     }
 }
 
@@ -197,9 +191,8 @@ impl Gui {
         let bytes = gtk::glib::Bytes::from_owned(image.into_bytes());
         let stream = MemoryInputStream::from_bytes(&bytes);
         let width = self.image_preview.size(gtk::Orientation::Horizontal);
-        let pixbuf = Pixbuf::from_stream_at_scale(
-            &stream, width, -1, true, Option::<&Cancellable>::None,
-        );
+        let pixbuf =
+            Pixbuf::from_stream_at_scale(&stream, width, -1, true, Option::<&Cancellable>::None);
         self.image_preview.set_pixbuf(Some(&pixbuf.unwrap()));
         if swap {
             self.file.unset_current();
@@ -229,8 +222,10 @@ impl Gui {
     /// Updates the title of the program window with the name of the output file.
     fn set_window_title(&self) {
         if !self.file.saved() {
-            self.window
-                .set_title(Some(&format!("Gfret - {} - <unsaved>", env!("CARGO_PKG_VERSION"))));
+            self.window.set_title(Some(&format!(
+                "Gfret - {} - <unsaved>",
+                env!("CARGO_PKG_VERSION")
+            )));
         } else if self.file.current() {
             if let Some(filename) = self.file.filename() {
                 self.window.set_title(Some(&format!(
@@ -340,10 +335,12 @@ impl Gui {
 
     fn to_metric(&self) {
         self.adjustments.to_metric();
-        self.bridge_spacing.set_value(self.bridge_spacing.value() * 20.4);
+        self.bridge_spacing
+            .set_value(self.bridge_spacing.value() * 20.4);
         self.nut_width.set_value(self.nut_width.value() * 20.4);
         self.scale.set_value(self.scale.value() * 20.4);
-        self.scale_multi_fine.set_value(self.scale_multi_fine.value() * 20.4);
+        self.scale_multi_fine
+            .set_value(self.scale_multi_fine.value() * 20.4);
         self.bridge_spacing.set_digits(2);
         self.nut_width.set_digits(2);
         self.scale_fine.set_digits(2);
@@ -352,10 +349,12 @@ impl Gui {
 
     fn to_imperial(&self) {
         self.adjustments.to_imperial();
-        self.bridge_spacing.set_value(self.bridge_spacing.value() / 20.4);
+        self.bridge_spacing
+            .set_value(self.bridge_spacing.value() / 20.4);
         self.nut_width.set_value(self.nut_width.value() / 20.4);
         self.scale.set_value(self.scale.value() / 20.4);
-        self.scale_multi_fine.set_value(self.scale_multi_fine.value() / 20.4);
+        self.scale_multi_fine
+            .set_value(self.scale_multi_fine.value() / 20.4);
         self.bridge_spacing.set_digits(3);
         self.nut_width.set_digits(3);
         self.scale_fine.set_digits(3);
@@ -411,8 +410,10 @@ fn build_ui(application: &Application) -> Rc<Gui> {
 
     gui.add_actions(application).connect(&gui);
 
-    gui.window
-        .set_title(Some(&format!("Gfret - {} - <unsaved>", env!("CARGO_PKG_VERSION"))));
+    gui.window.set_title(Some(&format!(
+        "Gfret - {} - <unsaved>",
+        env!("CARGO_PKG_VERSION")
+    )));
 
     gui.window.set_application(Some(application));
     gui.toggle_multi();

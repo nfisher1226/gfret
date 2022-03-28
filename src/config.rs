@@ -1,10 +1,13 @@
 #![warn(clippy::all, clippy::pedantic)]
-use fretboard_layout::{Config, Font, Units};
-use rgba_simple::{Color, Primary, PrimaryColor, ReducedRGBA};
-use serde::{Deserialize, Serialize};
-
-use std::path::{Path, PathBuf};
-use std::fs;
+use {
+    fretboard_layout::{Config, Font, Units},
+    rgba_simple::{Color, Primary, PrimaryColor, ReducedRGBA},
+    serde::{Deserialize, Serialize},
+    std::{
+        fs,
+        path::{Path, PathBuf},
+    },
+};
 
 /// Returns an OS appropriate configuration directory path
 pub fn get_config_dir() -> PathBuf {

@@ -35,8 +35,10 @@ impl Adjustments {
         self.scale.set_step_increment(1.0);
         self.scale.set_page_increment(10.0);
 
-        self.treble_scale.set_lower(self.treble_scale.lower() * 20.4);
-        self.treble_scale.set_upper(self.treble_scale.upper() * 20.4);
+        self.treble_scale
+            .set_lower(self.treble_scale.lower() * 20.4);
+        self.treble_scale
+            .set_upper(self.treble_scale.upper() * 20.4);
         self.treble_scale.set_step_increment(1.0);
         self.treble_scale.set_page_increment(10.0);
     }
@@ -57,8 +59,10 @@ impl Adjustments {
         self.scale.set_step_increment(0.125);
         self.scale.set_page_increment(1.0);
 
-        self.treble_scale.set_lower(self.treble_scale.lower() / 20.4);
-        self.treble_scale.set_upper(self.treble_scale.upper() / 20.4);
+        self.treble_scale
+            .set_lower(self.treble_scale.lower() / 20.4);
+        self.treble_scale
+            .set_upper(self.treble_scale.upper() / 20.4);
         self.treble_scale.set_step_increment(0.125);
         self.treble_scale.set_page_increment(1.0);
     }

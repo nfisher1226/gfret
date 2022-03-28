@@ -17,9 +17,7 @@ fretboard_layout = "~0.3"
 lazy_static = "~1.4"
 svg = "~0.10"
 toml = "~0.5"
-
-[dependencies.clap]
-version = "~3.0"
+clap = "~3.1"
 
 [dependencies.gtk]
 version = "~0.4"
@@ -32,3 +30,7 @@ features = ["derive"]
 [dependencies.rgba_simple]
 version = "~0.5"
 features = ["gdk"]
+
+[build-dependencies]
+clap = "~3.1"
+clap_complete = "~3.1"

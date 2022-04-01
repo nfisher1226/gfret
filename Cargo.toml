@@ -12,6 +12,10 @@ license = "BSD-2-Clause"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[features]
+png-icons = ["resvg", "usvg", "tiny-skia"]
+completions = ["clap", "clap_complete"]
+
 [dependencies]
 fretboard_layout = "~0.3"
 lazy_static = "~1.4"
@@ -32,8 +36,12 @@ version = "~0.5"
 features = ["gdk"]
 
 [build-dependencies]
-clap = "~3.1"
-clap_complete = "~3.1"
+clap = { version = "~3.1", optional = true }
+clap_complete = { version = "~3.1", optional = true }
+resvg = { version = "0.22", optional = true }
+usvg = { version = "0.22", optional = true }
+tiny-skia = { version = "0.6", optional = true }
+
 
 [profile.release]
 codegen-units = 1

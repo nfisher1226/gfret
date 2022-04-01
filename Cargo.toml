@@ -34,3 +34,8 @@ features = ["gdk"]
 [build-dependencies]
 clap = "~3.1"
 clap_complete = "~3.1"
+
+[profile.release]
+codegen-units = 1
+lto = true
+strip = true

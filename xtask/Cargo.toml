@@ -1,0 +1,14 @@
+[package]
+name = "xtask"
+version = "0.1.0"
+authors = ["Nathan Fisher <jeang3nie@hitchhiker-linux.org>"]
+edition = "2021"
+
+[dependencies]
+clap = "~3.1"
+clap_complete = "~3.1"
+clap_mangen = "0.1"
+resvg = "0.22"
+usvg = "0.22"
+tiny-skia = "0.6"
+

@@ -13,6 +13,8 @@ SRCS          += gui/gui.ui
 SRCS          += gui/mod.rs
 SRCS          += gui/dialogs/mod.rs
 SRCS          += gui/dialogs/prefs.ui
+SRCS          += build.rs
+SRCS          += cli.rs
 SRCS          += main.rs
 SRCS          += template.rs
 INSTALLDIRS   += $(XDGDIR)
@@ -39,9 +41,6 @@ $(PROGNAME): $(SRCS)
 	cargo build --release
 
 install: $(INSTALL_OBJS)
-
-install-strip: $(INSTALL_OBJS)
-	strip -s $<
 
 $(BINDIR)/$(PROGNAME): $(PROGNAME) | $(BINDIR)
 	install -m0755 $< $@

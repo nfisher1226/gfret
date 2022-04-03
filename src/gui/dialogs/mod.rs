@@ -1,22 +1,10 @@
 #![warn(clippy::all, clippy::pedantic)]
 use {
+    crate::{config::GfretConfig, CONFIG},
     fretboard_layout::{Font, FontWeight, Units},
-    gtk::{
-        pango::FontDescription,
-        prelude::*,
-        DialogFlags,
-        ResponseType
-    },
+    gtk::{pango::FontDescription, prelude::*, DialogFlags, ResponseType},
     rgba_simple::{Color::Reduced, Convert, ReducedRGBA},
-    crate::{
-        config::GfretConfig,
-        CONFIG,
-    },
-    std::{
-        env,
-        path::PathBuf,
-        str::FromStr,
-    },
+    std::{env, path::PathBuf, str::FromStr},
 };
 
 /// Handles on the widgets in the preferences dialog window for which we need to

@@ -1,10 +1,10 @@
 #![warn(clippy::all, clippy::pedantic)]
 mod adjustments;
 mod dialogs;
-mod file;
+pub mod file;
 
 use {
-    crate::{config, config::GfretConfig, template::Template, CONFIG},
+    crate::{config, config::GfretConfig, template::Template, CONFIG, FILE},
     adjustments::Adjustments,
     dialogs::Dialogs,
     file::File,
@@ -13,11 +13,11 @@ use {
         gdk_pixbuf::Pixbuf,
         gio::{Cancellable, MemoryInputStream, SimpleAction},
         glib,
-        glib::{char::Char, clone, OptionArg, OptionFlags},
+        glib::{char::Char, clone, MainContext, OptionArg, OptionFlags, PRIORITY_DEFAULT},
         prelude::*,
         Application, ResponseType,
     },
-    std::{path::PathBuf, process::Command, rc::Rc, sync::Mutex},
+    std::{path::PathBuf, process::Command, rc::Rc, sync::Mutex, thread},
 };
 
 struct Gui {
@@ -34,7 +34,6 @@ struct Gui {
     perpendicular_fret: gtk::SpinButton,
     nut_width: gtk::SpinButton,
     bridge_spacing: gtk::SpinButton,
-    file: Mutex<File>,
     dialogs: Dialogs,
     adjustments: Adjustments,
 }
@@ -79,7 +78,7 @@ impl Actions {
 
         self.open_external
             .connect_activate(clone!(@weak gui => move |_, _| {
-                if let Ok(file) = gui.file.try_lock() {
+                if let Ok(file) = FILE.try_lock() {
                     if !file.saved() {
                         gui.dialogs.save_as.show();
                     }
@@ -123,7 +122,6 @@ impl Gui {
             pfret_label: builder.object("pfret_label").unwrap(),
             nut_width: builder.object("nut_width").unwrap(),
             bridge_spacing: builder.object("bridge_spacing").unwrap(),
-            file: Mutex::new(File::default()),
             dialogs: Dialogs::init(&window, &builder),
             adjustments: Adjustments::init(&builder),
         }
@@ -197,7 +195,7 @@ impl Gui {
             Pixbuf::from_stream_at_scale(&stream, width, -1, true, Option::<&Cancellable>::None);
         self.image_preview.set_pixbuf(Some(&pixbuf.unwrap()));
         if swap {
-            if let Ok(mut file) = self.file.try_lock() {
+            if let Ok(mut file) = FILE.try_lock() {
                 file.unset_current();
                 self.set_window_title(&file);
             }
@@ -294,14 +292,46 @@ impl Gui {
     }
 
     fn save(&self) {
-        if let Ok(mut file) = self.file.try_lock() {
+        if let Ok(file) = FILE.try_lock() {
             if file.saved() {
                 if let Some(filename) = file.filename() {
                     let cfg = CONFIG.try_lock().unwrap().clone();
                     let document = self.get_specs().create_document(Some(cfg));
-                    self.save_template(&filename);
-                    file.do_save(&filename, &document);
-                    self.set_window_title(&file);
+                    let template = self.template_from_gui();
+                    let (sender, receiver) = MainContext::channel(PRIORITY_DEFAULT);
+                    let sender = sender.clone();
+                    let name = filename.to_string();
+                    Mutex::unlock(file);
+                    thread::spawn(move || {
+                        let mut file = FILE.try_lock().unwrap();
+                        template.save_to_file(&PathBuf::from(&name));
+                        match file.do_save(&name, &document) {
+                            Ok(_) => {
+                                sender.send("File saved".to_string())
+                                    .expect("Error sending message");
+                            },
+                            Err(e) => {
+                                sender.send(format!("{}", e))
+                                    .expect("Error sending message");
+                            },
+                        }
+                    });
+                    let window = self.window.clone();
+                    let name = filename.to_string();
+                    receiver.attach(None, move |response| {
+                        match response.as_str() {
+                            "File saved" => {
+                                println!("File saved as {}", &name);
+                                window.set_title(Some(&format!(
+                                    "Gfret - {} - {}",
+                                    env!("CARGO_PKG_VERSION"),
+                                    name,
+                                )));
+                            },
+                            _ => eprintln!("Error saving file"),
+                        }
+                        Continue(false)
+                    });
                 }
             } else {
                 self.dialogs.save_as.show();
@@ -314,19 +344,42 @@ impl Gui {
             if let Some(filename) = self.dialogs.get_save_path() {
                 let cfg = CONFIG.try_lock().unwrap().clone();
                 let document = self.get_specs().create_document(Some(cfg));
-                self.save_template(&filename);
-                if let Ok(mut file) = self.file.try_lock() {
-                    file.do_save(&filename, &document);
-                    self.set_window_title(&file);
-                }
+                let template = self.template_from_gui();
+                let (sender, receiver) = MainContext::channel(PRIORITY_DEFAULT);
+                let sender = sender.clone();
+                let name = filename.to_string();
+                thread::spawn(move || {
+                    let mut file = FILE.try_lock().unwrap();
+                    template.save_to_file(&PathBuf::from(&name));
+                    match file.do_save(&name, &document) {
+                        Ok(_) => {
+                            sender.send("File saved".to_string())
+                                .expect("Error sending message");
+                        },
+                        Err(e) => {
+                            sender.send(format!("{e}"))
+                                .expect("Error sending message");
+                        },
+                    }
+                });
+                let window = self.window.clone();
+                let name = filename.to_string();
+                receiver.attach(None, move |response| {
+                    match response.as_str() {
+                        "File saved" => {
+                            println!("File saved as {}", &name);
+                            window.set_title(Some(&format!(
+                                "Gfret - {} - {}",
+                                env!("CARGO_PKG_VERSION"),
+                                name,
+                            )));
+                        },
+                        _ => eprintln!("Error saving file"),
+                    }
+                    Continue(false)
+                });
             }
         }
-    }
-
-    /// Saves a template (toml format) to the specified location
-    fn save_template(&self, file: &str) {
-        let data: Template = self.template_from_gui();
-        data.save_to_file(&PathBuf::from(file));
     }
 
     fn open_external(&self, file: &File) {

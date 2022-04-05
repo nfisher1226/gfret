@@ -1,4 +1,5 @@
 #![warn(clippy::all, clippy::pedantic)]
+#![feature(mutex_unlock)]
 #![doc = include_str!("../README.md")]
 
 use {fretboard_layout::Config, std::sync::Mutex};
@@ -21,6 +22,7 @@ lazy_static! {
             .unwrap_or_default()
             .to_config()
     );
+    static ref FILE: Mutex<gui::file::File> = Mutex::new(gui::file::File::default());
 }
 
 fn main() {

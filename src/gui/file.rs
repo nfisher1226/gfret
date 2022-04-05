@@ -1,58 +1,43 @@
 #![warn(clippy::all, clippy::pedantic)]
-use std::cell::RefCell;
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct File {
-    saved_once: RefCell<bool>,
-    saved_current: RefCell<bool>,
-    filename: RefCell<String>,
+    saved_once: bool,
+    saved_current: bool,
+    filename: String,
 }
 
 impl File {
-    pub fn init() -> Self {
-        Self {
-            saved_once: RefCell::new(false),
-            saved_current: RefCell::new(false),
-            filename: RefCell::new(String::from("")),
-        }
-    }
-
     pub fn saved(&self) -> bool {
-        *self.saved_once.borrow()
-    }
-
-    pub fn set_saved(&self) {
-        self.saved_once.swap(&RefCell::new(true));
+        self.saved_once
     }
 
     pub fn filename(&self) -> Option<String> {
         if self.saved() {
-            Some(self.filename.borrow().to_string())
+            Some(self.filename.to_string())
         } else {
             None
         }
     }
 
     pub fn current(&self) -> bool {
-        *self.saved_current.borrow()
+        self.saved_current
     }
 
-    pub fn set_current(&self) {
-        self.saved_current.swap(&RefCell::new(true));
+    pub fn unset_current(&mut self) {
+        self.saved_current = false
     }
 
-    pub fn unset_current(&self) {
-        self.saved_current.swap(&RefCell::new(false));
-    }
-
-    pub fn do_save(&self, filename: &str, document: &svg::Document) {
+    pub fn do_save(&mut self, filename: &str, document: &svg::Document) {
         match svg::save(&filename, document) {
-            Ok(_) => println!("Output saved as {}.", filename),
+            Ok(_) => {
+                println!("Output saved as {}.", filename);
+                self.saved_once = true;
+                self.saved_current = true;
+                self.filename = String::from(filename);
+            },
             Err(e) => eprintln!("{}", e),
         };
 
-        self.set_saved();
-        self.set_current();
-        self.filename.swap(&RefCell::new(String::from(filename)));
     }
 }

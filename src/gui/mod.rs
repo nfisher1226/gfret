@@ -17,7 +17,7 @@ use {
         prelude::*,
         Application, ResponseType,
     },
-    std::{path::PathBuf, process::Command, rc::Rc},
+    std::{path::PathBuf, process::Command, rc::Rc, sync::Mutex},
 };
 
 struct Gui {
@@ -34,7 +34,7 @@ struct Gui {
     perpendicular_fret: gtk::SpinButton,
     nut_width: gtk::SpinButton,
     bridge_spacing: gtk::SpinButton,
-    file: File,
+    file: Mutex<File>,
     dialogs: Dialogs,
     adjustments: Adjustments,
 }
@@ -79,10 +79,12 @@ impl Actions {
 
         self.open_external
             .connect_activate(clone!(@weak gui => move |_, _| {
-                if !gui.file.saved() {
-                    gui.dialogs.save_as.show();
-                }
-                gui.open_external();
+                if let Ok(file) = gui.file.lock() {
+                    if !file.saved() {
+                        gui.dialogs.save_as.show();
+                    }
+                    gui.open_external();
+                };
             }));
 
         self.preferences
@@ -121,7 +123,7 @@ impl Gui {
             pfret_label: builder.object("pfret_label").unwrap(),
             nut_width: builder.object("nut_width").unwrap(),
             bridge_spacing: builder.object("bridge_spacing").unwrap(),
-            file: File::init(),
+            file: Mutex::new(File::default()),
             dialogs: Dialogs::init(&window, &builder),
             adjustments: Adjustments::init(&builder),
         }
@@ -195,8 +197,10 @@ impl Gui {
             Pixbuf::from_stream_at_scale(&stream, width, -1, true, Option::<&Cancellable>::None);
         self.image_preview.set_pixbuf(Some(&pixbuf.unwrap()));
         if swap {
-            self.file.unset_current();
-            self.set_window_title();
+            if let Ok(mut file) = self.file.lock() {
+                file.unset_current();
+                self.set_window_title(&file);
+            }
         }
     }
 
@@ -220,27 +224,27 @@ impl Gui {
     }
 
     /// Updates the title of the program window with the name of the output file.
-    fn set_window_title(&self) {
-        if !self.file.saved() {
-            self.window.set_title(Some(&format!(
-                "Gfret - {} - <unsaved>",
-                env!("CARGO_PKG_VERSION")
-            )));
-        } else if self.file.current() {
-            if let Some(filename) = self.file.filename() {
+    fn set_window_title(&self, file: &File) {
+            if !file.saved() {
                 self.window.set_title(Some(&format!(
-                    "Gfret - {} - {}",
+                    "Gfret - {} - <unsaved>",
+                    env!("CARGO_PKG_VERSION")
+                )));
+            } else if file.current() {
+                if let Some(filename) = file.filename() {
+                    self.window.set_title(Some(&format!(
+                        "Gfret - {} - {}",
+                        env!("CARGO_PKG_VERSION"),
+                        filename
+                    )));
+                }
+            } else if let Some(filename) = file.filename() {
+                self.window.set_title(Some(&format!(
+                    "Gfret - {} - {}*",
                     env!("CARGO_PKG_VERSION"),
                     filename
                 )));
             }
-        } else if let Some(filename) = self.file.filename() {
-            self.window.set_title(Some(&format!(
-                "Gfret - {} - {}*",
-                env!("CARGO_PKG_VERSION"),
-                filename
-            )));
-        }
     }
 
     /// Sets widget state to match temmplate
@@ -290,16 +294,18 @@ impl Gui {
     }
 
     fn save(&self) {
-        if self.file.saved() {
-            if let Some(filename) = self.file.filename() {
-                let cfg = CONFIG.lock().unwrap().clone();
-                let document = self.get_specs().create_document(Some(cfg));
-                self.save_template(&filename);
-                self.file.do_save(&filename, &document);
-                self.set_window_title();
+        if let Ok(mut file) = self.file.lock() {
+            if file.saved() {
+                if let Some(filename) = file.filename() {
+                    let cfg = CONFIG.lock().unwrap().clone();
+                    let document = self.get_specs().create_document(Some(cfg));
+                    self.save_template(&filename);
+                    file.do_save(&filename, &document);
+                    self.set_window_title(&file);
+                }
+            } else {
+                self.dialogs.save_as.show();
             }
-        } else {
-            self.dialogs.save_as.show();
         }
     }
 
@@ -309,8 +315,10 @@ impl Gui {
                 let cfg = CONFIG.lock().unwrap().clone();
                 let document = self.get_specs().create_document(Some(cfg));
                 self.save_template(&filename);
-                self.file.do_save(&filename, &document);
-                self.set_window_title();
+                if let Ok(mut file) = self.file.lock() {
+                    file.do_save(&filename, &document);
+                    self.set_window_title(&file);
+                }
             }
         }
     }
@@ -322,7 +330,7 @@ impl Gui {
     }
 
     fn open_external(&self) {
-        if let Some(filename) = self.file.filename() {
+        if let Ok(Some(filename)) = self.file.lock().map(|x| x.filename()) {
             let cfg = GfretConfig::from_file().unwrap_or_default();
             if let Some(cmd) = cfg.external_program {
                 match Command::new(&cmd).args(&[&filename]).spawn() {

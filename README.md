@@ -1,5 +1,4 @@
 # Gfret
-<!-- cargo-sync-readme start -->
 Contents
 ========
 * [Introduction](#introduction)
@@ -145,12 +144,15 @@ weight = "Normal"
 > this file by hand in normal use.
 ## Building
 You will need a Rust toolchain installed, including cargo. Gtk+4x is also
-required. To build the program, run ```cargo build --release``` to build a
-release binary in target/release.
-
-Alternatively, you can use the included Makefile to build and install the
-program, adjusting the installation path with the PREFIX and DESTDIR variables.
-
+required.
+```sh
+cargo build --release
+```
+If desired, a release distribution can then be generated which will include the
+binary, svg and png icons, Unix man pages, XDG .desktop file and shell completions.
+```sh
+cargo xtask dist
+```
 ## Roadmap
 - [x] For the gui, it would be nice to save state and allow loading specs
   from and saving to templates. **partial implementation 4/7/21** |
@@ -159,5 +161,3 @@ program, adjusting the installation path with the PREFIX and DESTDIR variables.
 - [x] Support changing from metric to imperial measurements **completed 12/21**
 - [x] Support left handed multiscale fretboards **completed 12/21**
 - [x] Orient left handed output with bass strings on top **completed 1/22**
-
-<!-- cargo-sync-readme end -->

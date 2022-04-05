@@ -79,11 +79,11 @@ impl Actions {
 
         self.open_external
             .connect_activate(clone!(@weak gui => move |_, _| {
-                if let Ok(file) = gui.file.lock() {
+                if let Ok(file) = gui.file.try_lock() {
                     if !file.saved() {
                         gui.dialogs.save_as.show();
                     }
-                    gui.open_external();
+                    gui.open_external(&file);
                 };
             }));
 
@@ -177,7 +177,7 @@ impl Gui {
             self.fret_count.value_as_int() as u32,
             self.get_variant(),
             self.nut_width.value(),
-            match CONFIG.lock().unwrap().units {
+            match CONFIG.try_lock().unwrap().units {
                 Units::Metric => self.bridge_spacing.value() + 6.0,
                 Units::Imperial => self.bridge_spacing.value() + (6.0 / 20.4),
             },
@@ -188,7 +188,7 @@ impl Gui {
     /// Performs a full render of the svg image without saving to disk, and
     /// refreshes the image preview with the new data.
     fn draw_preview(&self, swap: bool) {
-        let cfg = CONFIG.lock().unwrap().clone();
+        let cfg = CONFIG.try_lock().unwrap().clone();
         let image = self.get_specs().create_document(Some(cfg)).to_string();
         let bytes = gtk::glib::Bytes::from_owned(image.into_bytes());
         let stream = MemoryInputStream::from_bytes(&bytes);
@@ -197,7 +197,7 @@ impl Gui {
             Pixbuf::from_stream_at_scale(&stream, width, -1, true, Option::<&Cancellable>::None);
         self.image_preview.set_pixbuf(Some(&pixbuf.unwrap()));
         if swap {
-            if let Ok(mut file) = self.file.lock() {
+            if let Ok(mut file) = self.file.try_lock() {
                 file.unset_current();
                 self.set_window_title(&file);
             }
@@ -294,10 +294,10 @@ impl Gui {
     }
 
     fn save(&self) {
-        if let Ok(mut file) = self.file.lock() {
+        if let Ok(mut file) = self.file.try_lock() {
             if file.saved() {
                 if let Some(filename) = file.filename() {
-                    let cfg = CONFIG.lock().unwrap().clone();
+                    let cfg = CONFIG.try_lock().unwrap().clone();
                     let document = self.get_specs().create_document(Some(cfg));
                     self.save_template(&filename);
                     file.do_save(&filename, &document);
@@ -312,10 +312,10 @@ impl Gui {
     fn save_as(&self, res: ResponseType) {
         if res == ResponseType::Accept {
             if let Some(filename) = self.dialogs.get_save_path() {
-                let cfg = CONFIG.lock().unwrap().clone();
+                let cfg = CONFIG.try_lock().unwrap().clone();
                 let document = self.get_specs().create_document(Some(cfg));
                 self.save_template(&filename);
-                if let Ok(mut file) = self.file.lock() {
+                if let Ok(mut file) = self.file.try_lock() {
                     file.do_save(&filename, &document);
                     self.set_window_title(&file);
                 }
@@ -329,8 +329,8 @@ impl Gui {
         data.save_to_file(&PathBuf::from(file));
     }
 
-    fn open_external(&self) {
-        if let Ok(Some(filename)) = self.file.lock().map(|x| x.filename()) {
+    fn open_external(&self, file: &File) {
+        if let Some(filename) = file.filename() {
             let cfg = GfretConfig::from_file().unwrap_or_default();
             if let Some(cmd) = cfg.external_program {
                 match Command::new(&cmd).args(&[&filename]).spawn() {
@@ -403,7 +403,7 @@ pub fn run(template: Option<&str>) {
 
 fn build_ui(application: &Application) -> Rc<Gui> {
     let gui = Rc::new(Gui::init());
-    let cfg = CONFIG.lock().unwrap().clone();
+    let cfg = CONFIG.try_lock().unwrap().clone();
     let units = cfg.units;
     if units == Units::Imperial {
         gui.adjustments.to_imperial();
@@ -492,7 +492,7 @@ fn build_ui(application: &Application) -> Rc<Gui> {
         .window()
         .connect_response(clone!(@weak gui => move |dlg,res| {
             if res == ResponseType::Accept {
-                let units = CONFIG.lock().unwrap().units;
+                let units = CONFIG.try_lock().unwrap().units;
                 gui.dialogs.preferences.save_prefs();
                 let new = GfretConfig::from_file().unwrap().units;
                 if units != new {

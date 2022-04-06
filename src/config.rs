@@ -1,9 +1,9 @@
 #![warn(clippy::all, clippy::pedantic)]
 use {
-    fretboard_layout::{Config, Font, Units},
-    rgba_simple::{Color, Primary, PrimaryColor, ReducedRGBA},
+    fretboard_layout::{Color, Config, Font, Primary, PrimaryColor, ReducedRGBA, Units},
     serde::{Deserialize, Serialize},
     std::{
+        error::Error,
         fs,
         path::{Path, PathBuf},
     },
@@ -64,9 +64,10 @@ impl Default for GfretConfig {
 
 impl GfretConfig {
     /// Saves Config struct as a .toml file
-    pub fn save_to_file(&self, file: &Path) {
-        let toml_string = toml::to_string(&self).expect("Could not encode TOML value");
-        fs::write(file.clone(), toml_string).expect("Could not write to file!");
+    pub fn save_to_file(&self, file: &Path) -> Result<(), Box<dyn Error>> {
+        let toml_string = toml::to_string(&self)?;
+        fs::write(file, toml_string)?;
+        Ok(())
     }
 
     /// Deserializes config.toml into a `GfretConfig` struct
@@ -96,7 +97,7 @@ impl GfretConfig {
     /// Maps a `GfretConfig` struct to a `fretboard_layout::Config` struct
     pub fn to_config(&self) -> Config {
         Config {
-            units: self.units.clone(),
+            units: self.units,
             border: self.border,
             line_weight: self.line_weight,
             fretline_color: self.fretline_color.clone(),

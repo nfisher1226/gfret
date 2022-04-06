@@ -17,7 +17,7 @@ use {
         prelude::*,
         Application, ResponseType,
     },
-    std::{path::PathBuf, process::Command, rc::Rc, sync::Mutex, thread},
+    std::{path::PathBuf, process::Command, rc::Rc, string::ToString, sync::Mutex, thread},
 };
 
 struct Gui {
@@ -82,7 +82,7 @@ impl Actions {
                     if !file.saved() {
                         gui.dialogs.save_as.show();
                     }
-                    gui.open_external(&file);
+                    Gui::open_external(&file);
                 };
             }));
 
@@ -223,26 +223,26 @@ impl Gui {
 
     /// Updates the title of the program window with the name of the output file.
     fn set_window_title(&self, file: &File) {
-            if !file.saved() {
+        if !file.saved() {
+            self.window.set_title(Some(&format!(
+                "Gfret - {} - <unsaved>",
+                env!("CARGO_PKG_VERSION")
+            )));
+        } else if file.current() {
+            if let Some(filename) = file.filename() {
                 self.window.set_title(Some(&format!(
-                    "Gfret - {} - <unsaved>",
-                    env!("CARGO_PKG_VERSION")
-                )));
-            } else if file.current() {
-                if let Some(filename) = file.filename() {
-                    self.window.set_title(Some(&format!(
-                        "Gfret - {} - {}",
-                        env!("CARGO_PKG_VERSION"),
-                        filename
-                    )));
-                }
-            } else if let Some(filename) = file.filename() {
-                self.window.set_title(Some(&format!(
-                    "Gfret - {} - {}*",
+                    "Gfret - {} - {}",
                     env!("CARGO_PKG_VERSION"),
                     filename
                 )));
             }
+        } else if let Some(filename) = file.filename() {
+            self.window.set_title(Some(&format!(
+                "Gfret - {} - {}*",
+                env!("CARGO_PKG_VERSION"),
+                filename
+            )));
+        }
     }
 
     /// Sets widget state to match temmplate
@@ -299,7 +299,6 @@ impl Gui {
                     let document = self.get_specs().create_document(Some(cfg));
                     let template = self.template_from_gui();
                     let (sender, receiver) = MainContext::channel(PRIORITY_DEFAULT);
-                    let sender = sender.clone();
                     let name = filename.to_string();
                     Mutex::unlock(file);
                     thread::spawn(move || {
@@ -307,27 +306,28 @@ impl Gui {
                         template.save_to_file(&PathBuf::from(&name));
                         match file.do_save(&name, &document) {
                             Ok(_) => {
-                                sender.send("File saved".to_string())
+                                sender
+                                    .send("File saved".to_string())
                                     .expect("Error sending message");
-                            },
+                            }
                             Err(e) => {
-                                sender.send(format!("{}", e))
+                                sender
+                                    .send(format!("{}", e))
                                     .expect("Error sending message");
-                            },
+                            }
                         }
                     });
                     let window = self.window.clone();
-                    let name = filename.to_string();
                     receiver.attach(None, move |response| {
                         match response.as_str() {
                             "File saved" => {
-                                println!("File saved as {}", &name);
+                                println!("File saved as {}", &filename);
                                 window.set_title(Some(&format!(
                                     "Gfret - {} - {}",
                                     env!("CARGO_PKG_VERSION"),
-                                    name,
+                                    filename,
                                 )));
-                            },
+                            }
                             _ => eprintln!("Error saving file"),
                         }
                         Continue(false)
@@ -346,34 +346,32 @@ impl Gui {
                 let document = self.get_specs().create_document(Some(cfg));
                 let template = self.template_from_gui();
                 let (sender, receiver) = MainContext::channel(PRIORITY_DEFAULT);
-                let sender = sender.clone();
                 let name = filename.to_string();
                 thread::spawn(move || {
                     let mut file = FILE.try_lock().unwrap();
                     template.save_to_file(&PathBuf::from(&name));
                     match file.do_save(&name, &document) {
                         Ok(_) => {
-                            sender.send("File saved".to_string())
+                            sender
+                                .send("File saved".to_string())
                                 .expect("Error sending message");
-                        },
+                        }
                         Err(e) => {
-                            sender.send(format!("{e}"))
-                                .expect("Error sending message");
-                        },
+                            sender.send(format!("{e}")).expect("Error sending message");
+                        }
                     }
                 });
                 let window = self.window.clone();
-                let name = filename.to_string();
                 receiver.attach(None, move |response| {
                     match response.as_str() {
                         "File saved" => {
-                            println!("File saved as {}", &name);
+                            println!("File saved as {}", &filename);
                             window.set_title(Some(&format!(
                                 "Gfret - {} - {}",
                                 env!("CARGO_PKG_VERSION"),
-                                name,
+                                filename,
                             )));
-                        },
+                        }
                         _ => eprintln!("Error saving file"),
                     }
                     Continue(false)
@@ -382,7 +380,7 @@ impl Gui {
         }
     }
 
-    fn open_external(&self, file: &File) {
+    fn open_external(file: &File) {
         if let Some(filename) = file.filename() {
             let cfg = GfretConfig::from_file().unwrap_or_default();
             if let Some(cmd) = cfg.external_program {
@@ -430,7 +428,7 @@ impl Gui {
 }
 
 pub fn run(template: Option<&str>) {
-    let template = template.map(|x| x.to_string());
+    let template = template.map(ToString::to_string);
     let application = gtk::Application::new(
         Some("org.hitchhiker-linux.gfret"),
         gtk::gio::ApplicationFlags::default(),
@@ -480,84 +478,89 @@ fn build_ui(application: &Application) -> Rc<Gui> {
     gui.toggle_multi();
     gui.draw_preview(false);
 
-    gui.scale
-        .connect_value_changed(clone!(@weak gui => move |_| {
-            gui.draw_preview(false);
-        }));
+    gui.scale.connect_value_changed(clone!(@weak gui => move |_| {
+        gui.draw_preview(false);
+    }));
 
     gui.variant.connect_changed(clone!(@weak gui => move |_| {
         gui.toggle_multi();
         gui.draw_preview(true);
     }));
 
-    gui.handedness
-        .connect_changed(clone!(@weak gui => move |_| {
-            gui.draw_preview(true);
-        }));
+    gui.handedness.connect_changed(clone!(@weak gui => move |_| {
+        gui.draw_preview(true);
+    }));
 
-    gui.scale_multi_course
-        .connect_value_changed(clone!(@weak gui => move |_| {
-            gui.draw_preview(true);
-        }));
+    gui.scale_multi_course.connect_value_changed(clone!(@weak gui => move |_| {
+        gui.draw_preview(true);
+    }));
 
-    gui.fret_count
-        .connect_value_changed(clone!(@weak gui => move |_| {
-            gui.draw_preview(true);
-        }));
+    gui.fret_count.connect_value_changed(clone!(@weak gui => move |_| {
+        gui.draw_preview(true);
+    }));
 
-    gui.perpendicular_fret
-        .connect_value_changed(clone!(@weak gui => move |_| {
-            gui.draw_preview(true);
-        }));
+    gui.perpendicular_fret.connect_value_changed(clone!(@weak gui => move |_| {
+        gui.draw_preview(true);
+    }));
 
-    gui.nut_width
-        .connect_value_changed(clone!(@weak gui => move |_| {
-            gui.draw_preview(true);
-        }));
+    gui.nut_width.connect_value_changed(clone!(@weak gui => move |_| {
+        gui.draw_preview(true);
+    }));
 
-    gui.bridge_spacing
-        .connect_value_changed(clone!(@weak gui => move |_| {
-            gui.draw_preview(true);
-        }));
+    gui.bridge_spacing.connect_value_changed(clone!(@weak gui => move |_| {
+        gui.draw_preview(true);
+    }));
 
-    gui.dialogs
-        .save_as
-        .connect_response(clone!(@weak gui => move |dlg,res| {
-            gui.save_as(res);
-            dlg.hide();
-        }));
+    gui.dialogs.save_as.connect_response(clone!(@weak gui => move |dlg,res| {
+        gui.save_as(res);
+        dlg.hide();
+    }));
 
-    gui.dialogs
-        .open_template
-        .connect_response(clone!(@weak gui => move |dlg,res| {
-            if res == ResponseType::Accept {
-                if let Some(path) = gui.dialogs.get_template_path() {
-                    if let Some(template) = Template::load_from_file(path) {
-                        gui.load_template(&template);
-                    }
+    gui.dialogs.open_template.connect_response(clone!(@weak gui => move |dlg,res| {
+        if res == ResponseType::Accept {
+            if let Some(path) = gui.dialogs.get_template_path() {
+                if let Some(template) = Template::load_from_file(path) {
+                    gui.load_template(&template);
                 }
             }
-            dlg.hide();
-        }));
+        }
+        dlg.hide();
+    }));
 
     gui.dialogs
         .preferences
         .window()
         .connect_response(clone!(@weak gui => move |dlg,res| {
             if res == ResponseType::Accept {
-                let units = CONFIG.try_lock().unwrap().units;
-                gui.dialogs.preferences.save_prefs();
-                let new = GfretConfig::from_file().unwrap().units;
-                if units != new {
-                    if new == Units::Metric {
-                        gui.to_metric();
-                    } else {
-                        gui.to_imperial();
+                let (sender, receiver) = MainContext::channel(PRIORITY_DEFAULT);
+                let newcfg = gui.dialogs.preferences.config_from_widgets();
+                let cfg = newcfg.clone();
+                thread::spawn(move || {
+                    match cfg.save_to_file(&crate::config::get_config_file()) {
+                        Ok(_) => sender.send("success".to_string()),
+                        Err(e) => sender.send(format!("{e}")),
                     }
-                }
+                });
+                receiver.attach(None, move |response| {
+                    match response.as_str() {
+                        "success" => {
+                            let units = CONFIG.try_lock().unwrap().units;
+                            if units != newcfg.units {
+                                match newcfg.units {
+                                    Units::Metric => gui.to_metric(),
+                                    Units::Imperial => gui.to_imperial(),
+                                }
+                            }
+                            {   let mut cfg = CONFIG.lock().unwrap();
+                                *cfg = newcfg.to_config(); }
+                            gui.draw_preview(true);
+                        },
+                        e => eprintln!("{e}"),
+                    }
+                    Continue(false)
+                });
             }
             dlg.hide();
-            gui.draw_preview(true);
         }));
 
     gui.window.show();

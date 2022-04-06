@@ -1,6 +1,6 @@
 [package]
 name = "gfret"
-version = "2.1.0"
+version = "2.2.0"
 edition = "2021"
 description = "Generates an svg template of a musical instrument fretboard"
 authors = ["Nathan Fisher"]
@@ -13,11 +13,15 @@ license = "BSD-2-Clause"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-fretboard_layout = "~0.3"
 lazy_static = "~1.4"
 svg = "~0.10"
 toml = "~0.5"
 clap = "~3.1"
+
+[dependencies.fretboard_layout]
+#version = "~0.3"
+git = "https://codeberg.org/jeang3nie/fretboard-layout"
+features = ["gdk"]
 
 [dependencies.gtk]
 version = "~0.4"
@@ -26,10 +30,6 @@ package = "gtk4"
 [dependencies.serde]
 version = "~1.0"
 features = ["derive"]
-
-[dependencies.rgba_simple]
-version = "~0.5"
-features = ["gdk"]
 
 [profile.release]
 codegen-units = 1

@@ -28,7 +28,7 @@ lazy_static! {
 fn main() {
     let matches = cli::build().get_matches();
     if let Some(("cli", cli_matches)) = matches.subcommand() {
-        backend::run(&cli_matches);
+        backend::run(cli_matches);
     } else {
         crate::gui::run(matches.value_of("TEMPLATE"));
     }

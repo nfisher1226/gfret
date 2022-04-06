@@ -1,9 +1,8 @@
 #![warn(clippy::all, clippy::pedantic)]
 use {
-    crate::{config::GfretConfig, CONFIG},
-    fretboard_layout::{Font, FontWeight, Units},
+    crate::config::GfretConfig,
+    fretboard_layout::{Color::Reduced, ConvertColor, Font, FontWeight, ReducedRGBA, Units},
     gtk::{pango::FontDescription, prelude::*, DialogFlags, ResponseType},
-    rgba_simple::{Color::Reduced, Convert, ReducedRGBA},
     std::{env, path::PathBuf, str::FromStr},
 };
 
@@ -78,7 +77,7 @@ impl Dialogs {
     }
 
     fn init_about(window: &gtk::ApplicationWindow) -> gtk::AboutDialog {
-        let dlg = gtk::AboutDialog::builder()
+        gtk::AboutDialog::builder()
             .program_name("Gfret")
             .authors(vec!["Nathan Fisher".to_string()])
             .version(env!("CARGO_PKG_VERSION"))
@@ -89,8 +88,7 @@ impl Dialogs {
             .copyright("©2020 by Nathan Fisher (the JeanG3nie)")
             .website("https://codeberg.org/jeang3nie/gfret")
             .transient_for(window)
-            .build();
-        dlg
+            .build()
     }
 
     fn init_save_as(window: &gtk::ApplicationWindow) -> gtk::FileChooserDialog {
@@ -247,7 +245,7 @@ impl PrefWidgets {
     }
 
     fn set_external(&self, txt: &str) {
-        self.external_entry.buffer().set_text(&txt);
+        self.external_entry.buffer().set_text(txt);
     }
 
     fn units(&self) -> Units {
@@ -293,8 +291,8 @@ impl PrefWidgets {
         self.line_weight.set_digits(3);
     }
 
-    fn external(&self) -> Option<String> {
-        Some(self.external_entry.buffer().text())
+    fn external(&self) -> String {
+        self.external_entry.buffer().text()
     }
 
     /// Converts the value stored in a `gtk::ColorButton` from a `gtk::gdk::RGBA`
@@ -339,10 +337,10 @@ impl PrefWidgets {
     }
 
     /// Returns a `GfretConfig` struct from the widget states
-    fn config_from_widgets(&self) -> GfretConfig {
+    pub fn config_from_widgets(&self) -> GfretConfig {
         GfretConfig {
             units: self.units(),
-            external_program: self.external(),
+            external_program: Some(self.external()),
             border: self.border.value(),
             line_weight: self.line_weight.value(),
             fretline_color: Reduced(PrefWidgets::color(&self.fretline_color)),
@@ -387,15 +385,6 @@ impl PrefWidgets {
                 self.font_chooser.set_sensitive(false);
             }
         }
-    }
-
-    /// Serializes a `GfretConfig` struct as toml and saves to disk
-    pub fn save_prefs(&self) {
-        let config_file = crate::config::get_config_file();
-        let config_data = self.config_from_widgets();
-        let mut cfg = CONFIG.lock().unwrap();
-        *cfg = config_data.to_config();
-        config_data.save_to_file(&config_file);
     }
 
     /// Toggles the centerline color chooser button

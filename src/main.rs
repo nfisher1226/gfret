@@ -1,5 +1,6 @@
 #![warn(clippy::all, clippy::pedantic)]
-#![feature(mutex_unlock)]
+// switch to this when it stabilizes
+//#![feature(mutex_unlock)]
 #![doc = include_str!("../README.md")]
 
 use {fretboard_layout::Config, std::sync::Mutex};

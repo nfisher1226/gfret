@@ -17,7 +17,7 @@ use {
         prelude::*,
         Application, ResponseType,
     },
-    std::{path::PathBuf, process::Command, rc::Rc, string::ToString, sync::Mutex, thread},
+    std::{path::PathBuf, process::Command, rc::Rc, string::ToString, /*sync::Mutex,*/ thread},
 };
 
 struct Gui {
@@ -300,7 +300,9 @@ impl Gui {
                     let template = self.template_from_gui();
                     let (sender, receiver) = MainContext::channel(PRIORITY_DEFAULT);
                     let name = filename.to_string();
-                    Mutex::unlock(file);
+                    // When this stabilizes:
+                    // Mutex::unlock(file);
+                    std::mem::drop(file);
                     thread::spawn(move || {
                         let mut file = FILE.try_lock().unwrap();
                         template.save_to_file(&PathBuf::from(&name));
@@ -321,7 +323,7 @@ impl Gui {
                     receiver.attach(None, move |response| {
                         match response.as_str() {
                             "File saved" => {
-                                println!("File saved as {}", &filename);
+                                println!("Output saved as {}", &filename);
                                 window.set_title(Some(&format!(
                                     "Gfret - {} - {}",
                                     env!("CARGO_PKG_VERSION"),
@@ -365,7 +367,7 @@ impl Gui {
                 receiver.attach(None, move |response| {
                     match response.as_str() {
                         "File saved" => {
-                            println!("File saved as {}", &filename);
+                            println!("Output saved as {}", &filename);
                             window.set_title(Some(&format!(
                                 "Gfret - {} - {}",
                                 env!("CARGO_PKG_VERSION"),

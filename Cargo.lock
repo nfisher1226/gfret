@@ -149,7 +149,7 @@ dependencies = [
 [[package]]
 name = "fretboard_layout"
 version = "0.3.1"
-source = "git+https://codeberg.org/jeang3nie/fretboard-layout#d9f8072a5e7cdfb678b2fe8ae96c0d99f9a63df0"
+source = "git+https://codeberg.org/jeang3nie/fretboard-layout#a53f50be73b871c18d3608a7f25605db5612fa54"
 dependencies = [
  "rayon",
  "rgba_simple",
@@ -517,9 +517,9 @@ checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "libc"
-version = "0.2.121"
+version = "0.2.122"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "efaa7b300f3b5fe8eb6bf21ce3895e1751d9665086af2d64b42f19701015ff4f"
+checksum = "ec647867e2bf0772e28c8bcde4f0d19a9216916e890543b5a03ed8ef27b8f259"
 
 [[package]]
 name = "memchr"
@@ -649,9 +649,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.36"
+version = "1.0.37"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c7342d5883fbccae1cc37a2353b09c87c9b0f3afd73f5fb9bba687a1f733b029"
+checksum = "ec757218438d5fda206afc041538b2f6d889286160d649a86a24d37e1235afd1"
 dependencies = [
  "unicode-xid",
 ]
@@ -667,9 +667,9 @@ dependencies = [
 
 [[package]]
 name = "quote"
-version = "1.0.17"
+version = "1.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "632d02bff7f874a36f33ea8bb416cd484b90cc66c1194b1a1110d067a7013f58"
+checksum = "a1feb54ed693b93a84e14094943b84b7c4eae204c512b7ccb95ab0c66d278ad1"
 dependencies = [
  "proc-macro2",
 ]
@@ -701,9 +701,8 @@ dependencies = [
 
 [[package]]
 name = "rgba_simple"
-version = "0.5.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c09d22abe2d299da80a970610e152e571ccb6ca91c4e09f69f33b6139b745d9c"
+version = "0.6.0"
+source = "git+https://codeberg.org/jeang3nie/rgba-simple#2aae6bedbd2c24653ab09a8d700a1a724c1d16eb"
 dependencies = [
  "gdk4",
  "serde",

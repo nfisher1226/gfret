@@ -1,6 +1,6 @@
 #![warn(clippy::all, clippy::pedantic)]
 use {
-    fretboard_layout::{Color, Config, Font, Primary, PrimaryColor, ReducedRGBA, Units},
+    fretboard_layout::{Config, Font, Primary, PrimaryColor::*, RGBA, Units},
     serde::{Deserialize, Serialize},
     std::{
         error::Error,
@@ -38,11 +38,11 @@ pub struct GfretConfig {
     /// The line weight for all of the elements in mm
     pub line_weight: f64,
     /// The color of the fret lines
-    pub fretline_color: Color,
+    pub fretline_color: RGBA<u8>,
     /// The background color of the fretboard
-    pub fretboard_color: Color,
+    pub fretboard_color: RGBA<u8>,
     /// The color of the centerline
-    pub centerline_color: Option<Color>,
+    pub centerline_color: Option<RGBA<u8>>,
     /// The font used for the specifications
     pub font: Option<Font>,
 }
@@ -54,9 +54,9 @@ impl Default for GfretConfig {
             external_program: Some(String::from("inkscape")),
             border: 10.0,
             line_weight: 1.0,
-            fretline_color: Color::Reduced(ReducedRGBA::primary(PrimaryColor::White)),
-            fretboard_color: Color::Reduced(ReducedRGBA::primary(PrimaryColor::Black)),
-            centerline_color: Some(Color::Reduced(ReducedRGBA::primary(PrimaryColor::Blue))),
+            fretline_color: RGBA::primary(White),
+            fretboard_color: RGBA::primary(Black),
+            centerline_color: Some(RGBA::primary(Blue)),
             font: Some(Font::default()),
         }
     }

@@ -1,7 +1,7 @@
 #![warn(clippy::all, clippy::pedantic)]
 use {
     crate::config::GfretConfig,
-    fretboard_layout::{Color::Reduced, ConvertColor, Font, FontWeight, ReducedRGBA, Units},
+    fretboard_layout::{Font, FontWeight, RGBA, Units, ToGdk},
     gtk::{pango::FontDescription, prelude::*, DialogFlags, ResponseType},
     std::{env, path::PathBuf, str::FromStr},
 };
@@ -299,9 +299,9 @@ impl PrefWidgets {
     /// struct into a struct which can be serialized using serde
     #[allow(clippy::cast_sign_loss)]
     #[allow(clippy::cast_possible_truncation)]
-    fn color(button: &gtk::ColorButton) -> ReducedRGBA {
+    fn color(button: &gtk::ColorButton) -> RGBA<u8> {
         let color = button.rgba();
-        ReducedRGBA {
+        RGBA {
             red: (color.red() * 255.0) as u8,
             green: (color.green() * 255.0) as u8,
             blue: (color.blue() * 255.0) as u8,
@@ -343,9 +343,9 @@ impl PrefWidgets {
             external_program: Some(self.external()),
             border: self.border.value(),
             line_weight: self.line_weight.value(),
-            fretline_color: Reduced(PrefWidgets::color(&self.fretline_color)),
-            fretboard_color: Reduced(PrefWidgets::color(&self.fretboard_color)),
-            centerline_color: Some(Reduced(PrefWidgets::color(&self.centerline_color))),
+            fretline_color: PrefWidgets::color(&self.fretline_color),
+            fretboard_color: PrefWidgets::color(&self.fretboard_color),
+            centerline_color: Some(PrefWidgets::color(&self.centerline_color)),
             font: self.font(),
         }
     }
@@ -353,18 +353,12 @@ impl PrefWidgets {
     /// Sets widget states based on a `GfretConfig` struct which is loaded from file
     fn load_config(&self) {
         if let Some(config) = GfretConfig::from_file() {
-            if let Ok(color) = &config.fretline_color.to_gdk() {
-                self.fretline_color.set_rgba(color);
-            }
-            if let Ok(color) = &config.fretboard_color.to_gdk() {
-                self.fretboard_color.set_rgba(color);
-            }
+            self.fretline_color.set_rgba(&config.fretline_color.to_gdk());
+            self.fretboard_color.set_rgba(&config.fretboard_color.to_gdk());
             if let Some(c) = config.centerline_color {
                 self.draw_centerline.set_active(true);
-                if let Ok(color) = &c.to_gdk() {
-                    self.centerline_color.set_sensitive(true);
-                    self.centerline_color.set_rgba(color);
-                }
+                self.centerline_color.set_sensitive(true);
+                self.centerline_color.set_rgba(&c.to_gdk());
             } else {
                 self.draw_centerline.set_active(false);
                 self.centerline_color.set_sensitive(false);

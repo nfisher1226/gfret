@@ -5,7 +5,6 @@
 
 use {fretboard_layout::Config, std::sync::Mutex};
 /// The cli
-mod backend;
 mod cli;
 /// Handles getting the configuration data to and from disk
 mod config;
@@ -29,7 +28,7 @@ lazy_static! {
 fn main() {
     let matches = cli::build().get_matches();
     if let Some(("cli", cli_matches)) = matches.subcommand() {
-        backend::run(cli_matches);
+        cli::run(cli_matches);
     } else {
         crate::gui::run(matches.value_of("TEMPLATE"));
     }

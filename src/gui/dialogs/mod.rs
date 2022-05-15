@@ -1,7 +1,7 @@
 #![warn(clippy::all, clippy::pedantic)]
 use {
     crate::config::GfretConfig,
-    fretboard_layout::{Font, FontWeight, RGBA, Units, ToGdk},
+    fretboard_layout::{Font, FontWeight, ToGdk, Units, RGBA},
     gtk::{pango::FontDescription, prelude::*, DialogFlags, ResponseType},
     std::{env, path::PathBuf, str::FromStr},
 };
@@ -353,8 +353,10 @@ impl PrefWidgets {
     /// Sets widget states based on a `GfretConfig` struct which is loaded from file
     fn load_config(&self) {
         if let Some(config) = GfretConfig::from_file() {
-            self.fretline_color.set_rgba(&config.fretline_color.to_gdk());
-            self.fretboard_color.set_rgba(&config.fretboard_color.to_gdk());
+            self.fretline_color
+                .set_rgba(&config.fretline_color.to_gdk());
+            self.fretboard_color
+                .set_rgba(&config.fretboard_color.to_gdk());
             if let Some(c) = config.centerline_color {
                 self.draw_centerline.set_active(true);
                 self.centerline_color.set_sensitive(true);

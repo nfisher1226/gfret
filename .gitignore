@@ -2,3 +2,4 @@
 output.svg
 *.glade~
 cargo-timing*
+tags

@@ -17,7 +17,7 @@ use {
         prelude::*,
         Application, ResponseType,
     },
-    std::{path::PathBuf, process::Command, rc::Rc, string::ToString, /*sync::Mutex,*/ thread},
+    std::{path::PathBuf, process::Command, rc::Rc, string::ToString, /*sync::Mutex,*/ thread,},
 };
 
 struct Gui {
@@ -480,54 +480,65 @@ fn build_ui(application: &Application) -> Rc<Gui> {
     gui.toggle_multi();
     gui.draw_preview(false);
 
-    gui.scale.connect_value_changed(clone!(@weak gui => move |_| {
-        gui.draw_preview(false);
-    }));
+    gui.scale
+        .connect_value_changed(clone!(@weak gui => move |_| {
+            gui.draw_preview(false);
+        }));
 
     gui.variant.connect_changed(clone!(@weak gui => move |_| {
         gui.toggle_multi();
         gui.draw_preview(true);
     }));
 
-    gui.handedness.connect_changed(clone!(@weak gui => move |_| {
-        gui.draw_preview(true);
-    }));
+    gui.handedness
+        .connect_changed(clone!(@weak gui => move |_| {
+            gui.draw_preview(true);
+        }));
 
-    gui.scale_multi_course.connect_value_changed(clone!(@weak gui => move |_| {
-        gui.draw_preview(true);
-    }));
+    gui.scale_multi_course
+        .connect_value_changed(clone!(@weak gui => move |_| {
+            gui.draw_preview(true);
+        }));
 
-    gui.fret_count.connect_value_changed(clone!(@weak gui => move |_| {
-        gui.draw_preview(true);
-    }));
+    gui.fret_count
+        .connect_value_changed(clone!(@weak gui => move |_| {
+            gui.draw_preview(true);
+        }));
 
-    gui.perpendicular_fret.connect_value_changed(clone!(@weak gui => move |_| {
-        gui.draw_preview(true);
-    }));
+    gui.perpendicular_fret
+        .connect_value_changed(clone!(@weak gui => move |_| {
+            gui.draw_preview(true);
+        }));
 
-    gui.nut_width.connect_value_changed(clone!(@weak gui => move |_| {
-        gui.draw_preview(true);
-    }));
+    gui.nut_width
+        .connect_value_changed(clone!(@weak gui => move |_| {
+            gui.draw_preview(true);
+        }));
 
-    gui.bridge_spacing.connect_value_changed(clone!(@weak gui => move |_| {
-        gui.draw_preview(true);
-    }));
+    gui.bridge_spacing
+        .connect_value_changed(clone!(@weak gui => move |_| {
+            gui.draw_preview(true);
+        }));
 
-    gui.dialogs.save_as.connect_response(clone!(@weak gui => move |dlg,res| {
-        gui.save_as(res);
-        dlg.hide();
-    }));
+    gui.dialogs
+        .save_as
+        .connect_response(clone!(@weak gui => move |dlg,res| {
+            gui.save_as(res);
+            dlg.hide();
+        }));
 
-    gui.dialogs.open_template.connect_response(clone!(@weak gui => move |dlg,res| {
-        if res == ResponseType::Accept {
-            if let Some(path) = gui.dialogs.get_template_path() {
-                if let Some(template) = Template::load_from_file(path) {
-                    gui.load_template(&template);
+    gui.dialogs
+        .open_template
+        .connect_response(clone!(@weak gui => move |dlg,res| {
+            if res == ResponseType::Accept {
+                if let Some(path) = gui.dialogs.get_template_path() {
+                    if let Some(template) = Template::load_from_file(path) {
+                        gui.load_template(&template);
+                    }
                 }
             }
-        }
-        dlg.hide();
-    }));
+            dlg.hide();
+        }));
 
     gui.dialogs
         .preferences

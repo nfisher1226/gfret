@@ -1,6 +1,10 @@
 #![warn(clippy::all, clippy::pedantic)]
 use {
-    fretboard_layout::{Config, Font, Primary, PrimaryColor::*, RGBA, Units},
+    fretboard_layout::{
+        Config, Font, Primary,
+        PrimaryColor::{Black, Blue, White},
+        Units, RGBA,
+    },
     serde::{Deserialize, Serialize},
     std::{
         error::Error,
@@ -100,9 +104,9 @@ impl GfretConfig {
             units: self.units,
             border: self.border,
             line_weight: self.line_weight,
-            fretline_color: self.fretline_color.clone(),
-            fretboard_color: self.fretboard_color.clone(),
-            centerline_color: self.centerline_color.clone(),
+            fretline_color: self.fretline_color,
+            fretboard_color: self.fretboard_color,
+            centerline_color: self.centerline_color,
             font: self.font.clone(),
         }
     }

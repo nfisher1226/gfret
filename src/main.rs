@@ -26,7 +26,7 @@ lazy_static! {
 }
 
 fn main() {
-    let matches = cli::build().get_matches();
+    let matches = cli::opts::build().get_matches();
     if let Some(("cli", cli_matches)) = matches.subcommand() {
         cli::run(cli_matches);
     } else {

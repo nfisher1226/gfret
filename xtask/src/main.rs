@@ -6,7 +6,7 @@ use {
     usvg::{FitTo, Options, Tree},
 };
 
-include!("../../src/cli.rs");
+include!("../../src/cli/opts.rs");
 
 fn completions() -> Result<(), Box<dyn Error>> {
     println!("Generating completions:");

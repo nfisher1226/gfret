@@ -305,7 +305,9 @@ impl Gui {
                     std::mem::drop(file);
                     thread::spawn(move || {
                         let mut file = FILE.try_lock().unwrap();
-                        template.save_to_file(&PathBuf::from(&name));
+                        if let Err(e) = template.save_to_file(&PathBuf::from(&name)) {
+                            eprintln!("Error saving template: {e}");
+                        }
                         match file.do_save(&name, &document) {
                             Ok(_) => {
                                 sender
@@ -351,7 +353,9 @@ impl Gui {
                 let name = filename.to_string();
                 thread::spawn(move || {
                     let mut file = FILE.try_lock().unwrap();
-                    template.save_to_file(&PathBuf::from(&name));
+                    if let Err(e) = template.save_to_file(&PathBuf::from(&name)) {
+                        eprintln!("Error saving template: {e}");
+                    }
                     match file.do_save(&name, &document) {
                         Ok(_) => {
                             sender

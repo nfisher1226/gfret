@@ -47,16 +47,19 @@ impl Template {
         Some(template)
     }
     /// Saves Template struct as a .toml file
-    pub fn save_to_file(&self, file: &Path) {
-        let toml_string = toml::to_string(&self).expect("Could not encode TOML value");
+    pub fn save_to_file(&self, file: &Path) -> Result<(), crate::error::Error> {
+        let toml_string = toml::to_string(&self)?;
         let mut file = file.to_path_buf();
         file.set_extension("toml");
-        fs::write(file, toml_string).expect("Could not write to file!");
+        fs::write(file, toml_string)?;
+        Ok(())
     }
     /// Saves the program state on exit
     pub fn save_statefile(&self) {
         let mut statefile = config::get_config_dir();
         statefile.push("state.toml");
-        self.save_to_file(&statefile);
+        if let Err(e) = self.save_to_file(&statefile) {
+            eprintln!("Error saving statefile: {e}");
+        }
     }
 }

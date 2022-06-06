@@ -1,5 +1,5 @@
 #![warn(clippy::all, clippy::pedantic)]
-use std::error::Error;
+use std::io;
 
 #[derive(Clone, Default)]
 pub struct File {
@@ -29,11 +29,7 @@ impl File {
         self.saved_current = false;
     }
 
-    pub fn do_save(
-        &mut self,
-        filename: &str,
-        document: &svg::Document,
-    ) -> Result<(), Box<dyn Error>> {
+    pub fn do_save(&mut self, filename: &str, document: &svg::Document) -> Result<(), io::Error> {
         svg::save(&filename, document)?;
         self.saved_once = true;
         self.saved_current = true;

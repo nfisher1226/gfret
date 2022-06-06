@@ -8,6 +8,7 @@ use {fretboard_layout::Config, std::sync::Mutex};
 mod cli;
 /// Handles getting the configuration data to and from disk
 mod config;
+pub mod error;
 /// The Gtk user interface to gfret.
 mod gui;
 /// Persistent templates

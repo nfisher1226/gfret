@@ -1,5 +1,6 @@
 #![warn(clippy::all, clippy::pedantic)]
 use {
+    crate::error::Error,
     fretboard_layout::{
         Config, Font, Primary,
         PrimaryColor::{Black, Blue, White},
@@ -7,7 +8,6 @@ use {
     },
     serde::{Deserialize, Serialize},
     std::{
-        error::Error,
         fs,
         path::{Path, PathBuf},
     },
@@ -68,34 +68,18 @@ impl Default for GfretConfig {
 
 impl GfretConfig {
     /// Saves Config struct as a .toml file
-    pub fn save_to_file(&self, file: &Path) -> Result<(), Box<dyn Error>> {
+    pub fn save_to_file(&self, file: &Path) -> Result<(), Error> {
         let toml_string = toml::to_string(&self)?;
         fs::write(file, toml_string)?;
         Ok(())
     }
 
     /// Deserializes config.toml into a `GfretConfig` struct
-    pub fn from_file() -> Option<GfretConfig> {
+    pub fn from_file() -> Result<Self, Error> {
         let config_file = get_config_file();
-        let config_file = if config_file.exists() {
-            match fs::read_to_string(config_file) {
-                Ok(c) => c,
-                Err(e) => {
-                    eprintln!("{}", e);
-                    return None;
-                }
-            }
-        } else {
-            return None;
-        };
-        let config: GfretConfig = match toml::from_str(&config_file) {
-            Ok(c) => c,
-            Err(e) => {
-                eprintln!("{}", e);
-                return None;
-            }
-        };
-        Some(config)
+        let config_file = fs::read_to_string(config_file)?;
+        let config: Self = toml::from_str(&config_file)?;
+        Ok(config)
     }
 
     /// Maps a `GfretConfig` struct to a `fretboard_layout::Config` struct

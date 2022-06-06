@@ -3,3 +3,5 @@ output.svg
 *.glade~
 cargo-timing*
 tags
+tags.temp
+tags.lock

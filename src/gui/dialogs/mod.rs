@@ -352,34 +352,39 @@ impl PrefWidgets {
 
     /// Sets widget states based on a `GfretConfig` struct which is loaded from file
     fn load_config(&self) {
-        if let Some(config) = GfretConfig::from_file() {
-            self.fretline_color
-                .set_rgba(&config.fretline_color.to_gdk());
-            self.fretboard_color
-                .set_rgba(&config.fretboard_color.to_gdk());
-            if let Some(c) = config.centerline_color {
-                self.draw_centerline.set_active(true);
-                self.centerline_color.set_sensitive(true);
-                self.centerline_color.set_rgba(&c.to_gdk());
-            } else {
-                self.draw_centerline.set_active(false);
-                self.centerline_color.set_sensitive(false);
+        let config = match GfretConfig::from_file() {
+            Ok(c) => c,
+            Err(e) => {
+                eprintln!("Error reading config: {e}");
+                return;
             }
-            match config.units {
-                Units::Metric => self.units.set_active(Some(0)),
-                Units::Imperial => self.units.set_active(Some(1)),
-            };
-            self.border.set_value(config.border);
-            self.line_weight.set_value(config.line_weight);
-            if let Some(f) = config.font {
-                self.print_specs.set_active(true);
-                self.font_chooser.set_sensitive(true);
-                self.font_chooser
-                    .set_font(&format!("{} {}", f.family, f.weight));
-            } else {
-                self.print_specs.set_active(false);
-                self.font_chooser.set_sensitive(false);
-            }
+        };
+        self.fretline_color
+            .set_rgba(&config.fretline_color.to_gdk());
+        self.fretboard_color
+            .set_rgba(&config.fretboard_color.to_gdk());
+        if let Some(c) = config.centerline_color {
+            self.draw_centerline.set_active(true);
+            self.centerline_color.set_sensitive(true);
+            self.centerline_color.set_rgba(&c.to_gdk());
+        } else {
+            self.draw_centerline.set_active(false);
+            self.centerline_color.set_sensitive(false);
+        }
+        match config.units {
+            Units::Metric => self.units.set_active(Some(0)),
+            Units::Imperial => self.units.set_active(Some(1)),
+        };
+        self.border.set_value(config.border);
+        self.line_weight.set_value(config.line_weight);
+        if let Some(f) = config.font {
+            self.print_specs.set_active(true);
+            self.font_chooser.set_sensitive(true);
+            self.font_chooser
+                .set_font(&format!("{} {}", f.family, f.weight));
+        } else {
+            self.print_specs.set_active(false);
+            self.font_chooser.set_sensitive(false);
         }
     }
 

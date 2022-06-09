@@ -1,5 +1,7 @@
 use clap::{Arg, Command};
 
+/// The cli subcommand options
+#[must_use]
 pub fn build_cli() -> Command<'static> {
     Command::new("cli")
         .about("Output an svg without running the interface")
@@ -81,6 +83,8 @@ known in advance.",
         )
 }
 
+/// The main program options
+#[must_use]
 pub fn build() -> Command<'static> {
     Command::new("gfret")
         .about("Generates layout dimensions for a stringed instrument fretboard")

@@ -62,7 +62,7 @@ pub fn run(matches: &ArgMatches) {
     };
     let specs = Specs::init(scale, count, variant, nut, bridge, pfret);
     let doc = specs.create_document(None);
-    let output = matches.value_of("OUTPUT").unwrap().to_string();
+    let output = matches.value_of("OUTPUT").unwrap_or("-").to_string();
     if output == "-" {
         println!("{}", doc);
     } else {

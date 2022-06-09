@@ -74,6 +74,8 @@ will be installed if the program is installed using the included
 ```Makefile```, and can be used for launching the program from desktop menus
 or creating shortcuts.
 ## Keybindings
+> Note: See [KEYS.md](KEYS.md) for information on changing keybindings
+
 | Key | Action |
 | --- | --- |
 | Ctrl/S | save file |

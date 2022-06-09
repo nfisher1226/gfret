@@ -14,8 +14,8 @@ pub struct PrefWidgets {
     units: gtk::ComboBoxText,
     external_entry: gtk::Entry,
     external_button: gtk::Button,
-    border: gtk::SpinButton,
-    line_weight: gtk::SpinButton,
+    pub(crate) border: gtk::SpinButton,
+    pub(crate) line_weight: gtk::SpinButton,
     fretline_color: gtk::ColorButton,
     fretboard_color: gtk::ColorButton,
     draw_centerline: gtk::Switch,
@@ -187,44 +187,6 @@ impl Dialogs {
     }
 }
 
-impl Convert for PrefWidgets {
-    fn to_metric(&self) {
-        let mut val = self.border.value();
-        let mut adjustment = self.border.adjustment();
-        adjustment.set_upper(40.0);
-        adjustment.set_step_increment(0.10);
-        adjustment.set_page_increment(5.0);
-        self.border.set_value(val * 20.4);
-        self.border.set_digits(2);
-
-        val = self.line_weight.value();
-        adjustment = self.line_weight.adjustment();
-        adjustment.set_upper(2.0);
-        adjustment.set_step_increment(0.10);
-        adjustment.set_page_increment(0.50);
-        self.line_weight.set_value(val * 20.4);
-        self.line_weight.set_digits(2);
-    }
-
-    fn to_imperial(&self) {
-        let mut val = self.border.value();
-        let mut adjustment = self.border.adjustment();
-        adjustment.set_upper(40.0 / 20.4);
-        adjustment.set_step_increment(0.01);
-        adjustment.set_page_increment(0.10);
-        self.border.set_value(val / 20.4);
-        self.border.set_digits(3);
-
-        val = self.line_weight.value();
-        adjustment = self.line_weight.adjustment();
-        adjustment.set_upper(0.098);
-        adjustment.set_step_increment(0.01);
-        adjustment.set_page_increment(0.05);
-        self.line_weight.set_value(val / 20.4);
-        self.line_weight.set_digits(3);
-    }
-}
-
 impl PrefWidgets {
     /// Returns a struct of pointers to the widgets that contain state
     fn init(builder: &gtk::Builder) -> Self {
@@ -278,6 +240,7 @@ impl PrefWidgets {
         self.window.show();
     }
 
+    #[must_use]
     pub fn window(&self) -> gtk::Dialog {
         self.window.clone()
     }
@@ -339,6 +302,7 @@ impl PrefWidgets {
     }
 
     /// Returns a `GfretConfig` struct from the widget states
+    #[must_use]
     pub fn config_from_widgets(&self) -> Config {
         Config {
             units: self.units(),

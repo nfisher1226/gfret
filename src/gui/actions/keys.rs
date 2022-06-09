@@ -1,0 +1,44 @@
+use {
+    crate::config,
+    serde::Deserialize,
+    std::{collections::HashMap, fs, path::PathBuf},
+};
+
+#[derive(Default, Deserialize)]
+pub(in crate::gui::actions) struct Keys {
+    pub(in crate::gui::actions) keys: HashMap<String, String>,
+}
+
+fn get_key_file() -> PathBuf {
+    let mut file = config::get_config_dir();
+    file.push("keys.toml");
+    file
+}
+
+impl Keys {
+    #[must_use]
+    pub(in crate::gui::actions) fn get(&self, action: &str) -> &str {
+        if let Some(key) = self.keys.get(action) {
+            if gtk::accelerator_parse(key).is_some() {
+                return key;
+            }
+        }
+        match action {
+            "open_template" => "<primary>O",
+            "save" => "<primary>S",
+            "save_as" => "<primary><Shift>S",
+            "open_external" => "<primary>E",
+            "preferences" => "<primary><Shift>P",
+            "about" => "<primary>A",
+            "quit" => "<primary>Q",
+            _ => unreachable!(),
+        }
+    }
+
+    pub(in crate::gui::actions) fn from_file() -> Result<Self, crate::error::Error> {
+        let keyfile = get_key_file();
+        let keyfile = fs::read_to_string(keyfile)?;
+        let keys: Self = toml::from_str(&keyfile)?;
+        Ok(keys)
+    }
+}

@@ -1,9 +1,17 @@
 Contents
 ========
-* [2.1](2.1-release)
-* [2.0.2](2.0.2-release)
-* [2.0.1](2.0.1-release)
-* [2.0](2.0-release)
+* [unreleased](#unreleased)
+* [2.1](#2.1-release)
+* [2.0.2](#2.0.2-release)
+* [2.0.1](#2.0.1-release)
+* [2.0](#2.0-release)
+
+## Unreleased
+* Move some common code into lib.rs
+* Create trait `Convert` to swap imperial and metric values
+* Move action handling into module
+* Move keybindings into module
+* Make keybindings configurable
 
 ## 2.1 release
 * Update to `gtk4-rs` version `0.4`

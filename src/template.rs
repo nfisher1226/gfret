@@ -25,27 +25,12 @@ pub struct Template {
 impl Template {
     /// Takes a filename as an argument and returns either a populated Template
     /// struct, or else None.
-    pub fn load_from_file(file: PathBuf) -> Option<Template> {
-        let file = if file.exists() {
-            match fs::read_to_string(file) {
-                Ok(c) => c,
-                Err(e) => {
-                    eprintln!("{}", e);
-                    return None;
-                }
-            }
-        } else {
-            return None;
-        };
-        let template: Template = match toml::from_str(&file) {
-            Ok(c) => c,
-            Err(e) => {
-                eprintln!("{}", e);
-                return None;
-            }
-        };
-        Some(template)
+    pub fn load_from_file(file: PathBuf) -> Result<Self, crate::error::Error> {
+        let file = fs::read_to_string(file)?;
+        let template = toml::from_str(&file)?;
+        Ok(template)
     }
+
     /// Saves Template struct as a .toml file
     pub fn save_to_file(&self, file: &Path) -> Result<(), crate::error::Error> {
         let toml_string = toml::to_string(&self)?;
@@ -55,11 +40,10 @@ impl Template {
         Ok(())
     }
     /// Saves the program state on exit
-    pub fn save_statefile(&self) {
+    pub fn save_statefile(&self) -> Result<(), crate::error::Error> {
         let mut statefile = config::get_config_dir();
         statefile.push("state.toml");
-        if let Err(e) = self.save_to_file(&statefile) {
-            eprintln!("Error saving statefile: {e}");
-        }
+        self.save_to_file(&statefile)?;
+        Ok(())
     }
 }

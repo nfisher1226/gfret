@@ -3,27 +3,26 @@
 //#![feature(mutex_unlock)]
 #![doc = include_str!("../README.md")]
 
-use {fretboard_layout::Config, std::sync::Mutex};
+use {fretboard_layout::Config, gui::file::File, std::sync::Mutex};
 /// The cli
 mod cli;
 /// Handles getting the configuration data to and from disk
 mod config;
+mod convert;
 pub mod error;
 /// The Gtk user interface to gfret.
 mod gui;
 /// Persistent templates
 mod template;
+pub use convert::Convert;
 
 #[macro_use]
 extern crate lazy_static;
 
 lazy_static! {
-    static ref CONFIG: Mutex<Config> = Mutex::new(
-        config::GfretConfig::from_file()
-            .unwrap_or_default()
-            .to_config()
-    );
-    static ref FILE: Mutex<gui::file::File> = Mutex::new(gui::file::File::default());
+    static ref CONFIG: Mutex<Config> =
+        Mutex::new(config::Config::from_file().unwrap_or_default().truncate());
+    static ref FILE: Mutex<File> = Mutex::new(File::default());
 }
 
 fn main() {

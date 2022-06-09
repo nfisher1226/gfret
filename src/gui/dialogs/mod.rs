@@ -1,6 +1,6 @@
 #![warn(clippy::all, clippy::pedantic)]
 use {
-    crate::config::GfretConfig,
+    crate::{config::Config, Convert},
     fretboard_layout::{Font, FontWeight, ToGdk, Units, RGBA},
     gtk::{pango::FontDescription, prelude::*, DialogFlags, ResponseType},
     std::{env, path::PathBuf, str::FromStr},
@@ -187,6 +187,44 @@ impl Dialogs {
     }
 }
 
+impl Convert for PrefWidgets {
+    fn to_metric(&self) {
+        let mut val = self.border.value();
+        let mut adjustment = self.border.adjustment();
+        adjustment.set_upper(40.0);
+        adjustment.set_step_increment(0.10);
+        adjustment.set_page_increment(5.0);
+        self.border.set_value(val * 20.4);
+        self.border.set_digits(2);
+
+        val = self.line_weight.value();
+        adjustment = self.line_weight.adjustment();
+        adjustment.set_upper(2.0);
+        adjustment.set_step_increment(0.10);
+        adjustment.set_page_increment(0.50);
+        self.line_weight.set_value(val * 20.4);
+        self.line_weight.set_digits(2);
+    }
+
+    fn to_imperial(&self) {
+        let mut val = self.border.value();
+        let mut adjustment = self.border.adjustment();
+        adjustment.set_upper(40.0 / 20.4);
+        adjustment.set_step_increment(0.01);
+        adjustment.set_page_increment(0.10);
+        self.border.set_value(val / 20.4);
+        self.border.set_digits(3);
+
+        val = self.line_weight.value();
+        adjustment = self.line_weight.adjustment();
+        adjustment.set_upper(0.098);
+        adjustment.set_step_increment(0.01);
+        adjustment.set_page_increment(0.05);
+        self.line_weight.set_value(val / 20.4);
+        self.line_weight.set_digits(3);
+    }
+}
+
 impl PrefWidgets {
     /// Returns a struct of pointers to the widgets that contain state
     fn init(builder: &gtk::Builder) -> Self {
@@ -255,42 +293,6 @@ impl PrefWidgets {
         }
     }
 
-    fn to_metric(&self) {
-        let mut val = self.border.value();
-        let mut adjustment = self.border.adjustment();
-        adjustment.set_upper(40.0);
-        adjustment.set_step_increment(0.10);
-        adjustment.set_page_increment(5.0);
-        self.border.set_value(val * 20.4);
-        self.border.set_digits(2);
-
-        val = self.line_weight.value();
-        adjustment = self.line_weight.adjustment();
-        adjustment.set_upper(2.0);
-        adjustment.set_step_increment(0.10);
-        adjustment.set_page_increment(0.50);
-        self.line_weight.set_value(val * 20.4);
-        self.line_weight.set_digits(2);
-    }
-
-    fn to_imperial(&self) {
-        let mut val = self.border.value();
-        let mut adjustment = self.border.adjustment();
-        adjustment.set_upper(40.0 / 20.4);
-        adjustment.set_step_increment(0.01);
-        adjustment.set_page_increment(0.10);
-        self.border.set_value(val / 20.4);
-        self.border.set_digits(3);
-
-        val = self.line_weight.value();
-        adjustment = self.line_weight.adjustment();
-        adjustment.set_upper(0.098);
-        adjustment.set_step_increment(0.01);
-        adjustment.set_page_increment(0.05);
-        self.line_weight.set_value(val / 20.4);
-        self.line_weight.set_digits(3);
-    }
-
     fn external(&self) -> String {
         self.external_entry.buffer().text()
     }
@@ -337,8 +339,8 @@ impl PrefWidgets {
     }
 
     /// Returns a `GfretConfig` struct from the widget states
-    pub fn config_from_widgets(&self) -> GfretConfig {
-        GfretConfig {
+    pub fn config_from_widgets(&self) -> Config {
+        Config {
             units: self.units(),
             external_program: Some(self.external()),
             border: self.border.value(),
@@ -352,7 +354,7 @@ impl PrefWidgets {
 
     /// Sets widget states based on a `GfretConfig` struct which is loaded from file
     fn load_config(&self) {
-        let config = match GfretConfig::from_file() {
+        let config = match Config::from_file() {
             Ok(c) => c,
             Err(e) => {
                 eprintln!("Error reading config: {e}");

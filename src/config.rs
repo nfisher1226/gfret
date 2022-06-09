@@ -2,10 +2,11 @@
 use {
     crate::error::Error,
     fretboard_layout::{
-        Config, Font, Primary,
+        Font, Primary,
         PrimaryColor::{Black, Blue, White},
         Units, RGBA,
     },
+    gtk::glib,
     serde::{Deserialize, Serialize},
     std::{
         fs,
@@ -15,7 +16,7 @@ use {
 
 /// Returns an OS appropriate configuration directory path
 pub fn get_config_dir() -> PathBuf {
-    let mut configdir: PathBuf = gtk::glib::user_config_dir();
+    let mut configdir: PathBuf = glib::user_config_dir();
     let progname = env!("CARGO_PKG_NAME");
     configdir.push(progname);
     if !configdir.exists() {
@@ -32,7 +33,7 @@ pub fn get_config_file() -> PathBuf {
 }
 
 #[derive(Clone, Deserialize, Debug, Serialize)]
-pub struct GfretConfig {
+pub struct Config {
     /// Whether to use Metric (mm) or Imperial (in) measurements
     pub units: Units,
     /// An optional external program that can edit svg images
@@ -51,9 +52,9 @@ pub struct GfretConfig {
     pub font: Option<Font>,
 }
 
-impl Default for GfretConfig {
+impl Default for Config {
     fn default() -> Self {
-        GfretConfig {
+        Config {
             units: Units::default(),
             external_program: Some(String::from("inkscape")),
             border: 10.0,
@@ -66,7 +67,7 @@ impl Default for GfretConfig {
     }
 }
 
-impl GfretConfig {
+impl Config {
     /// Saves Config struct as a .toml file
     pub fn save_to_file(&self, file: &Path) -> Result<(), Error> {
         let toml_string = toml::to_string(&self)?;
@@ -83,8 +84,8 @@ impl GfretConfig {
     }
 
     /// Maps a `GfretConfig` struct to a `fretboard_layout::Config` struct
-    pub fn to_config(&self) -> Config {
-        Config {
+    pub fn truncate(&self) -> fretboard_layout::Config {
+        fretboard_layout::Config {
             units: self.units,
             border: self.border,
             line_weight: self.line_weight,

@@ -4,7 +4,11 @@ mod dialogs;
 pub mod file;
 
 use {
-    crate::{config, config::GfretConfig, template::Template, CONFIG, FILE},
+    crate::{
+        config::{self, Config},
+        template::Template,
+        Convert, CONFIG, FILE,
+    },
     adjustments::Adjustments,
     dialogs::Dialogs,
     file::File,
@@ -17,7 +21,7 @@ use {
         prelude::*,
         Application, ResponseType,
     },
-    std::{path::PathBuf, process::Command, rc::Rc, string::ToString, /*sync::Mutex,*/ thread,},
+    std::{mem, path::PathBuf, process::Command, rc::Rc, string::ToString, thread},
 };
 
 struct Gui {
@@ -100,6 +104,36 @@ impl Actions {
             gui.cleanup();
             gui.window.close();
         }));
+    }
+}
+
+impl Convert for Gui {
+    fn to_metric(&self) {
+        self.adjustments.to_metric();
+        self.bridge_spacing
+            .set_value(self.bridge_spacing.value() * 20.4);
+        self.nut_width.set_value(self.nut_width.value() * 20.4);
+        self.scale.set_value(self.scale.value() * 20.4);
+        self.scale_multi_fine
+            .set_value(self.scale_multi_fine.value() * 20.4);
+        self.bridge_spacing.set_digits(2);
+        self.nut_width.set_digits(2);
+        self.scale_fine.set_digits(2);
+        self.scale_multi_fine.set_digits(2);
+    }
+
+    fn to_imperial(&self) {
+        self.adjustments.to_imperial();
+        self.bridge_spacing
+            .set_value(self.bridge_spacing.value() / 20.4);
+        self.nut_width.set_value(self.nut_width.value() / 20.4);
+        self.scale.set_value(self.scale.value() / 20.4);
+        self.scale_multi_fine
+            .set_value(self.scale_multi_fine.value() / 20.4);
+        self.bridge_spacing.set_digits(3);
+        self.nut_width.set_digits(3);
+        self.scale_fine.set_digits(3);
+        self.scale_multi_fine.set_digits(3);
     }
 }
 
@@ -302,7 +336,7 @@ impl Gui {
                     let name = filename.to_string();
                     // When this stabilizes:
                     // Mutex::unlock(file);
-                    std::mem::drop(file);
+                    mem::drop(file);
                     thread::spawn(move || {
                         let mut file = FILE.try_lock().unwrap();
                         if let Err(e) = template.save_to_file(&PathBuf::from(&name)) {
@@ -388,7 +422,7 @@ impl Gui {
 
     fn open_external(file: &File) {
         if let Some(filename) = file.filename() {
-            let cfg = GfretConfig::from_file().unwrap_or_default();
+            let cfg = Config::from_file().unwrap_or_default();
             if let Some(cmd) = cfg.external_program {
                 match Command::new(&cmd).args(&[&filename]).spawn() {
                     Ok(_) => (),
@@ -398,38 +432,12 @@ impl Gui {
         }
     }
 
-    fn to_metric(&self) {
-        self.adjustments.to_metric();
-        self.bridge_spacing
-            .set_value(self.bridge_spacing.value() * 20.4);
-        self.nut_width.set_value(self.nut_width.value() * 20.4);
-        self.scale.set_value(self.scale.value() * 20.4);
-        self.scale_multi_fine
-            .set_value(self.scale_multi_fine.value() * 20.4);
-        self.bridge_spacing.set_digits(2);
-        self.nut_width.set_digits(2);
-        self.scale_fine.set_digits(2);
-        self.scale_multi_fine.set_digits(2);
-    }
-
-    fn to_imperial(&self) {
-        self.adjustments.to_imperial();
-        self.bridge_spacing
-            .set_value(self.bridge_spacing.value() / 20.4);
-        self.nut_width.set_value(self.nut_width.value() / 20.4);
-        self.scale.set_value(self.scale.value() / 20.4);
-        self.scale_multi_fine
-            .set_value(self.scale_multi_fine.value() / 20.4);
-        self.bridge_spacing.set_digits(3);
-        self.nut_width.set_digits(3);
-        self.scale_fine.set_digits(3);
-        self.scale_multi_fine.set_digits(3);
-    }
-
     /// Saves the program state before exiting
     fn cleanup(&self) {
         let data = self.template_from_gui();
-        data.save_statefile();
+        if let Err(e) = data.save_statefile() {
+            eprintln!("Error saving statefile: {e}");
+        }
     }
 }
 
@@ -450,8 +458,9 @@ pub fn run(template: Option<&str>) {
     application.connect_activate(move |app| {
         let gui = build_ui(app);
         if let Some(template) = &template {
-            if let Some(template) = Template::load_from_file(PathBuf::from(template.clone())) {
-                gui.load_template(&template);
+            match Template::load_from_file(PathBuf::from(template.clone())) {
+                Ok(t) => gui.load_template(&t),
+                Err(e) => eprintln!("Error loading template: {e}"),
             }
         }
     });
@@ -468,8 +477,9 @@ fn build_ui(application: &Application) -> Rc<Gui> {
     let mut statefile = config::get_config_dir();
     statefile.push("state.toml");
     if statefile.exists() {
-        if let Some(template) = Template::load_from_file(statefile) {
-            gui.load_template(&template);
+        match Template::load_from_file(statefile) {
+            Ok(t) => gui.load_template(&t),
+            Err(e) => eprintln!("Error loading statefile: {e}"),
         }
     }
 
@@ -536,8 +546,9 @@ fn build_ui(application: &Application) -> Rc<Gui> {
         .connect_response(clone!(@weak gui => move |dlg,res| {
             if res == ResponseType::Accept {
                 if let Some(path) = gui.dialogs.get_template_path() {
-                    if let Some(template) = Template::load_from_file(path) {
-                        gui.load_template(&template);
+                    match Template::load_from_file(path) {
+                        Ok(t) => gui.load_template(&t),
+                        Err(e) => eprintln!("Error opening template: {e}"),
                     }
                 }
             }
@@ -569,7 +580,7 @@ fn build_ui(application: &Application) -> Rc<Gui> {
                                 }
                             }
                             {   let mut cfg = CONFIG.lock().unwrap();
-                                *cfg = newcfg.to_config(); }
+                                *cfg = newcfg.truncate(); }
                             gui.draw_preview(true);
                         },
                         e => eprintln!("{e}"),

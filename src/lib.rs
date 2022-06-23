@@ -3,7 +3,7 @@
 //#![feature(mutex_unlock)]
 #![doc = include_str!("../README.md")]
 
-use {fretboard_layout::Config, gtk::prelude::*, gui::file::File, std::sync::Mutex};
+use {fretboard_layout::Config, gtk::prelude::*, gui::file::File, lazy_static::lazy_static, std::sync::Mutex};
 /// The cli
 pub mod cli;
 /// Handles getting the configuration data to and from disk
@@ -16,9 +16,6 @@ pub mod gui;
 mod template;
 
 pub use gui::{dialogs::PrefWidgets, Gui};
-
-#[macro_use]
-extern crate lazy_static;
 
 lazy_static! {
     static ref CONFIG: Mutex<Config> =

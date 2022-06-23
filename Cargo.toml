@@ -16,7 +16,7 @@ license = "BSD-2-Clause"
 lazy_static = "~1.4"
 svg = "~0.10"
 toml = "~0.5"
-clap = "~3.1"
+clap = "3.2"
 
 [dependencies.fretboard_layout]
 #version = "~0.3"

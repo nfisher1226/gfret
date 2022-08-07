@@ -3,7 +3,14 @@
 //#![feature(mutex_unlock)]
 #![doc = include_str!("../README.md")]
 
-use {fretboard_layout::Config, gtk::prelude::*, gui::file::File, lazy_static::lazy_static, std::sync::Mutex};
+use {
+    adw::prelude::*,
+    fretboard_layout::Config,
+    gtk::{gio, prelude::*},
+    gui::file::File,
+    lazy_static::lazy_static,
+    std::sync::Mutex
+};
 /// The cli
 pub mod cli;
 /// Handles getting the configuration data to and from disk
@@ -14,6 +21,7 @@ pub(crate) mod error;
 pub mod gui;
 /// Persistent templates
 mod template;
+mod window;
 
 pub use gui::{dialogs::PrefWidgets, Gui};
 
@@ -21,6 +29,20 @@ lazy_static! {
     static ref CONFIG: Mutex<Config> =
         Mutex::new(config::Config::from_file().unwrap_or_default().truncate());
     static ref FILE: Mutex<File> = Mutex::new(File::default());
+}
+
+pub fn run_gui() {
+    let app = adw::Application::builder()
+        .application_id("org.hitchhiker_linux.gfret")
+        .flags(gio::ApplicationFlags::HANDLES_OPEN)
+        .register_session(true)
+        .build();
+    app.connect_activate(move |app| {
+        println!("Running app");
+        let window = window::GfretWindow::new(app);
+        window.present();
+    });
+    app.run();
 }
 
 /// Switches between imperial and metric units

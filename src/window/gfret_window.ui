@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkAdjustment" id="borderAdjustment">
+    <property name="upper">20</property>
+    <property name="value">10</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">5</property>
+  </object>
+  <object class="GtkAdjustment" id="bridgeAdjustment">
+    <property name="lower">20</property>
+    <property name="upper">100</property>
+    <property name="value">56</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">5</property>
+  </object>
+  <object class="GtkAdjustment" id="fretCountAdjustment">
+    <property name="lower">8</property>
+    <property name="upper">36</property>
+    <property name="value">24</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">3</property>
+  </object>
+  <object class="GtkAdjustment" id="nutAdjustment">
+    <property name="lower">20</property>
+    <property name="upper">100</property>
+    <property name="value">43</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">5</property>
+  </object>
+  <object class="GtkAdjustment" id="perpendicularFretAdjustment">
+    <property name="upper">36</property>
+    <property name="value">8</property>
+    <property name="step-increment">0.10</property>
+    <property name="page-increment">1</property>
+  </object>
+  <object class="GtkAdjustment" id="scaleAdjustment">
+    <property name="lower">225</property>
+    <property name="upper">1250</property>
+    <property name="value">655</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="trebleScaleAdjustment">
+    <property name="lower">225</property>
+    <property name="upper">1250</property>
+    <property name="value">610</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <menu id="actionMenu">
+    <section>
+      <item>
+        <attribute name="label">Open Template</attribute>
+        <attribute name="action">win.open_template</attribute>
+      </item>
+      <item>
+        <attribute name="label">Save</attribute>
+        <attribute name="action">win.save</attribute>
+      </item>
+      <item>
+        <attribute name="label">Save As</attribute>
+        <attribute name="action">win.save_as</attribute>
+      </item>
+      <item>
+        <attribute name="label">Open External</attribute>
+        <attribute name="action">win.open_external</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label">Preferences</attribute>
+        <attribute name="action">win.preferences</attribute>
+      </item>
+      <item>
+        <attribute name="label">About</attribute>
+        <attribute name="action">win.about</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label">Quit</attribute>
+        <attribute name="action">win.quit</attribute>
+      </item>
+    </section>
+  </menu>
+  <template class="GfretWindow" parent="AdwApplicationWindow">
+    <property name="title">Gfret - unsaved</property>
+    <property name="default-width">500</property>
+    <property name="icon-name">gfret</property>
+    <property name="startup-id">gfret</property>
+    <child>
+      <object class="GtkBox">
+        <property name="hexpand">1</property>
+        <property name="vexpand">1</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <property name="margin-bottom">5</property>
+        <child>
+          <object class="AdwHeaderBar">
+            <child type="end">
+              <object class="GtkMenuButton">
+                <property name="icon-name">open-menu-symbolic</property>
+                <property name="menu-model">actionMenu</property>
+                <property name="tooltip-text" translatable="yes">Opens the application menu.</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="hexpand">1</property>
+            <property name="vexpand">1</property>
+            <property name="halign">fill</property>
+            <property name="valign">fill</property>
+            <property name="margin-start">0</property>
+            <property name="margin-end">0</property>
+            <property name="margin-top">0</property>
+            <property name="margin-bottom">0</property>
+            <child>
+              <object class="GtkPicture" id="image_preview">
+                <property name="can-focus">0</property>
+                <property name="hexpand">1</property>
+                <property name="vexpand">1</property>
+                <property name="halign">fill</property>
+                <property name="valign">fill</property>
+                <property name="margin-start">0</property>
+                <property name="margin-end">0</property>
+                <property name="margin-top">0</property>
+                <property name="margin-bottom">0</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="hexpand">1</property>
+            <property name="spacing">3</property>
+            <property name="margin-start">5</property>
+            <property name="margin-end">5</property>
+            <child>
+              <object class="GtkGrid">
+                <property name="halign">fill</property>
+                <property name="hexpand">1</property>
+                <property name="row-spacing">2</property>
+                <property name="column-spacing">3</property>
+                <child>
+                  <object class="GtkComboBoxText" id="combo_box_variant">
+                    <property name="active">0</property>
+                    <property name="tooltip-text" translatable="yes">Whether the neck has a single scale for both sides or a &quot;Multiscale&quot;, or fanned fret, layout.</property>
+                    <layout>
+                      <property name="row">0</property>\
+                      <property name="column">0</property>
+                    </layout>
+                    <items>
+                      <item translatable="yes">Monoscale</item>
+                      <item translatable="yes">Multiscale</item>
+                    </items>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkScale" id="scale_course">
+                    <property name="name">scaleCourse</property>
+                    <property name="tooltip-text" translatable="yes">Scale length course adjustment. If &quot;Multiscale&quot; is selected, this is the bass side scale length.</property>
+                    <property name="hexpand">1</property>
+                    <property name="adjustment">scaleAdjustment</property>
+                    <layout>
+                      <property name="row">0</property>\
+                      <property name="column">1</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="scale_fine">
+                    <property name="name">scaleFine</property>
+                    <property name="tooltip-text" translatable="yes">Scale length fine adjustment. If &quot;Multiscale&quot; is selected, then this will be the bass side scale length.</property>
+                    <property name="adjustment">scaleAdjustment</property>
+                    <property name="digits">2</property>
+                    <property name="numeric">1</property>
+                    <property name="update-policy">if-valid</property>
+                    <property name="value">655</property>
+                    <layout>
+                      <property name="row">0</property>\
+                      <property name="column">2</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="combo_box_handedness">
+                    <property name="active">0</property>
+                    <property name="tooltip-text" translatable="yes">Selects between right and left handed necks.</property>
+                    <layout>
+                      <property name="row">1</property>\
+                      <property name="column">0</property>
+                    </layout>
+                    <items>
+                      <item translatable="yes">Right Hand</item>
+                      <item translatable="yes">Left Hand</item>
+                    </items>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkScale" id="scale_multi_course">
+                    <property name="name">scaleMultiCourse</property>
+                    <property name="sensitive">0</property>
+                    <property name="tooltip-text" translatable="yes">Treble scale length course adjustment</property>
+                    <property name="hexpand">1</property>
+                    <property name="adjustment">trebleScaleAdjustment</property>
+                    <layout>
+                      <property name="row">1</property>\
+                      <property name="column">1</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="scale_multi_fine">
+                    <property name="name">scaleMultiFine</property>
+                    <property name="sensitive">0</property>
+                    <property name="tooltip-text" translatable="yes">Treble scale length fine adjustment</property>
+                    <property name="text" translatable="yes">610.0</property>
+                    <property name="adjustment">trebleScaleAdjustment</property>
+                    <property name="digits">2</property>
+                    <property name="numeric">1</property>
+                    <property name="update-policy">if-valid</property>
+                    <property name="value">610</property>
+                    <layout>
+                      <property name="row">1</property>\
+                      <property name="column">2</property>
+                    </layout>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="hexpand">1</property>
+            <property name="vexpand">0</property>
+            <property name="spacing">2</property>
+            <property name="margin-start">5</property>
+            <property name="margin-end">5</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="halign">center</property>
+            <property name="spacing">3</property>
+            <property name="margin-start">5</property>
+            <property name="margin-end">5</property>
+            <child>
+              <object class="GtkGrid">
+                <property name="halign">center</property>
+                <property name="hexpand">1</property>
+                <property name="row-spacing">2</property>
+                <property name="column-spacing">3</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="can-focus">0</property>
+                    <property name="label" translatable="yes">Nut Width:</property>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="row">0</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="nut_width">
+                    <property name="name">nut_width</property>
+                    <property name="tooltip-text" translatable="yes">The physical width of the neck at the nut. For multiscale designs, this dimansion is an approximation where each end of the nut will be half of this width from the centerline.</property>
+                    <property name="text" translatable="yes">43.0</property>
+                    <property name="adjustment">nutAdjustment</property>
+                    <property name="digits">2</property>
+                    <property name="numeric">1</property>
+                    <property name="update-policy">if-valid</property>
+                    <property name="value">43</property>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="row">1</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="can-focus">0</property>
+                    <property name="label" translatable="yes">Bridge Spacing:</property>
+                    <layout>
+                      <property name="column">1</property>
+                      <property name="row">0</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="bridge_spacing">
+                    <property name="name">bridgeSpacing</property>
+                    <property name="tooltip-text" translatable="yes">The string spacing at the bridge. For purposes of calculating the fretboard dimensions this number will be appropriately padded to allow for fretboard overhang beyond the outer strings.</property>
+                    <property name="text" translatable="yes">56.0</property>
+                    <property name="adjustment">bridgeAdjustment</property>
+                    <property name="digits">2</property>
+                    <property name="numeric">1</property>
+                    <property name="update-policy">if-valid</property>
+                    <property name="value">56</property>
+                    <layout>
+                      <property name="column">1</property>
+                      <property name="row">1</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="pfret_label">
+                    <property name="can-focus">0</property>
+                    <property name="label" translatable="yes">Perpendicular Fret:</property>
+                    <layout>
+                      <property name="column">2</property>
+                      <property name="row">0</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="perpendicular_fret">
+                    <property name="name">perpendicularFret</property>
+                    <property name="tooltip-text" translatable="yes">Which fret is perpendicular to the centerline. If a value is set that is between two whole numbers, then the transition will take place between frets.</property>
+                    <property name="text" translatable="yes">8.0</property>
+                    <property name="adjustment">perpendicularFretAdjustment</property>
+                    <property name="digits">1</property>
+                    <property name="numeric">1</property>
+                    <property name="update-policy">if-valid</property>
+                    <property name="value">8</property>
+                    <layout>
+                      <property name="column">2</property>
+                      <property name="row">1</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="can-focus">0</property>
+                    <property name="label" translatable="yes">Fret Count:</property>
+                    <layout>
+                      <property name="column">3</property>
+                      <property name="row">0</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="fret_count">
+                    <property name="name">fret_count</property>
+                    <property name="tooltip-text" translatable="yes">The number of frets to render</property>
+                    <property name="text" translatable="yes">24</property>
+                    <property name="adjustment">fretCountAdjustment</property>
+                    <property name="numeric">1</property>
+                    <property name="update-policy">if-valid</property>
+                    <property name="value">24</property>
+                    <layout>
+                      <property name="column">3</property>
+                      <property name="row">1</property>
+                    </layout>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

@@ -7,7 +7,6 @@ use {
         gio,
         glib::{self, clone, Object},
         prelude::*,
-        subclass::prelude::*,
         CssProvider, StyleContext,
     },
 };
@@ -25,6 +24,18 @@ impl GfretWindow {
     #[must_use]
     pub fn new(app: &adw::Application) -> Self {
         let obj: Self = Object::new(&[("application", app)]).expect("Cannot create GfretWindow");
+        obj.connect_signals();
         obj
+    }
+
+    fn connect_signals(&self) {
+        self.imp().variant_box.connect_changed(clone!(@strong self as win => move |bx| {
+            let set = bx.active_id() == Some(glib::GString::from("multiscale"));
+            win.imp().handedness_box.set_visible(set);
+            win.imp().scale_multi.set_visible(set);
+            win.imp().scale_multi_fine.set_visible(set);
+            win.imp().pfret_label.set_visible(set);
+            win.imp().perpendicular_fret.set_visible(set);
+        }));
     }
 }

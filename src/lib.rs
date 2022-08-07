@@ -38,7 +38,6 @@ pub fn run_gui() {
         .register_session(true)
         .build();
     app.connect_activate(move |app| {
-        println!("Running app");
         let window = window::GfretWindow::new(app);
         window.present();
     });

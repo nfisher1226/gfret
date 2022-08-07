@@ -2,7 +2,6 @@ use {
     adw::{prelude::*, subclass::prelude::*},
     gtk::{
         glib::{self, subclass::InitializingObject},
-        prelude::*,
         subclass::prelude::*,
         CompositeTemplate,
     },
@@ -11,6 +10,30 @@ use {
 #[derive(CompositeTemplate, Default)]
 #[template(file = "gfret_window.ui")]
 pub struct GfretWindow {
+    #[template_child]
+    pub title: TemplateChild<adw::WindowTitle>,
+    #[template_child]
+    pub variant_box: TemplateChild<gtk::ComboBoxText>,
+    #[template_child]
+    pub handedness_box: TemplateChild<gtk::ComboBoxText>,
+    #[template_child]
+    pub image_preview: TemplateChild<gtk::Picture>,
+    #[template_child]
+    pub scale: TemplateChild<gtk::Scale>,
+    #[template_child]
+    pub scale_multi: TemplateChild<gtk::Scale>,
+    #[template_child]
+    pub scale_multi_fine: TemplateChild<gtk::SpinButton>,
+    #[template_child]
+    pub nut_width: TemplateChild<gtk::SpinButton>,
+    #[template_child]
+    pub bridge_spacing: TemplateChild<gtk::SpinButton>,
+    #[template_child]
+    pub pfret_label: TemplateChild<gtk::Label>,
+    #[template_child]
+    pub perpendicular_fret: TemplateChild<gtk::SpinButton>,
+    #[template_child]
+    pub fret_count: TemplateChild<gtk::SpinButton>,
 }
 
 #[glib::object_subclass]
@@ -31,6 +54,8 @@ impl ObjectSubclass for GfretWindow {
 impl ObjectImpl for GfretWindow {
     fn constructed(&self, obj: &Self::Type) {
         self.parent_constructed(obj);
+        self.variant_box.set_active_id(Some("monoscale"));
+        self.handedness_box.set_active_id(Some("right"));
     }
 }
 

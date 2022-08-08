@@ -103,23 +103,14 @@
                 <items>
                   <item translatable="yes" id="monoscale">Monoscale</item>
                   <item translatable="yes" id="multiscale">Multiscale</item>
-                </items>
-              </object>
-            </child>
-            <child type="start">
-              <object class="GtkComboBoxText" id="handedness_box">
-                <property name="active">0</property>
-                <property name="visible">false</property>
-                <property name="tooltip-text" translatable="yes">Selects between right and left handed necks.</property>
-                <items>
-                  <item translatable="yes" id="right">Right Hand</item>
-                  <item translatable="yes" id="left">Left Hand</item>
+                  <item translatable="yes" id="multiscale_lh">Multiscale LH</item>
                 </items>
               </object>
             </child>
             <child type="title">
               <object class="AdwWindowTitle" id="title">
                 <property name="title">Gfret-3.0</property>
+                <property name="subtitle">New file</property>
               </object>
             </child>
             <child type="end">
@@ -127,6 +118,17 @@
                 <property name="icon-name">open-menu-symbolic</property>
                 <property name="menu-model">actionMenu</property>
                 <property name="tooltip-text" translatable="yes">Opens the application menu.</property>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkButton">
+                <property name="child">
+                  <object class="AdwButtonContent">
+                    <property name="icon-name">document-save-symbolic</property>
+                    <property name="label" translatable="yes">Save</property>
+                  </object>
+                </property>
+                <property name="action-name">win.save</property>
               </object>
             </child>
           </object>

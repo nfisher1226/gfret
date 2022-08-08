@@ -1,6 +1,7 @@
 use {
     adw::{prelude::*, subclass::prelude::*},
     gtk::{
+        gio,
         glib::{self, subclass::InitializingObject},
         subclass::prelude::*,
         CompositeTemplate,
@@ -14,8 +15,6 @@ pub struct GfretWindow {
     pub title: TemplateChild<adw::WindowTitle>,
     #[template_child]
     pub variant_box: TemplateChild<gtk::ComboBoxText>,
-    #[template_child]
-    pub handedness_box: TemplateChild<gtk::ComboBoxText>,
     #[template_child]
     pub image_preview: TemplateChild<gtk::Picture>,
     #[template_child]
@@ -34,6 +33,8 @@ pub struct GfretWindow {
     pub perpendicular_fret: TemplateChild<gtk::SpinButton>,
     #[template_child]
     pub fret_count: TemplateChild<gtk::SpinButton>,
+    pub file: Option<gio::File>,
+    pub changed: bool,
 }
 
 #[glib::object_subclass]
@@ -55,7 +56,6 @@ impl ObjectImpl for GfretWindow {
     fn constructed(&self, obj: &Self::Type) {
         self.parent_constructed(obj);
         self.variant_box.set_active_id(Some("monoscale"));
-        self.handedness_box.set_active_id(Some("right"));
     }
 }
 

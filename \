@@ -60,7 +60,14 @@ pub fn run(matches: &ArgMatches) {
             process::exit(1);
         }
     };
-    let specs = Specs::init(scale, count, variant, nut, bridge);
+    let pfret = match matches.value_of_t("PERPENDICULAR") {
+        Ok(c) => c,
+        Err(e) => {
+            eprintln!("{}", e);
+            process::exit(1);
+        }
+    };
+    let specs = Specs::init(scale, count, variant, nut, bridge, pfret);
     let doc = specs.create_document(None);
     let output = matches.value_of("OUTPUT").unwrap_or("-").to_string();
     if output == "-" {

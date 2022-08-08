@@ -7,7 +7,7 @@ use {
     adw::prelude::*,
     fretboard_layout::Config,
     gtk::{gio, prelude::*},
-    gui::file::File,
+    //gui::file::File,
     lazy_static::lazy_static,
     std::sync::Mutex
 };
@@ -18,17 +18,16 @@ mod config;
 /// Crate specific errors
 pub(crate) mod error;
 /// The Gtk user interface to gfret.
-pub mod gui;
+//pub mod gui;
 /// Persistent templates
 mod template;
 mod window;
 
-pub use gui::{dialogs::PrefWidgets, Gui};
+//pub use gui::{dialogs::PrefWidgets, Gui};
 
 lazy_static! {
     static ref CONFIG: Mutex<Config> =
         Mutex::new(config::Config::from_file().unwrap_or_default().truncate());
-    static ref FILE: Mutex<File> = Mutex::new(File::default());
 }
 
 pub fn run_gui() {
@@ -39,6 +38,7 @@ pub fn run_gui() {
         .build();
     app.connect_activate(move |app| {
         let window = window::GfretWindow::new(app);
+        window.draw_preview();
         window.present();
     });
     app.run();
@@ -52,6 +52,7 @@ pub(crate) trait Convert {
     fn to_metric(&self);
 }
 
+/*
 impl Convert for Gui {
     fn to_metric(&self) {
         self.adjustments.to_metric();
@@ -119,3 +120,4 @@ impl Convert for PrefWidgets {
         self.line_weight.set_digits(3);
     }
 }
+*/

@@ -5,7 +5,7 @@ use {
     crate::{
         config::{self, Config},
         template::Template,
-        Convert, CONFIG, FILE,
+        Convert, CONFIG,
     },
     fretboard_layout::{Handedness, Specs, Units, Variant},
     gtk::{
@@ -66,13 +66,15 @@ impl GfretWindow {
         match self.imp().variant_box.active() {
             Some(1) => {
                 let scale = self.imp().scale_multi.value();
-                let hand = Handedness::Right;
-                Variant::Multiscale(scale, hand)
+                let handedness = Handedness::Right;
+                let pfret = self.imp().perpendicular_fret.value();
+                Variant::Multiscale { scale, handedness, pfret }
             },
             Some(2) => {
                 let scale = self.imp().scale_multi.value();
-                let hand = Handedness::Left;
-                Variant::Multiscale(scale, hand)
+                let handedness = Handedness::Left;
+                let pfret = self.imp().perpendicular_fret.value();
+                Variant::Multiscale { scale, handedness, pfret }
             },
             _ => Variant::Monoscale,
         }
@@ -91,13 +93,12 @@ impl GfretWindow {
                 Units::Metric => self.imp().bridge_spacing.value() + 6.0,
                 Units::Imperial => self.imp().bridge_spacing.value() + (6.0 / 20.4),
             },
-            self.imp().perpendicular_fret.value(),
         )
     }
 
     /// Performs a full render of the svg image without saving to disk, and
     /// refreshes the image preview with the new data.
-    fn draw_preview(&self) {
+    pub(crate) fn draw_preview(&self) {
         //let cfg = CONFIG.try_lock().unwrap().clone();
         let cfg = fretboard_layout::Config::default();
         let image = self.specs().create_document(Some(cfg)).to_string();

@@ -5,8 +5,8 @@ use {
 };
 
 #[derive(Default, Deserialize)]
-pub(in crate::gui::actions) struct Keys {
-    pub(in crate::gui::actions) keys: HashMap<String, String>,
+pub struct Keys {
+    pub keys: HashMap<String, String>,
 }
 
 fn get_key_file() -> PathBuf {
@@ -17,7 +17,7 @@ fn get_key_file() -> PathBuf {
 
 impl Keys {
     #[must_use]
-    pub(in crate::gui::actions) fn get(&self, action: &str) -> &str {
+    pub fn get(&self, action: &str) -> &str {
         if let Some(key) = self.keys.get(action) {
             if gtk::accelerator_parse(key).is_some() {
                 return key;
@@ -35,7 +35,7 @@ impl Keys {
         }
     }
 
-    pub(in crate::gui::actions) fn from_file() -> Result<Self, crate::error::Error> {
+    pub fn from_file() -> Result<Self, crate::error::Error> {
         let keyfile = get_key_file();
         let keyfile = fs::read_to_string(keyfile)?;
         let keys: Self = toml::from_str(&keyfile)?;

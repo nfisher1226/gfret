@@ -1,8 +1,5 @@
 use gtk::{
-    glib::{
-        self,
-        subclass::{InitializingObject},
-    },
+    glib::{self, subclass::InitializingObject},
     prelude::*,
     subclass::prelude::*,
     traits::WidgetExt,

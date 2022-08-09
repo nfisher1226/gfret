@@ -1,27 +1,19 @@
 mod imp;
 
 use {
-    crate::{
-        config::{self, Config},
-        template::Template,
-        theme_switcher::ThemeSwitcher,
-        ConvertUnits, CONFIG,
-    },
+    crate::{theme_switcher::ThemeSwitcher, ConvertUnits, CONFIG},
     adw::{prelude::*, subclass::prelude::*},
     fretboard_layout::{Handedness, MultiscaleBuilder, Specs, Units, Variant},
     gtk::{
-        gdk::Display,
         gdk_pixbuf::Pixbuf,
         gio,
         gio::{Cancellable, MemoryInputStream},
         glib::{self, clone, Object},
-        prelude::*,
-        CssProvider, StyleContext,
     },
 };
 
 glib::wrapper! {
-    pub struct GfretWindow(ObjectSubclass<imp::GfretWindow>)
+    pub struct Window(ObjectSubclass<imp::Window>)
         @extends adw::ApplicationWindow, gtk::ApplicationWindow, adw::Window,
             gtk::Window, gtk::Widget,
         @implements gio::ActionGroup, gio::ActionMap, gtk::Accessible,
@@ -29,9 +21,9 @@ glib::wrapper! {
             gtk::ShortcutManager;
 }
 
-impl GfretWindow {
+impl Window {
     #[must_use]
-    pub fn new(app: &adw::Application) -> Self {
+    pub fn new(app: &crate::Application) -> Self {
         let obj: Self = Object::new(&[("application", app)]).expect("Cannot create GfretWindow");
         obj.connect_signals();
         obj.setup_theme_switcher();
@@ -153,7 +145,7 @@ impl GfretWindow {
     }
 }
 
-impl ConvertUnits for GfretWindow {
+impl ConvertUnits for Window {
     fn to_metric(&self) {
         self.imp().bridge_spacing.to_metric();
         self.imp().nut_width.to_metric();

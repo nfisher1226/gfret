@@ -3,64 +3,27 @@
 //#![feature(mutex_unlock)]
 #![doc = include_str!("../README.md")]
 
-use {
-    adw::prelude::*,
-    fretboard_layout::{Config, Units},
-    gtk::{gdk, gio, prelude::*, subclass::prelude::*},
-    //gui::file::File,
-    lazy_static::lazy_static,
-    std::sync::Mutex,
-    window::GfretWindow,
-};
+use {adw::prelude::*, fretboard_layout::Config, lazy_static::lazy_static, std::sync::Mutex};
+pub mod actions;
+pub mod application;
 /// The cli
 pub mod cli;
 /// Handles getting the configuration data to and from disk
 mod config;
 /// Crate specific errors
 pub(crate) mod error;
-/// The Gtk user interface to gfret.
-//pub mod gui;
 /// Persistent templates
 mod template;
 pub(crate) mod theme_switcher;
 mod window;
+
+pub use {actions::Actions, application::Application, window::Window};
 
 //pub use gui::{dialogs::PrefWidgets, Gui};
 
 lazy_static! {
     static ref CONFIG: Mutex<Config> =
         Mutex::new(config::Config::from_file().unwrap_or_default().truncate());
-}
-
-pub fn run_gui() {
-    let app = adw::Application::builder()
-        .application_id("org.hitchhiker_linux.gfret")
-        .flags(gio::ApplicationFlags::HANDLES_OPEN)
-        .register_session(true)
-        .build();
-    app.connect_startup(|_| {
-        adw::init();
-        adw::StyleManager::default().set_color_scheme(adw::ColorScheme::Default);
-    });
-    app.connect_activate(move |app| {
-        let window = window::GfretWindow::new(app);
-        let provider = gtk::CssProvider::new();
-        provider.load_from_data(include_str!("style.css").as_bytes());
-        gtk::StyleContext::add_provider_for_display(
-            &gdk::Display::default().expect("Cannot get display"),
-            &provider,
-            gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
-        );
-        {
-            let cfg = CONFIG.try_lock().unwrap().clone();
-            if cfg.units == Units::Imperial {
-                window.to_imperial();
-            }
-        }
-        window.draw_preview();
-        window.present();
-    });
-    app.run();
 }
 
 /// Switches between imperial and metric units

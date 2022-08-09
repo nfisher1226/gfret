@@ -165,7 +165,7 @@ cargo xtask dist
 - [x] Orient left handed output with bass strings on top **completed 1/22**
 ### 3.0
 - [x] Subclass application window from AdwApplicationWindow
-- [ ] Subclass GfretApplication from AdwApplication
+- [x] Subclass GfretApplication from AdwApplication
 - [ ] Move Config into GfretApplication
 - [x] Provide theme switcher
 - [ ] Subclass preferences window from AdwPreferencesWindow

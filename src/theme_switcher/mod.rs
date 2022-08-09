@@ -2,7 +2,6 @@ mod imp;
 
 use gtk::glib::{self, Object};
 
-
 glib::wrapper! {
     pub struct ThemeSwitcher(ObjectSubclass<imp::ThemeSwitcher>)
         @extends gtk::Widget,

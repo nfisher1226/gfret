@@ -88,7 +88,7 @@
       </item>
     </section>
   </menu>
-  <template class="GfretWindow" parent="AdwApplicationWindow">
+  <template class="Window" parent="AdwApplicationWindow">
     <property name="default-width">500</property>
     <property name="icon-name">gfret</property>
     <property name="startup-id">gfret</property>

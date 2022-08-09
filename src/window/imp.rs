@@ -10,7 +10,7 @@ use {
 
 #[derive(CompositeTemplate, Default)]
 #[template(file = "gfret_window.ui")]
-pub struct GfretWindow {
+pub struct Window {
     #[template_child]
     pub title: TemplateChild<adw::WindowTitle>,
     #[template_child]
@@ -42,9 +42,9 @@ pub struct GfretWindow {
 }
 
 #[glib::object_subclass]
-impl ObjectSubclass for GfretWindow {
-    const NAME: &'static str = "GfretWindow";
-    type Type = super::GfretWindow;
+impl ObjectSubclass for Window {
+    const NAME: &'static str = "Window";
+    type Type = super::Window;
     type ParentType = adw::ApplicationWindow;
 
     fn class_init(klass: &mut Self::Class) {
@@ -56,16 +56,16 @@ impl ObjectSubclass for GfretWindow {
     }
 }
 
-impl ObjectImpl for GfretWindow {
+impl ObjectImpl for Window {
     fn constructed(&self, obj: &Self::Type) {
         self.parent_constructed(obj);
         self.variant_box.set_active_id(Some("monoscale"));
     }
 }
 
-impl AdwApplicationWindowImpl for GfretWindow {}
-impl ApplicationWindowImpl for GfretWindow {}
-impl AdwWindowImpl for GfretWindow {}
-impl WindowImpl for GfretWindow {}
-impl WidgetImpl for GfretWindow {}
-impl BoxImpl for GfretWindow {}
+impl AdwApplicationWindowImpl for Window {}
+impl ApplicationWindowImpl for Window {}
+impl AdwWindowImpl for Window {}
+impl WindowImpl for Window {}
+impl WidgetImpl for Window {}
+impl BoxImpl for Window {}

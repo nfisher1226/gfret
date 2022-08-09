@@ -20,6 +20,8 @@ pub struct GfretWindow {
     #[template_child]
     pub scale: TemplateChild<gtk::Scale>,
     #[template_child]
+    pub scale_fine: TemplateChild<gtk::SpinButton>,
+    #[template_child]
     pub scale_multi: TemplateChild<gtk::Scale>,
     #[template_child]
     pub scale_multi_fine: TemplateChild<gtk::SpinButton>,

@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <object class="GtkAdjustment" id="borderAdjustment">
+  <object class="GtkAdjustment" id="border_adjustment">
     <property name="upper">20</property>
     <property name="value">10</property>
     <property name="step-increment">1</property>
     <property name="page-increment">5</property>
   </object>
-  <object class="GtkAdjustment" id="bridgeAdjustment">
+  <object class="GtkAdjustment" id="bridge_adjustment">
     <property name="lower">20</property>
     <property name="upper">100</property>
     <property name="value">56</property>
     <property name="step-increment">1</property>
     <property name="page-increment">5</property>
   </object>
-  <object class="GtkAdjustment" id="fretCountAdjustment">
+  <object class="GtkAdjustment" id="fret_count_adjustment">
     <property name="lower">8</property>
     <property name="upper">36</property>
     <property name="value">24</property>
     <property name="step-increment">1</property>
     <property name="page-increment">3</property>
   </object>
-  <object class="GtkAdjustment" id="nutAdjustment">
+  <object class="GtkAdjustment" id="nut_adjustment">
     <property name="lower">20</property>
     <property name="upper">100</property>
     <property name="value">43</property>
     <property name="step-increment">1</property>
     <property name="page-increment">5</property>
   </object>
-  <object class="GtkAdjustment" id="perpendicularFretAdjustment">
+  <object class="GtkAdjustment" id="perpendicular_fret_adjustment">
     <property name="upper">36</property>
     <property name="value">8</property>
     <property name="step-increment">0.10</property>
     <property name="page-increment">1</property>
   </object>
-  <object class="GtkAdjustment" id="scaleAdjustment">
+  <object class="GtkAdjustment" id="scale_adjustment">
     <property name="lower">225</property>
     <property name="upper">1250</property>
     <property name="value">655</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkAdjustment" id="trebleScaleAdjustment">
+  <object class="GtkAdjustment" id="treble_scale_adjustment">
     <property name="lower">225</property>
     <property name="upper">1250</property>
     <property name="value">610</property>
@@ -169,7 +169,7 @@
                 <property name="name">scaleCourse</property>
                 <property name="tooltip-text" translatable="yes">Scale length course adjustment. If "Multiscale" is selected, this is the bass side scale length.</property>
                 <property name="hexpand">1</property>
-                <property name="adjustment">scaleAdjustment</property>
+                <property name="adjustment">scale_adjustment</property>
                 <layout>
                   <property name="row">0</property>
                   <property name="column">0</property>
@@ -180,7 +180,7 @@
               <object class="GtkSpinButton" id="scale_fine">
                 <property name="name">scaleFine</property>
                 <property name="tooltip-text" translatable="yes">Scale length fine adjustment. If "Multiscale" is selected, then this will be the bass side scale length.</property>
-                <property name="adjustment">scaleAdjustment</property>
+                <property name="adjustment">scale_adjustment</property>
                 <property name="digits">2</property>
                 <property name="numeric">1</property>
                 <property name="update-policy">if-valid</property>
@@ -197,7 +197,7 @@
                 <property name="visible">false</property>
                 <property name="tooltip-text" translatable="yes">Treble scale length course adjustment</property>
                 <property name="hexpand">1</property>
-                <property name="adjustment">trebleScaleAdjustment</property>
+                <property name="adjustment">treble_scale_adjustment</property>
                 <layout><property name="row">1</property>
                 <property name="column">0</property></layout>
               </object>
@@ -208,7 +208,7 @@
                 <property name="visible">false</property>
                 <property name="tooltip-text" translatable="yes">Treble scale length fine adjustment</property>
                 <property name="text" translatable="yes">610.0</property>
-                <property name="adjustment">trebleScaleAdjustment</property>
+                <property name="adjustment">treble_scale_adjustment</property>
                 <property name="digits">2</property>
                 <property name="numeric">1</property>
                 <property name="update-policy">if-valid</property>
@@ -240,7 +240,7 @@
                 <property name="name">nut_width</property>
                 <property name="tooltip-text" translatable="yes">The physical width of the neck at the nut. For multiscale designs, this dimansion is an approximation where each end of the nut will be half of this width from the centerline.</property>
                 <property name="text" translatable="yes">43.0</property>
-                <property name="adjustment">nutAdjustment</property>
+                <property name="adjustment">nut_adjustment</property>
                 <property name="digits">2</property>
                 <property name="numeric">1</property>
                 <property name="update-policy">if-valid</property>
@@ -266,7 +266,7 @@
                 <property name="name">bridgeSpacing</property>
                 <property name="tooltip-text" translatable="yes">The string spacing at the bridge. For purposes of calculating the fretboard dimensions this number will be appropriately padded to allow for fretboard overhang beyond the outer strings.</property>
                 <property name="text" translatable="yes">56.0</property>
-                <property name="adjustment">bridgeAdjustment</property>
+                <property name="adjustment">bridge_adjustment</property>
                 <property name="digits">2</property>
                 <property name="numeric">1</property>
                 <property name="update-policy">if-valid</property>
@@ -294,7 +294,7 @@
                 <property name="tooltip-text" translatable="yes">Which fret is perpendicular to the centerline. If a value is set that is between two whole numbers, then the transition will take place between frets.</property>
                 <property name="text" translatable="yes">8.0</property>
                 <property name="visible">false</property>
-                <property name="adjustment">perpendicularFretAdjustment</property>
+                <property name="adjustment">perpendicular_fret_adjustment</property>
                 <property name="digits">1</property>
                 <property name="numeric">1</property>
                 <property name="update-policy">if-valid</property>
@@ -320,7 +320,7 @@
                 <property name="name">fret_count</property>
                 <property name="tooltip-text" translatable="yes">The number of frets to render</property>
                 <property name="text" translatable="yes">24</property>
-                <property name="adjustment">fretCountAdjustment</property>
+                <property name="adjustment">fret_count_adjustment</property>
                 <property name="numeric">1</property>
                 <property name="update-policy">if-valid</property>
                 <property name="value">24</property>

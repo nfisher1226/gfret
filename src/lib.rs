@@ -5,11 +5,12 @@
 
 use {
     adw::prelude::*,
-    fretboard_layout::Config,
-    gtk::{gio, prelude::*},
+    fretboard_layout::{Config, Units},
+    gtk::{gio, prelude::*, subclass::prelude::*},
     //gui::file::File,
     lazy_static::lazy_static,
-    std::sync::Mutex
+    std::sync::Mutex,
+    window::GfretWindow,
 };
 /// The cli
 pub mod cli;
@@ -38,6 +39,12 @@ pub fn run_gui() {
         .build();
     app.connect_activate(move |app| {
         let window = window::GfretWindow::new(app);
+        {
+            let cfg = CONFIG.try_lock().unwrap().clone();
+            if cfg.units == Units::Imperial {
+                window.to_imperial();
+            }
+        }
         window.draw_preview();
         window.present();
     });
@@ -45,44 +52,60 @@ pub fn run_gui() {
 }
 
 /// Switches between imperial and metric units
-pub(crate) trait Convert {
+pub(crate) trait ConvertUnits {
     /// Changes to imperial units
     fn to_imperial(&self);
     /// Changes to metric units
     fn to_metric(&self);
 }
 
-/*
-impl Convert for Gui {
+impl ConvertUnits for gtk::Adjustment {
     fn to_metric(&self) {
-        self.adjustments.to_metric();
-        self.bridge_spacing
-            .set_value(self.bridge_spacing.value() * 20.4);
-        self.nut_width.set_value(self.nut_width.value() * 20.4);
-        self.scale.set_value(self.scale.value() * 20.4);
-        self.scale_multi_fine
-            .set_value(self.scale_multi_fine.value() * 20.4);
-        self.bridge_spacing.set_digits(2);
-        self.nut_width.set_digits(2);
-        self.scale_fine.set_digits(2);
-        self.scale_multi_fine.set_digits(2);
+        self.set_lower(self.lower() * 20.4);
+        self.set_upper(self.upper() * 20.4);
+        self.set_value(self.value() * 20.4);
+        self.set_step_increment(1.0);
+        self.set_page_increment(5.0);
     }
 
     fn to_imperial(&self) {
-        self.adjustments.to_imperial();
-        self.bridge_spacing
-            .set_value(self.bridge_spacing.value() / 20.4);
-        self.nut_width.set_value(self.nut_width.value() / 20.4);
-        self.scale.set_value(self.scale.value() / 20.4);
-        self.scale_multi_fine
-            .set_value(self.scale_multi_fine.value() / 20.4);
-        self.bridge_spacing.set_digits(3);
-        self.nut_width.set_digits(3);
-        self.scale_fine.set_digits(3);
-        self.scale_multi_fine.set_digits(3);
+        self.set_lower(self.lower() / 20.4);
+        self.set_upper(self.upper() / 20.4);
+        self.set_value(self.value() / 20.4);
+        self.set_step_increment(0.125);
+        self.set_page_increment(0.5);
     }
 }
 
+impl ConvertUnits for gtk::SpinButton {
+    fn to_metric(&self) {
+        self.adjustment().to_metric();
+        self.set_digits(2);
+    }
+
+    fn to_imperial(&self) {
+        self.adjustment().to_imperial();
+        self.set_digits(3);
+    }
+}
+
+impl ConvertUnits for GfretWindow {
+    fn to_metric(&self) {
+        self.imp().bridge_spacing.to_metric();
+        self.imp().nut_width.to_metric();
+        self.imp().scale_fine.to_metric();
+        self.imp().scale_multi_fine.to_metric();
+    }
+
+    fn to_imperial(&self) {
+        self.imp().bridge_spacing.to_imperial();
+        self.imp().nut_width.to_imperial();
+        self.imp().scale_fine.to_imperial();
+        self.imp().scale_multi_fine.to_imperial();
+    }
+}
+
+/*
 impl Convert for PrefWidgets {
     fn to_metric(&self) {
         let mut val = self.border.value();
@@ -121,3 +144,4 @@ impl Convert for PrefWidgets {
     }
 }
 */
+

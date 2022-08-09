@@ -7,7 +7,7 @@ use {
         template::Template,
         Convert, CONFIG,
     },
-    fretboard_layout::{Handedness, Specs, Units, Variant},
+    fretboard_layout::{Handedness, MultiscaleBuilder, Specs, Units, Variant},
     gtk::{
         gdk::Display,
         gdk_pixbuf::Pixbuf,
@@ -65,16 +65,18 @@ impl GfretWindow {
     fn variant(&self) -> Variant {
         match self.imp().variant_box.active() {
             Some(1) => {
-                let scale = self.imp().scale_multi.value();
-                let handedness = Handedness::Right;
-                let pfret = self.imp().perpendicular_fret.value();
-                Variant::Multiscale { scale, handedness, pfret }
+                MultiscaleBuilder::new()
+                    .scale(self.imp().scale_multi.value())
+                    .handedness(Handedness::Right)
+                    .pfret(self.imp().perpendicular_fret.value())
+                    .build()
             },
             Some(2) => {
-                let scale = self.imp().scale_multi.value();
-                let handedness = Handedness::Left;
-                let pfret = self.imp().perpendicular_fret.value();
-                Variant::Multiscale { scale, handedness, pfret }
+                MultiscaleBuilder::new()
+                    .scale(self.imp().scale_multi.value())
+                    .handedness(Handedness::Left)
+                    .pfret(self.imp().perpendicular_fret.value())
+                    .build()
             },
             _ => Variant::Monoscale,
         }
@@ -84,23 +86,22 @@ impl GfretWindow {
     /// which will be used by the backend to render the svg image.
     #[allow(clippy::cast_sign_loss)]
     fn specs(&self) -> Specs {
-        Specs::init(
-            self.imp().scale.value(),
-            self.imp().fret_count.value_as_int() as u32,
-            self.variant(),
-            self.imp().nut_width.value(),
-            match CONFIG.try_lock().unwrap().units {
+        Specs::builder()
+            .scale(self.imp().scale.value())
+            .count(self.imp().fret_count.value_as_int() as u32)
+            .variant(self.variant())
+            .nut(self.imp().nut_width.value())
+            .bridge(match CONFIG.try_lock().unwrap().units {
                 Units::Metric => self.imp().bridge_spacing.value() + 6.0,
                 Units::Imperial => self.imp().bridge_spacing.value() + (6.0 / 20.4),
-            },
-        )
+            })
+            .build()
     }
 
     /// Performs a full render of the svg image without saving to disk, and
     /// refreshes the image preview with the new data.
     pub(crate) fn draw_preview(&self) {
-        //let cfg = CONFIG.try_lock().unwrap().clone();
-        let cfg = fretboard_layout::Config::default();
+        let cfg = CONFIG.try_lock().unwrap().clone();
         let image = self.specs().create_document(Some(cfg)).to_string();
         let bytes = gtk::glib::Bytes::from_owned(image.into_bytes());
         let stream = MemoryInputStream::from_bytes(&bytes);

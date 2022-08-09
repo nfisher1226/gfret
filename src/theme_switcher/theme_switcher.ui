@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="ThemeSwitcher" parent="GtkWidget">
+    <style>
+      <class name="themeswitcher"/>
+    </style>
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">horizontal</property>
+        <property name="halign">fill</property>
+        <property name="hexpand">true</property>
+        <property name="margin-top">10</property>
+        <property name="margin-bottom">10</property>
+        <property name="margin-start">10</property>
+        <property name="margin-end">10</property>
+        <property name="spacing">10</property>
+        <child>
+          <object class="GtkCheckButton" id="system_button">
+            <property name="hexpand">true</property>
+            <property name="halign">center</property>
+            <property name="tooltip-text" translatable="yes">Follow system style</property>
+            <property name="active">true</property>
+            <style>
+              <class name="theme-button"/>
+              <class name="theme-system"/>
+            </style>
+            <accessibility>
+              <property name="label" translatable="yes">Follow system style</property>
+            </accessibility>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="light_button">
+            <property name="hexpand">true</property>
+            <property name="halign">center</property>
+            <property name="tooltip-text" translatable="yes">Light style</property>
+            <property name="group">system_button</property>
+            <style>
+              <class name="theme-button"/>
+              <class name="theme-light"/>
+            </style>
+            <accessibility>
+              <property name="label" translatable="yes">Light style</property>
+            </accessibility>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="dark_button">
+            <property name="hexpand">true</property>
+            <property name="halign">center</property>
+            <property name="tooltip-text" translatable="yes">Dark style</property>
+            <property name="group">system_button</property>
+            <style>
+              <class name="theme-button"/>
+              <class name="theme-dark"/>
+            </style>
+            <accessibility>
+              <property name="label" translatable="yes">Dark style</property>
+            </accessibility>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

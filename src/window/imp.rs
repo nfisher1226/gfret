@@ -14,6 +14,8 @@ pub struct GfretWindow {
     #[template_child]
     pub title: TemplateChild<adw::WindowTitle>,
     #[template_child]
+    pub menu_button: TemplateChild<gtk::MenuButton>,
+    #[template_child]
     pub variant_box: TemplateChild<gtk::ComboBoxText>,
     #[template_child]
     pub image_preview: TemplateChild<gtk::Picture>,
@@ -67,4 +69,3 @@ impl AdwWindowImpl for GfretWindow {}
 impl WindowImpl for GfretWindow {}
 impl WidgetImpl for GfretWindow {}
 impl BoxImpl for GfretWindow {}
-

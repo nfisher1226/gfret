@@ -50,6 +50,11 @@
   <menu id="actionMenu">
     <section>
       <item>
+        <attribute name="custom">theme</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
         <attribute name="label">Open Template</attribute>
         <attribute name="action">win.open_template</attribute>
       </item>
@@ -87,13 +92,16 @@
     <property name="default-width">500</property>
     <property name="icon-name">gfret</property>
     <property name="startup-id">gfret</property>
+    <style>
+      <class name="gfret-window"/>
+    </style>
     <child>
       <object class="GtkBox">
         <property name="hexpand">1</property>
         <property name="vexpand">1</property>
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
-        <property name="margin-bottom">5</property>
+        <property name="margin-bottom">10</property>
         <child>
           <object class="AdwHeaderBar">
             <child type="start">
@@ -114,7 +122,7 @@
               </object>
             </child>
             <child type="end">
-              <object class="GtkMenuButton">
+              <object class="GtkMenuButton" id="menu_button">
                 <property name="icon-name">open-menu-symbolic</property>
                 <property name="menu-model">actionMenu</property>
                 <property name="tooltip-text" translatable="yes">Opens the application menu.</property>
@@ -162,8 +170,10 @@
           <object class="GtkGrid">
             <property name="halign">fill</property>
             <property name="hexpand">1</property>
-            <property name="row-spacing">2</property>
+            <property name="row-spacing">3</property>
             <property name="column-spacing">3</property>
+            <property name="margin-start">10</property>
+            <property name="margin-end">10</property>
             <child>
               <object class="GtkScale" id="scale">
                 <property name="name">scaleCourse</property>
@@ -223,8 +233,10 @@
           <object class="GtkGrid">
             <property name="halign">center</property>
             <property name="hexpand">1</property>
-            <property name="row-spacing">2</property>
+            <property name="row-spacing">3</property>
             <property name="column-spacing">3</property>
+            <property name="margin-start">10</property>
+            <property name="margin-end">10</property>
             <child>
               <object class="GtkLabel">
                 <property name="can-focus">0</property>

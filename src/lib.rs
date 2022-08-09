@@ -6,7 +6,7 @@
 use {
     adw::prelude::*,
     fretboard_layout::{Config, Units},
-    gtk::{gio, prelude::*, subclass::prelude::*},
+    gtk::{gdk, gio, prelude::*, subclass::prelude::*},
     //gui::file::File,
     lazy_static::lazy_static,
     std::sync::Mutex,
@@ -22,6 +22,7 @@ pub(crate) mod error;
 //pub mod gui;
 /// Persistent templates
 mod template;
+pub(crate) mod theme_switcher;
 mod window;
 
 //pub use gui::{dialogs::PrefWidgets, Gui};
@@ -37,8 +38,19 @@ pub fn run_gui() {
         .flags(gio::ApplicationFlags::HANDLES_OPEN)
         .register_session(true)
         .build();
+    app.connect_startup(|_| {
+        adw::init();
+        adw::StyleManager::default().set_color_scheme(adw::ColorScheme::Default);
+    });
     app.connect_activate(move |app| {
         let window = window::GfretWindow::new(app);
+        let provider = gtk::CssProvider::new();
+        provider.load_from_data(include_str!("style.css").as_bytes());
+        gtk::StyleContext::add_provider_for_display(
+            &gdk::Display::default().expect("Cannot get display"),
+            &provider,
+            gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
+        );
         {
             let cfg = CONFIG.try_lock().unwrap().clone();
             if cfg.units == Units::Imperial {
@@ -89,22 +101,6 @@ impl ConvertUnits for gtk::SpinButton {
     }
 }
 
-impl ConvertUnits for GfretWindow {
-    fn to_metric(&self) {
-        self.imp().bridge_spacing.to_metric();
-        self.imp().nut_width.to_metric();
-        self.imp().scale_fine.to_metric();
-        self.imp().scale_multi_fine.to_metric();
-    }
-
-    fn to_imperial(&self) {
-        self.imp().bridge_spacing.to_imperial();
-        self.imp().nut_width.to_imperial();
-        self.imp().scale_fine.to_imperial();
-        self.imp().scale_multi_fine.to_imperial();
-    }
-}
-
 /*
 impl Convert for PrefWidgets {
     fn to_metric(&self) {
@@ -144,4 +140,3 @@ impl Convert for PrefWidgets {
     }
 }
 */
-

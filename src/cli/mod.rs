@@ -42,7 +42,11 @@ pub fn run(matches: &ArgMatches) {
                 process::exit(1);
             }
         };
-        Variant::Multiscale { scale, handedness, pfret }
+        Variant::Multiscale {
+            scale,
+            handedness,
+            pfret,
+        }
     } else {
         Variant::Monoscale
     };

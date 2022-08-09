@@ -163,3 +163,14 @@ cargo xtask dist
 - [x] Support changing from metric to imperial measurements **completed 12/21**
 - [x] Support left handed multiscale fretboards **completed 12/21**
 - [x] Orient left handed output with bass strings on top **completed 1/22**
+### 3.0
+- [x] Subclass application window from AdwApplicationWindow
+- [ ] Subclass GfretApplication from AdwApplication
+- [ ] Move Config into GfretApplication
+- [x] Provide theme switcher
+- [ ] Subclass preferences window from AdwPreferencesWindow
+- [ ] Make a property action and menu entry for Units
+- [ ] Add AdwToastOverlay and set toast when a file is saved
+- [ ] Replace gfret::File type for glib::File
+- [ ] Make a `changed` boolean property of GfretWindow to track saved state
+- [ ] Create all dialogs as needed instead of persisting for the program lifespan

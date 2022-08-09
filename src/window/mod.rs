@@ -1,18 +1,19 @@
 mod imp;
 
 use {
-    adw::{prelude::*, subclass::prelude::*},
     crate::{
         config::{self, Config},
         template::Template,
-        Convert, CONFIG,
+        theme_switcher::ThemeSwitcher,
+        ConvertUnits, CONFIG,
     },
+    adw::{prelude::*, subclass::prelude::*},
     fretboard_layout::{Handedness, MultiscaleBuilder, Specs, Units, Variant},
     gtk::{
         gdk::Display,
         gdk_pixbuf::Pixbuf,
-        gio::{Cancellable, MemoryInputStream},
         gio,
+        gio::{Cancellable, MemoryInputStream},
         glib::{self, clone, Object},
         prelude::*,
         CssProvider, StyleContext,
@@ -33,51 +34,74 @@ impl GfretWindow {
     pub fn new(app: &adw::Application) -> Self {
         let obj: Self = Object::new(&[("application", app)]).expect("Cannot create GfretWindow");
         obj.connect_signals();
+        obj.setup_theme_switcher();
         obj
     }
 
     fn connect_signals(&self) {
-        self.imp().variant_box.connect_changed(clone!(@strong self as win => move |bx| {
-            let set = bx.active() == Some(1) || bx.active() == Some(2);
-            win.toggle_multi(set);
-            win.draw_preview();
-        }));
-        self.imp().scale.connect_value_changed(clone!(@weak self as win => move |scl| {
-            win.draw_preview();
-        }));
-        self.imp().scale_multi.connect_value_changed(clone!(@weak self as win => move |scl| {
-            win.draw_preview();
-        }));
-        self.imp().nut_width.connect_value_changed(clone!(@weak self as win => move |scl| {
-            win.draw_preview();
-        }));
-        self.imp().bridge_spacing.connect_value_changed(clone!(@weak self as win => move |scl| {
-            win.draw_preview();
-        }));
-        self.imp().perpendicular_fret.connect_value_changed(clone!(@weak self as win => move |scl| {
-            win.draw_preview();
-        }));
-        self.imp().fret_count.connect_value_changed(clone!(@weak self as win => move |scl| {
-            win.draw_preview();
-        }));
+        self.imp()
+            .variant_box
+            .connect_changed(clone!(@strong self as win => move |bx| {
+                let set = bx.active() == Some(1) || bx.active() == Some(2);
+                win.toggle_multi(set);
+                win.draw_preview();
+            }));
+        self.imp()
+            .scale
+            .connect_value_changed(clone!(@weak self as win => move |_scl| {
+                win.draw_preview();
+            }));
+        self.imp()
+            .scale_multi
+            .connect_value_changed(clone!(@weak self as win => move |_scl| {
+                win.draw_preview();
+            }));
+        self.imp()
+            .nut_width
+            .connect_value_changed(clone!(@weak self as win => move |_scl| {
+                win.draw_preview();
+            }));
+        self.imp()
+            .bridge_spacing
+            .connect_value_changed(clone!(@weak self as win => move |_scl| {
+                win.draw_preview();
+            }));
+        self.imp().perpendicular_fret.connect_value_changed(
+            clone!(@weak self as win => move |_scl| {
+                win.draw_preview();
+            }),
+        );
+        self.imp()
+            .fret_count
+            .connect_value_changed(clone!(@weak self as win => move |_scl| {
+                win.draw_preview();
+            }));
+    }
+
+    fn setup_theme_switcher(&self) {
+        let pop = self
+            .imp()
+            .menu_button
+            .popover()
+            .unwrap()
+            .downcast::<gtk::PopoverMenu>()
+            .unwrap();
+        let switcher = ThemeSwitcher::new();
+        pop.add_child(&switcher, "theme");
     }
 
     fn variant(&self) -> Variant {
         match self.imp().variant_box.active() {
-            Some(1) => {
-                MultiscaleBuilder::new()
-                    .scale(self.imp().scale_multi.value())
-                    .handedness(Handedness::Right)
-                    .pfret(self.imp().perpendicular_fret.value())
-                    .build()
-            },
-            Some(2) => {
-                MultiscaleBuilder::new()
-                    .scale(self.imp().scale_multi.value())
-                    .handedness(Handedness::Left)
-                    .pfret(self.imp().perpendicular_fret.value())
-                    .build()
-            },
+            Some(1) => MultiscaleBuilder::new()
+                .scale(self.imp().scale_multi.value())
+                .handedness(Handedness::Right)
+                .pfret(self.imp().perpendicular_fret.value())
+                .build(),
+            Some(2) => MultiscaleBuilder::new()
+                .scale(self.imp().scale_multi.value())
+                .handedness(Handedness::Left)
+                .pfret(self.imp().perpendicular_fret.value())
+                .build(),
             _ => Variant::Monoscale,
         }
     }
@@ -126,5 +150,21 @@ impl GfretWindow {
         self.imp().scale_multi_fine.set_visible(set);
         self.imp().pfret_label.set_visible(set);
         self.imp().perpendicular_fret.set_visible(set);
+    }
+}
+
+impl ConvertUnits for GfretWindow {
+    fn to_metric(&self) {
+        self.imp().bridge_spacing.to_metric();
+        self.imp().nut_width.to_metric();
+        self.imp().scale_fine.to_metric();
+        self.imp().scale_multi_fine.to_metric();
+    }
+
+    fn to_imperial(&self) {
+        self.imp().bridge_spacing.to_imperial();
+        self.imp().nut_width.to_imperial();
+        self.imp().scale_fine.to_imperial();
+        self.imp().scale_multi_fine.to_imperial();
     }
 }

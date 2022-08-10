@@ -68,8 +68,8 @@ impl<'a> Actions<'a> {
                     }));
                 }
                 "about" => {
-                    action.connect_activate(clone!(@strong win => move |_, _| {
-                        adw::gtk::show_about_dialog(Some(&win), &[
+                    action.connect_activate(clone!(@strong win, @weak app => move |_, _| {
+                        /*adw::gtk::show_about_dialog(Some(&win), &[
                             ("program-name", &"Gfret".to_value()),
                             ("authors", &["Nathan Fisher"].to_value()),
                             ("version", &env!("CARGO_PKG_VERSION")),
@@ -79,7 +79,34 @@ impl<'a> Actions<'a> {
                             ("logo-icon-name", &"gfret"),
                             ("copyright", &"©2020 by Nathan Fisher (the JeanG3nie)"),
                             ("website", &"https://codeberg.org/jeang3nie/gfret"),
-                        ]);
+                        ]);*/
+                        let win = adw::AboutWindow::builder()
+                            .application_icon("gfret")
+                            .application_name(&env!("CARGO_PKG_NAME").to_uppercase())
+                            .comments("A tool for lutherie\nBuilt using Rust and Gtk+")
+                            .copyright("©2020 by Nathan Fisher (the JeanG3nie)")
+                            .developer_name("Nathan Fisher")
+                            .issue_url("https://codeberg.org/jeang3nie/gfret/issues")
+                            .license_type(adw::gtk::License::Bsd)
+                            .release_notes("<p>Unreleased</p>\
+                                <ul>\
+                                <li>Move some common code into lib.rs</li>\
+                                <li>Create trait `ConvertUnits` to swap imperial and metric values</li>\
+                                <li>Move action handling into module</li>\
+                                <li>Move keybindings into module</li>\
+                                <li>Make keybindings configurable</li>\
+                                <li>Depend on libadwaita</li>\
+                                <li>Subclass Application from AdwApplication</li>\
+                                <li>Subclass Window from AdwWindow</li>\
+                                <li>Use adwaita AboutWindow</li>\
+                                </ul>"
+                            )
+                            .version(env!("CARGO_PKG_VERSION"))
+                            .website("https://jeang3nie.codeberg.page/gfret/")
+                            .application(&app)
+                            .transient_for(&win)
+                            .build();
+                        win.show();
                     }));
                 }
                 "quit" => {

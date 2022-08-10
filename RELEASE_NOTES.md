@@ -8,10 +8,14 @@ Contents
 
 ## Unreleased
 * Move some common code into lib.rs
-* Create trait `Convert` to swap imperial and metric values
+* Create trait `ConvertUnits` to swap imperial and metric values
 * Move action handling into module
 * Move keybindings into module
 * Make keybindings configurable
+* Depend on libadwaita
+* Subclass Application from AdwApplication
+* Subclass Window from AdwWindow
+* Use adwaita AboutWindow
 
 ## 2.1 release
 * Update to `gtk4-rs` version `0.4`

@@ -1,11 +1,13 @@
-use {
-    adw::{prelude::*, subclass::prelude::*},
+use adw::{
     gtk::{
+        self,
         gio,
         glib::{self, subclass::InitializingObject},
         subclass::prelude::*,
         CompositeTemplate,
     },
+    prelude::*,
+    subclass::prelude::*
 };
 
 #[derive(CompositeTemplate, Default)]

@@ -1,4 +1,4 @@
-use gtk::prelude::*;
+use adw::gtk::prelude::*;
 
 fn main() {
     let matches = gfret::cli::opts::build().get_matches();

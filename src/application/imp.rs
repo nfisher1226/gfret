@@ -1,8 +1,10 @@
 use {
     crate::{Actions, Window, ConvertUnits, CONFIG},
-    adw::subclass::prelude::*,
+    adw::{
+        gtk::{self, gdk, glib, prelude::*, subclass::prelude::*},
+        subclass::prelude::*,
+    },
     fretboard_layout::Units,
-    gtk::{gdk, glib, prelude::*, subclass::prelude::*},
 };
 
 #[derive(Default)]

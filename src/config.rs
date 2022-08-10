@@ -6,7 +6,7 @@ use {
         PrimaryColor::{Black, Blue, White},
         Units, RGBA,
     },
-    gtk::glib,
+    adw::gtk::glib,
     serde::{Deserialize, Serialize},
     std::{
         fs,

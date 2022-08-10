@@ -1,11 +1,11 @@
 mod keys;
 use {
-    crate::{Application, Window},
-    gtk::{
+    adw::gtk::{
         gio::SimpleAction,
         glib::{self, clone},
         prelude::*,
     },
+    crate::{Application, Window},
     keys::Keys,
 };
 
@@ -69,7 +69,7 @@ impl<'a> Actions<'a> {
                 }
                 "about" => {
                     action.connect_activate(clone!(@strong win => move |_, _| {
-                        gtk::show_about_dialog(Some(&win), &[
+                        adw::gtk::show_about_dialog(Some(&win), &[
                             ("program-name", &"Gfret".to_value()),
                             ("authors", &["Nathan Fisher"].to_value()),
                             ("version", &env!("CARGO_PKG_VERSION")),

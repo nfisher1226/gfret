@@ -2,14 +2,17 @@ mod imp;
 
 use {
     crate::{theme_switcher::ThemeSwitcher, ConvertUnits, CONFIG},
-    adw::{prelude::*, subclass::prelude::*},
-    fretboard_layout::{Handedness, MultiscaleBuilder, Specs, Units, Variant},
-    gtk::{
-        gdk_pixbuf::Pixbuf,
-        gio,
-        gio::{Cancellable, MemoryInputStream},
-        glib::{self, clone, Object},
+    adw::{
+        gtk::{
+            gdk_pixbuf::Pixbuf,
+            gio::{self, Cancellable, MemoryInputStream},
+            glib::{self, clone, Object},
+            self,
+        },
+        prelude::*,
+        subclass::prelude::*
     },
+    fretboard_layout::{Handedness, MultiscaleBuilder, Specs, Units, Variant},
 };
 
 glib::wrapper! {

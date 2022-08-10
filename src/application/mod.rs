@@ -1,6 +1,7 @@
 mod imp;
 
-use gtk::{
+use adw::gtk::{
+    self,
     gio::{self, ApplicationFlags},
     glib::{self, Object},
     prelude::ToValue,

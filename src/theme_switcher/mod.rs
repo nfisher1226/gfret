@@ -1,6 +1,6 @@
 mod imp;
 
-use gtk::glib::{self, Object};
+use adw::gtk::{self, glib::{self, Object}};
 
 glib::wrapper! {
     pub struct ThemeSwitcher(ObjectSubclass<imp::ThemeSwitcher>)

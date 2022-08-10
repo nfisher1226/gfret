@@ -3,7 +3,12 @@
 //#![feature(mutex_unlock)]
 #![doc = include_str!("../README.md")]
 
-use {adw::prelude::*, fretboard_layout::Config, lazy_static::lazy_static, std::sync::Mutex};
+use {
+    adw::{gtk, prelude::*},
+    fretboard_layout::Config,
+    lazy_static::lazy_static,
+    std::sync::Mutex
+};
 pub mod actions;
 pub mod application;
 /// The cli

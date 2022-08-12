@@ -18,7 +18,7 @@ pub struct Window {
     #[template_child]
     pub menu_button: TemplateChild<gtk::MenuButton>,
     #[template_child]
-    pub variant_box: TemplateChild<gtk::ComboBoxText>,
+    pub variant_list: TemplateChild<gtk::DropDown>,
     #[template_child]
     pub image_preview: TemplateChild<gtk::Picture>,
     #[template_child]
@@ -61,7 +61,6 @@ impl ObjectSubclass for Window {
 impl ObjectImpl for Window {
     fn constructed(&self, obj: &Self::Type) {
         self.parent_constructed(obj);
-        self.variant_box.set_active_id(Some("monoscale"));
     }
 }
 

@@ -35,9 +35,9 @@ impl Window {
 
     fn connect_signals(&self) {
         self.imp()
-            .variant_box
-            .connect_changed(clone!(@strong self as win => move |bx| {
-                let set = bx.active() == Some(1) || bx.active() == Some(2);
+            .variant_list
+            .connect_selected_notify(clone!(@strong self as win => move |list| {
+                let set = list.selected() == 1 || list.selected() == 2;
                 win.toggle_multi(set);
                 win.draw_preview();
             }));
@@ -86,13 +86,13 @@ impl Window {
     }
 
     fn variant(&self) -> Variant {
-        match self.imp().variant_box.active() {
-            Some(1) => MultiscaleBuilder::new()
+        match self.imp().variant_list.selected() {
+            1 => MultiscaleBuilder::new()
                 .scale(self.imp().scale_multi.value())
                 .handedness(Handedness::Right)
                 .pfret(self.imp().perpendicular_fret.value())
                 .build(),
-            Some(2) => MultiscaleBuilder::new()
+            2 => MultiscaleBuilder::new()
                 .scale(self.imp().scale_multi.value())
                 .handedness(Handedness::Left)
                 .pfret(self.imp().perpendicular_fret.value())

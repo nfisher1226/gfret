@@ -89,7 +89,8 @@
     </section>
   </menu>
   <template class="Window" parent="AdwApplicationWindow">
-    <property name="default-width">500</property>
+    <property name="default-width">700</property>
+    <property name="default-height">350</property>
     <property name="icon-name">gfret</property>
     <property name="startup-id">gfret</property>
     <style>
@@ -105,14 +106,18 @@
         <child>
           <object class="AdwHeaderBar">
             <child type="start">
-              <object class="GtkComboBoxText" id="variant_box">
-                <property name="active">0</property>
+              <object class="GtkDropDown" id="variant_list">
+                <property name="selected">0</property>
                 <property name="tooltip-text" translatable="yes">Whether the neck has a single scale for both sides or a "Multiscale", or fanned fret, layout.</property>
-                <items>
-                  <item translatable="yes" id="monoscale">Monoscale</item>
-                  <item translatable="yes" id="multiscale">Multiscale</item>
-                  <item translatable="yes" id="multiscale_lh">Multiscale LH</item>
-                </items>
+                <property name="model">
+                  <object class="GtkStringList">
+                    <items>
+                      <item translatable="yes">Monoscale</item>
+                      <item translatable="yes">Multiscale</item>
+                      <item translatable="yes">Multiscale LH</item>
+                    </items>
+                  </object>
+                </property>
               </object>
             </child>
             <child type="title">

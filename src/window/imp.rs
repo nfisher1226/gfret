@@ -1,13 +1,16 @@
-use adw::{
-    gtk::{
-        self,
-        gio,
-        glib::{self, subclass::InitializingObject},
+use {
+    adw::{
+        gtk::{
+            self,
+            gio,
+            glib::{self, once_cell::sync::Lazy, ParamSpec, ParamSpecInt, subclass::InitializingObject, Value},
+            subclass::prelude::*,
+            CompositeTemplate,
+        },
+        prelude::*,
         subclass::prelude::*,
-        CompositeTemplate,
     },
-    prelude::*,
-    subclass::prelude::*
+    std::cell::Cell,
 };
 
 #[derive(CompositeTemplate, Default)]
@@ -41,6 +44,7 @@ pub struct Window {
     pub fret_count: TemplateChild<gtk::SpinButton>,
     pub file: Option<gio::File>,
     pub changed: bool,
+    pub bass_scale: Cell<f64>,
 }
 
 #[glib::object_subclass]
@@ -59,6 +63,38 @@ impl ObjectSubclass for Window {
 }
 
 impl ObjectImpl for Window {
+    fn properties() -> &'static [glib::ParamSpec] {
+        static PROPERTIES: Lazy<Vec<glib::ParamSpec>> =
+            Lazy::new(|| vec![
+                ParamSpecInt::builder("bass_scale").build(),
+            ]);
+        PROPERTIES.as_ref()
+    }
+
+    fn set_property(
+        &self,
+        _obj: &Self::Type,
+        _id: usize,
+        value: &Value,
+        pspec: &ParamSpec,
+    ) {
+        match pspec.name() {
+            "bass_scale" => {
+                let input_scale =
+                    value.get().expect("The value needs to be of type `f64`.");
+                self.bass_scale.replace(input_scale);
+            }
+            _ => unimplemented!(),
+        }
+    }
+
+    fn property(&self, _obj: &Self::Type, _id: usize, pspec: &ParamSpec) -> Value {
+        match pspec.name() {
+            "bass_scale" => self.bass_scale.get().to_value(),
+            _ => unimplemented!(),
+        }
+    }
+
     fn constructed(&self, obj: &Self::Type) {
         self.parent_constructed(obj);
     }

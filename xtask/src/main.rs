@@ -130,6 +130,15 @@ fn copy_data() -> Result<(), Box<dyn Error>> {
     let infile: PathBuf = ["data", "gfret.svg"].iter().collect();
     fs::copy(&infile, &outfile)?;
     println!("    {} -> {}", infile.display(), outfile.display());
+    let schemadir: PathBuf = ["target", "dist", "share", "glib-2.0", "schemas"].iter().collect();
+    if !schemadir.exists() {
+        fs::create_dir_all(&schemadir)?;
+    }
+    let mut outfile = schemadir;
+    outfile.push("org.hitchhiker_linux.gfret.gschema.xml");
+    let infile: PathBuf = ["data", "org.hitchhiker_linux.gfret.gschema.xml"].iter().collect();
+    fs::copy(&infile, &outfile)?;
+    println!("    {} -> {}", infile.display(), outfile.display());
     Ok(())
 }
 

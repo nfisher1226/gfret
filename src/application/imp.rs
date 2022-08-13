@@ -1,7 +1,7 @@
 use {
     crate::{Actions, ConvertUnits, Window, CONFIG},
     adw::{
-        gio::PropertyAction,
+        gio::{PropertyAction, Settings, SettingsBindFlags},
         gtk::{
             self, gdk,
             glib::{self, once_cell::sync::Lazy, ParamSpec, ParamSpecEnum, Value},
@@ -16,12 +16,14 @@ use {
 
 pub struct Application {
     pub theme: RefCell<adw::ColorScheme>,
+    pub settings: Settings,
 }
 
 impl Default for Application {
     fn default() -> Self {
         Self {
             theme: RefCell::new(adw::ColorScheme::Default),
+            settings: Settings::new("org.hitchhiker_linux.gfret"),
         }
     }
 }
@@ -64,6 +66,9 @@ impl ObjectImpl for Application {
         self.parent_constructed(obj);
         let set_property_action = PropertyAction::new("set-theme", obj, "theme");
         obj.add_action(&set_property_action);
+        self.settings.bind("theme", obj, "theme")
+            .flags(SettingsBindFlags::DEFAULT)
+            .build();
     }
 }
 

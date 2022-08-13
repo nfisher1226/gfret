@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.hitchhiker_linux.gfret" path="/org/hitchhiker_linux/gfret/">
+    <key name="theme" type="s">
+      <choices>
+        <choice value='default'/>
+        <choice value='force-light'/>
+        <choice value='force-dark'/>
+      </choices>
+      <default>'default'</default>
+      <summary>The application theme to use</summary>
+    </key>
+  </schema>
+</schemalist>

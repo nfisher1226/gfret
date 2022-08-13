@@ -16,6 +16,7 @@ Contents
 * Subclass Application from AdwApplication
 * Subclass Window from AdwWindow
 * Use adwaita AboutWindow
+* Create Application::settings object and store application state
 
 ## 2.1 release
 * Update to `gtk4-rs` version `0.4`

@@ -151,9 +151,16 @@ required.
 cargo build --release
 ```
 If desired, a release distribution can then be generated which will include the
-binary, svg and png icons, Unix man pages, XDG .desktop file and shell completions.
+binary, svg and png icons, Unix man pages, XDG .desktop file, gschema.xml and
+shell completions.
 ```sh
 cargo xtask dist
+```
+To install, copy the contents of `target/dist` to the appropriate prefix and
+compile the gschemas.
+```Sh
+cp -Rv target/dist/* /usr/local
+glib-compile-schemas /usr/local/share/glib-2.0/gschemas/
 ```
 ## Roadmap
 - [x] For the gui, it would be nice to save state and allow loading specs
@@ -166,9 +173,10 @@ cargo xtask dist
 ### 3.0
 - [x] Subclass application window from AdwApplicationWindow
 - [x] Subclass GfretApplication from AdwApplication
+- [ ] Create a gio::Settings object and store application state in it
 - [ ] Move Config into GfretApplication
 - [x] Provide theme switcher
-- [ ] Subclass preferences window from AdwPreferencesWindow
+- [x] Subclass preferences window from AdwPreferencesWindow
 - [ ] Make a property action and menu entry for Units
 - [ ] Add AdwToastOverlay and set toast when a file is saved
 - [ ] Replace gfret::File type for glib::File

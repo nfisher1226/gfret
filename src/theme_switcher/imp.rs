@@ -37,15 +37,9 @@ impl ObjectImpl for ThemeSwitcher {
     fn constructed(&self, obj: &Self::Type) {
         self.parent_constructed(obj);
         obj.set_layout_manager(Some(&gtk::BinLayout::new()));
-        self.system_button.connect_active_notify(move |_| {
-            adw::StyleManager::default().set_color_scheme(adw::ColorScheme::Default);
-        });
-        self.light_button.connect_active_notify(move |_| {
-            adw::StyleManager::default().set_color_scheme(adw::ColorScheme::ForceLight);
-        });
-        self.dark_button.connect_active_notify(move |_| {
-            adw::StyleManager::default().set_color_scheme(adw::ColorScheme::ForceDark);
-        });
+        self.system_button.set_detailed_action_name("app.set-theme::default");
+        self.light_button.set_detailed_action_name("app.set-theme::force-light");
+        self.dark_button.set_detailed_action_name("app.set-theme::force-dark")
     }
 }
 

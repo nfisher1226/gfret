@@ -4,13 +4,13 @@ use {
     crate::{theme_switcher::ThemeSwitcher, ConvertUnits, CONFIG},
     adw::{
         gtk::{
+            self,
             gdk_pixbuf::Pixbuf,
             gio::{self, Cancellable, MemoryInputStream},
             glib::{self, clone, Object},
-            self,
         },
         prelude::*,
-        subclass::prelude::*
+        subclass::prelude::*,
     },
     fretboard_layout::{Handedness, MultiscaleBuilder, Specs, Units, Variant},
 };
@@ -34,13 +34,13 @@ impl Window {
     }
 
     fn connect_signals(&self) {
-        self.imp()
-            .variant_list
-            .connect_selected_notify(clone!(@strong self as win => move |list| {
+        self.imp().variant_list.connect_selected_notify(
+            clone!(@strong self as win => move |list| {
                 let set = list.selected() == 1 || list.selected() == 2;
                 win.toggle_multi(set);
                 win.draw_preview();
-            }));
+            }),
+        );
         self.imp()
             .scale
             .connect_value_changed(clone!(@weak self as win => move |_scl| {

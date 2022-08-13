@@ -1,9 +1,13 @@
 use {
-    crate::{Actions, Window, ConvertUnits, CONFIG},
+    crate::{Actions, ConvertUnits, Window, CONFIG},
     adw::{
-        gtk::{self, gdk,
-        glib::{self, once_cell::sync::Lazy, ParamSpec, ParamSpecEnum, Value},
-        prelude::*, subclass::prelude::*},
+        gio::PropertyAction,
+        gtk::{
+            self, gdk,
+            glib::{self, once_cell::sync::Lazy, ParamSpec, ParamSpecEnum, Value},
+            prelude::*,
+            subclass::prelude::*,
+        },
         subclass::prelude::*,
     },
     fretboard_layout::Units,
@@ -31,24 +35,18 @@ impl ObjectSubclass for Application {
 
 impl ObjectImpl for Application {
     fn properties() -> &'static [glib::ParamSpec] {
-        static PROPERTIES: Lazy<Vec<glib::ParamSpec>> =
-            Lazy::new(|| vec![
-                ParamSpecEnum::builder("theme", adw::ColorScheme::static_type()).build()
-            ]);
+        static PROPERTIES: Lazy<Vec<glib::ParamSpec>> = Lazy::new(|| {
+            vec![ParamSpecEnum::builder("theme", adw::ColorScheme::static_type()).build()]
+        });
         PROPERTIES.as_ref()
     }
 
-    fn set_property(
-        &self,
-        _obj: &Self::Type,
-        _id: usize,
-        value: &Value,
-        pspec: &ParamSpec,
-    ) {
+    fn set_property(&self, _obj: &Self::Type, _id: usize, value: &Value, pspec: &ParamSpec) {
         match pspec.name() {
             "theme" => {
-                let input_theme =
-                    value.get().expect("The value needs to be of type `adw::ColorScheme`.");
+                let input_theme = value
+                    .get()
+                    .expect("The value needs to be of type `adw::ColorScheme`.");
                 self.theme.replace(input_theme);
             }
             _ => unimplemented!(),
@@ -64,6 +62,8 @@ impl ObjectImpl for Application {
 
     fn constructed(&self, obj: &Self::Type) {
         self.parent_constructed(obj);
+        let set_property_action = PropertyAction::new("set-theme", obj, "theme");
+        obj.add_action(&set_property_action);
     }
 }
 

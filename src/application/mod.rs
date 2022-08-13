@@ -1,11 +1,11 @@
 mod imp;
 
-use adw::gtk::{
+use adw::{gtk::{
     self,
     gio::{self, ApplicationFlags},
     glib::{self, Object},
     prelude::ToValue,
-};
+}, prelude::ObjectExt, traits::AdwApplicationExt, glib::BindingFlags};
 
 glib::wrapper! {
     pub struct Application(ObjectSubclass<imp::Application>)
@@ -22,6 +22,9 @@ impl Application {
             ("register-session", &true.to_value()),
         ])
         .expect("Cannot create Application");
+        obj.bind_property("theme", &obj.style_manager(), "color-scheme")
+            .flags(BindingFlags::SYNC_CREATE)
+            .build();
         obj
     }
 }

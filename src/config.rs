@@ -1,12 +1,12 @@
 #![warn(clippy::all, clippy::pedantic)]
 use {
     crate::error::Error,
+    adw::gtk::glib,
     fretboard_layout::{
         Font, Primary,
         PrimaryColor::{Black, Blue, White},
         Units, RGBA,
     },
-    adw::gtk::glib,
     serde::{Deserialize, Serialize},
     std::{
         fs,

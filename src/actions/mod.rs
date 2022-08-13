@@ -1,11 +1,11 @@
 mod keys;
 use {
+    crate::{Application, Window},
     adw::gtk::{
         gio::SimpleAction,
         glib::{self, clone},
         prelude::*,
     },
-    crate::{Application, Window},
     keys::Keys,
 };
 

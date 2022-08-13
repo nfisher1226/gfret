@@ -35,7 +35,6 @@
             <property name="hexpand">true</property>
             <property name="halign">center</property>
             <property name="tooltip-text" translatable="yes">Light style</property>
-            <property name="group">system_button</property>
             <style>
               <class name="theme-button"/>
               <class name="theme-light"/>
@@ -50,7 +49,6 @@
             <property name="hexpand">true</property>
             <property name="halign">center</property>
             <property name="tooltip-text" translatable="yes">Dark style</property>
-            <property name="group">system_button</property>
             <style>
               <class name="theme-button"/>
               <class name="theme-dark"/>

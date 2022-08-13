@@ -7,7 +7,7 @@ use {
     adw::{gtk, prelude::*},
     fretboard_layout::Config,
     lazy_static::lazy_static,
-    std::sync::Mutex
+    std::sync::Mutex,
 };
 pub mod actions;
 pub mod application;

@@ -4,7 +4,7 @@ use {
             self, gio,
             glib::{
                 self, once_cell::sync::Lazy, subclass::InitializingObject, BindingFlags, ParamSpec,
-                ParamSpecDouble, ParamSpecUInt, Value,
+                ParamSpecUInt, Value,
             },
             subclass::prelude::*,
             CompositeTemplate,
@@ -46,13 +46,7 @@ pub struct Window {
     pub fret_count: TemplateChild<gtk::SpinButton>,
     pub file: Option<gio::File>,
     pub changed: bool,
-    // Mapping the values from the above controls to properties of the window
-    pub variant: Cell<u32>,
-    pub bass_scale: Cell<f64>,
-    pub treble_scale: Cell<f64>,
-    pub nut: Cell<f64>,
-    pub bridge: Cell<f64>,
-    pub pfret: Cell<f64>,
+    // Mapping this value to a u32 so as to bind to a settings property
     pub count: Cell<u32>,
 }
 
@@ -75,12 +69,6 @@ impl ObjectImpl for Window {
     fn properties() -> &'static [glib::ParamSpec] {
         static PROPERTIES: Lazy<Vec<glib::ParamSpec>> =
             Lazy::new(|| vec![
-                ParamSpecUInt::builder("variant").build(),
-                ParamSpecDouble::builder("bass-scale").build(),
-                ParamSpecDouble::builder("treble-scale").build(),
-                ParamSpecDouble::builder("nut-width").build(),
-                ParamSpecDouble::builder("bridge-spacing").build(),
-                ParamSpecDouble::builder("perpendicular-fret").build(),
                 ParamSpecUInt::builder("fret-count").build(),
             ]);
         PROPERTIES.as_ref()
@@ -88,30 +76,6 @@ impl ObjectImpl for Window {
 
     fn set_property(&self, _obj: &Self::Type, _id: usize, value: &Value, pspec: &ParamSpec) {
         match pspec.name() {
-            "variant" => {
-                let input = value.get().expect("The value needs to be of type `u32`.");
-                self.variant.replace(input);
-            }
-            "bass-scale" => {
-                let input_scale = value.get().expect("The value needs to be of type `f64`.");
-                self.bass_scale.replace(input_scale);
-            }
-            "treble-scale" => {
-                let input_scale = value.get().expect("The value needs to be of type `f64`.");
-                self.treble_scale.replace(input_scale);
-            }
-            "nut-width" => {
-                let input = value.get().expect("The value needs to be of type `f64`.");
-                self.nut.replace(input);
-            }
-            "bridge-spacing" => {
-                let input = value.get().expect("The value needs to be of type `f64`.");
-                self.bridge.replace(input);
-            }
-            "perpendicular-fret" => {
-                let input = value.get().expect("The value needs to be of type `f64`.");
-                self.pfret.replace(input);
-            }
             "fret-count" => {
                 let input = value.get().expect("The value needs to be of type `f64`.");
                 self.count.replace(input);
@@ -122,12 +86,6 @@ impl ObjectImpl for Window {
 
     fn property(&self, _obj: &Self::Type, _id: usize, pspec: &ParamSpec) -> Value {
         match pspec.name() {
-            "variant" => self.variant.get().to_value(),
-            "bass-scale" => self.bass_scale.get().to_value(),
-            "treble-scale" => self.treble_scale.get().to_value(),
-            "nut-width" => self.nut.get().to_value(),
-            "bridge-spacing" => self.bridge.get().to_value(),
-            "perpendicular-fret" => self.pfret.get().to_value(),
             "fret-count" => self.count.get().to_value(),
             _ => unimplemented!(),
         }
@@ -135,24 +93,6 @@ impl ObjectImpl for Window {
 
     fn constructed(&self, obj: &Self::Type) {
         self.parent_constructed(obj);
-        obj.bind_property("variant", &obj.imp().variant_list.get(), "selected")
-            .flags(BindingFlags::SYNC_CREATE | BindingFlags::BIDIRECTIONAL)
-            .build();
-        obj.bind_property("bass-scale", &self.scale.adjustment(), "value")
-            .flags(BindingFlags::SYNC_CREATE | BindingFlags::BIDIRECTIONAL)
-            .build();
-        obj.bind_property("treble-scale", &self.scale_multi.adjustment(), "value")
-            .flags(BindingFlags::SYNC_CREATE | BindingFlags::BIDIRECTIONAL)
-            .build();
-        obj.bind_property("nut-width", &self.nut_width.adjustment(), "value")
-            .flags(BindingFlags::SYNC_CREATE | BindingFlags::BIDIRECTIONAL)
-            .build();
-        obj.bind_property("bridge-spacing", &self.bridge_spacing.adjustment(), "value")
-            .flags(BindingFlags::SYNC_CREATE | BindingFlags::BIDIRECTIONAL)
-            .build();
-        obj.bind_property("perpendicular-fret", &self.perpendicular_fret.adjustment(), "value")
-            .flags(BindingFlags::SYNC_CREATE | BindingFlags::BIDIRECTIONAL)
-            .build();
         obj.bind_property("fret-count", &self.fret_count.adjustment(), "value")
             .transform_to(|_,value| {
                 let num = value.get::<u32>().expect("The property needs to be of type `u32`.");

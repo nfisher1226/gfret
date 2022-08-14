@@ -6,7 +6,7 @@ use {
         gtk::{
             self,
             gdk_pixbuf::Pixbuf,
-            gio::{self, Cancellable, MemoryInputStream},
+            gio::{self, Cancellable, MemoryInputStream, SettingsBindFlags},
             glib::{self, clone, Object},
         },
         prelude::*,
@@ -30,7 +30,33 @@ impl Window {
         let obj: Self = Object::new(&[("application", app)]).expect("Cannot create GfretWindow");
         obj.connect_signals();
         obj.setup_theme_switcher();
+        obj.bind_properties(app);
         obj
+    }
+
+    fn bind_properties(&self, app: &crate::Application) {
+        let settings = &app.imp().settings;
+        settings.bind("fret-count", self, "fret-count")
+            .flags(SettingsBindFlags::DEFAULT)
+            .build();
+        settings.bind("scale", &self.imp().scale.adjustment(), "value")
+            .flags(SettingsBindFlags::DEFAULT)
+            .build();
+        settings.bind("treble-scale", &self.imp().scale_multi.adjustment(), "value")
+            .flags(SettingsBindFlags::DEFAULT)
+            .build();
+        settings.bind("nut-width", &self.imp().nut_width.adjustment(), "value")
+            .flags(SettingsBindFlags::DEFAULT)
+            .build();
+        settings.bind("bridge-spacing", &self.imp().bridge_spacing.adjustment(), "value")
+            .flags(SettingsBindFlags::DEFAULT)
+            .build();
+        settings.bind("perpendicular-fret", &self.imp().perpendicular_fret.adjustment(), "value")
+            .flags(SettingsBindFlags::DEFAULT)
+            .build();
+        settings.bind("variant", &self.imp().variant_list.get(), "selected")
+            .flags(SettingsBindFlags::DEFAULT)
+            .build();
     }
 
     fn connect_signals(&self) {

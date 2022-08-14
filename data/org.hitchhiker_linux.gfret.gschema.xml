@@ -10,5 +10,33 @@
       <default>'default'</default>
       <summary>The application theme to use</summary>
     </key>
+    <key name="fret-count" type="u">
+      <default>24</default>
+      <summary>The number of frets to render</summary>
+    </key>
+    <key name="scale" type="d">
+      <default>655.0</default>
+      <summary>The main scale length</summary>
+    </key>
+    <key name="treble-scale" type="d">
+      <default>610.0</default>
+      <summary>The treble scale length</summary>
+    </key>
+    <key name="nut-width" type="d">
+      <default>43.0</default>
+      <summary>The width at the nut</summary>
+    </key>
+    <key name="bridge-spacing" type="d">
+      <default>56.0</default>
+      <summary>The distance between the two outer strings at the bridge</summary>
+    </key>
+    <key name="perpendicular-fret" type="d">
+      <default>8.0</default>
+      <summary>The fret which is at a right angle to the neck centerline</summary>
+    </key>
+    <key name="variant" type="u">
+      <default>0</default>
+      <summary>Monoscale, multiscale, or multiscale left handed types</summary>
+    </key>
   </schema>
 </schemalist>

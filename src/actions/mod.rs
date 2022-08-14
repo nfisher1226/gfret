@@ -64,22 +64,11 @@ impl<'a> Actions<'a> {
                 }
                 "preferences" => {
                     action.connect_activate(clone!(@weak win => move |_, _| {
-                        //gui.dialogs.preferences.show();
+                        win.run_preferences();
                     }));
                 }
                 "about" => {
                     action.connect_activate(clone!(@strong win, @weak app => move |_, _| {
-                        /*adw::gtk::show_about_dialog(Some(&win), &[
-                            ("program-name", &"Gfret".to_value()),
-                            ("authors", &["Nathan Fisher"].to_value()),
-                            ("version", &env!("CARGO_PKG_VERSION")),
-                            ("license", &include_str!(r"../../LICENSE")),
-                            ("wrap-license", &true),
-                            ("comments", &"A tool for lutherie\nBuilt using Rust and Gtk+"),
-                            ("logo-icon-name", &"gfret"),
-                            ("copyright", &"©2020 by Nathan Fisher (the JeanG3nie)"),
-                            ("website", &"https://codeberg.org/jeang3nie/gfret"),
-                        ]);*/
                         let win = adw::AboutWindow::builder()
                             .application_icon("gfret")
                             .application_name(&env!("CARGO_PKG_NAME").to_uppercase())

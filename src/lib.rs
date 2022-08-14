@@ -17,6 +17,7 @@ pub mod cli;
 mod config;
 /// Crate specific errors
 pub(crate) mod error;
+pub mod preferences;
 /// Persistent templates
 mod template;
 pub(crate) mod theme_switcher;

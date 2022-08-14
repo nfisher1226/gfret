@@ -1,7 +1,12 @@
 mod imp;
 
 use {
-    crate::{theme_switcher::ThemeSwitcher, ConvertUnits, CONFIG},
+    crate::{
+        preferences::PreferencesWindow,
+        theme_switcher::ThemeSwitcher,
+        ConvertUnits,
+        CONFIG
+    },
     adw::{
         gtk::{
             self,
@@ -171,6 +176,11 @@ impl Window {
         self.imp().scale_multi_fine.set_visible(set);
         self.imp().pfret_label.set_visible(set);
         self.imp().perpendicular_fret.set_visible(set);
+    }
+
+    pub fn run_preferences(&self) {
+        let pwin = PreferencesWindow::new();
+        pwin.show();
     }
 }
 

@@ -12,62 +12,6 @@
     <property name="step-increment">0.10</property>
     <property name="page-increment">0.50</property>
   </object>
-  <object class="GtkSpinButton" id="border_width">
-    <property name="adjustment">border_adjustment</property>
-    <property name="digits">2</property>
-    <property name="numeric">1</property>
-    <property name="vexpand">false</property>
-    <property name="valign">center</property>
-  </object>
-  <object class="GtkSpinButton" id="line_weight">
-    <property name="adjustment">weight_adjustment</property>
-    <property name="digits">2</property>
-    <property name="numeric">1</property>
-    <property name="vexpand">false</property>
-    <property name="valign">center</property>
-  </object>
-  <object class="GtkButton" id="external_button">
-    <property name="receives-default">1</property>
-    <property name="halign">end</property>
-    <property name="tooltip-text" translatable="yes">Choose an external editor to run for svg files.</property>
-    <property name="icon-name">folder</property>
-    <property name="vexpand">false</property>
-    <property name="valign">center</property>
-  </object>
-  <object class="GtkColorButton" id="fretline_color">
-    <property name="hexpand">false</property>
-    <property name="vexpand">false</property>
-    <property name="valign">center</property>
-    <property name="rgba">rgb(255,255,255)</property>
-  </object>
-  <object class="GtkColorButton" id="fretboard_color">
-    <property name="hexpand">false</property>
-    <property name="vexpand">false</property>
-    <property name="valign">center</property>
-    <property name="rgba">rgb(36,31,49)</property>
-  </object>
-  <object class="GtkSwitch" id="draw_centerline">
-    <property name="vexpand">false</property>
-    <property name="valign">center</property>
-  </object>
-  <object class="GtkColorButton" id="centerline_color">
-    <property name="hexpand">false</property>
-    <property name="vexpand">false</property>
-    <property name="valign">center</property>
-    <property name="rgba">rgb(0,0,255)</property>
-  </object>
-  <object class="GtkSwitch" id="print_specs">
-    <property name="vexpand">false</property>
-    <property name="valign">center</property>
-  </object>
-  <object class="GtkFontButton" id="font_chooser">
-    <property name="vexpand">false</property>
-    <property name="valign">center</property>
-    <property name="font">Sans 12</property>
-    <property name="language">en-us</property>
-    <property name="preview-text"></property>
-    <property name="use-font">1</property>
-  </object>
   <template class="PreferencesWindow" parent="AdwPreferencesWindow">
     <child>
       <object class="AdwPreferencesPage">
@@ -76,6 +20,17 @@
             <child>
               <object class="AdwEntryRow" id="external_row">
                 <property name="title">External editor</property>
+                <property name="text">inkscape</property>
+                <child>
+                  <object class="GtkButton" id="external_button">
+                    <property name="receives-default">1</property>
+                    <property name="halign">end</property>
+                    <property name="tooltip-text" translatable="yes">Choose an external editor to run for svg files.</property>
+                    <property name="icon-name">folder</property>
+                    <property name="vexpand">false</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
@@ -95,11 +50,29 @@
             <child>
               <object class="AdwActionRow" id="border_row">
                 <property name="title">Border width</property>
+                <child>
+                  <object class="GtkSpinButton" id="border_width">
+                    <property name="adjustment">border_adjustment</property>
+                    <property name="digits">2</property>
+                    <property name="numeric">1</property>
+                    <property name="vexpand">false</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
               <object class="AdwActionRow" id="line_weight_row">
                 <property name="title">Line weight</property>
+                <child>
+                  <object class="GtkSpinButton" id="line_weight">
+                    <property name="adjustment">weight_adjustment</property>
+                    <property name="digits">2</property>
+                    <property name="numeric">1</property>
+                    <property name="vexpand">false</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -110,33 +83,79 @@
             <child>
               <object class="AdwActionRow" id="fretline_color_row">
                 <property name="title">Fret line color</property>
+                <child>
+  <object class="GtkColorButton" id="fretline_color">
+    <property name="hexpand">false</property>
+    <property name="vexpand">false</property>
+    <property name="valign">center</property>
+    <property name="rgba">rgb(255,255,255)</property>
+  </object>
+                </child>
               </object>
             </child>
             <child>
               <object class="AdwActionRow" id="fretboard_color_row">
                 <property name="title">Fretboard color</property>
+                <child>
+  <object class="GtkColorButton" id="fretboard_color">
+    <property name="hexpand">false</property>
+    <property name="vexpand">false</property>
+    <property name="valign">center</property>
+    <property name="rgba">rgb(36,31,49)</property>
+  </object>
+                </child>
               </object>
             </child>
             <child>
               <object class="AdwActionRow" id="centerline_row">
                 <property name="title">Draw Centerline</property>
+                <child>
+                  <object class="GtkSwitch" id="draw_centerline">
+                    <property name="vexpand">false</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
               <object class="AdwActionRow" id="centerline_color_row">
                 <property name="title">Centerline Color</property>
+                <child>
+  <object class="GtkColorButton" id="centerline_color">
+    <property name="hexpand">false</property>
+    <property name="vexpand">false</property>
+    <property name="valign">center</property>
+    <property name="rgba">rgb(0,0,255)</property>
+  </object>
+                </child>
               </object>
             </child>
             <child>
               <object class="AdwActionRow" id="print_row">
                 <property name="title">Print Specs</property>
                 <property name="subtitle">Whether to print the specifications on the document</property>
+                <child>
+  <object class="GtkSwitch" id="print_specs">
+    <property name="vexpand">false</property>
+    <property name="valign">center</property>
+  </object>
+                </child>
               </object>
             </child>
             <child>
               <object class="AdwActionRow" id="font_row">
                 <property name="title">Font</property>
                 <property name="subtitle">The font used to print the specifications</property>
+                <child>
+  <object class="GtkFontButton" id="font_chooser">
+    <property name="vexpand">false</property>
+    <property name="valign">center</property>
+    <property name="font">Sans 12</property>
+    <property name="language">en-us</property>
+    <property name="preview-text"/>
+    <property name="use-font">1</property>
+  </object>
+                </child>
               </object>
             </child>
           </object>

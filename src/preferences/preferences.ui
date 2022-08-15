@@ -84,12 +84,12 @@
               <object class="AdwActionRow" id="fretline_color_row">
                 <property name="title">Fret line color</property>
                 <child>
-  <object class="GtkColorButton" id="fretline_color">
-    <property name="hexpand">false</property>
-    <property name="vexpand">false</property>
-    <property name="valign">center</property>
-    <property name="rgba">rgb(255,255,255)</property>
-  </object>
+                  <object class="GtkColorButton" id="fretline_color">
+                    <property name="hexpand">false</property>
+                    <property name="vexpand">false</property>
+                    <property name="valign">center</property>
+                    <property name="rgba">rgb(255,255,255)</property>
+                  </object>
                 </child>
               </object>
             </child>
@@ -97,12 +97,12 @@
               <object class="AdwActionRow" id="fretboard_color_row">
                 <property name="title">Fretboard color</property>
                 <child>
-  <object class="GtkColorButton" id="fretboard_color">
-    <property name="hexpand">false</property>
-    <property name="vexpand">false</property>
-    <property name="valign">center</property>
-    <property name="rgba">rgb(36,31,49)</property>
-  </object>
+                  <object class="GtkColorButton" id="fretboard_color">
+                    <property name="hexpand">false</property>
+                    <property name="vexpand">false</property>
+                    <property name="valign">center</property>
+                    <property name="rgba">rgb(36,31,49)</property>
+                  </object>
                 </child>
               </object>
             </child>
@@ -121,12 +121,12 @@
               <object class="AdwActionRow" id="centerline_color_row">
                 <property name="title">Centerline Color</property>
                 <child>
-  <object class="GtkColorButton" id="centerline_color">
-    <property name="hexpand">false</property>
-    <property name="vexpand">false</property>
-    <property name="valign">center</property>
-    <property name="rgba">rgb(0,0,255)</property>
-  </object>
+                  <object class="GtkColorButton" id="centerline_color">
+                    <property name="hexpand">false</property>
+                    <property name="vexpand">false</property>
+                    <property name="valign">center</property>
+                    <property name="rgba">rgb(0,0,255)</property>
+                  </object>
                 </child>
               </object>
             </child>
@@ -135,10 +135,10 @@
                 <property name="title">Print Specs</property>
                 <property name="subtitle">Whether to print the specifications on the document</property>
                 <child>
-  <object class="GtkSwitch" id="print_specs">
-    <property name="vexpand">false</property>
-    <property name="valign">center</property>
-  </object>
+                  <object class="GtkSwitch" id="print_specs">
+                    <property name="vexpand">false</property>
+                    <property name="valign">center</property>
+                  </object>
                 </child>
               </object>
             </child>
@@ -147,14 +147,14 @@
                 <property name="title">Font</property>
                 <property name="subtitle">The font used to print the specifications</property>
                 <child>
-  <object class="GtkFontButton" id="font_chooser">
-    <property name="vexpand">false</property>
-    <property name="valign">center</property>
-    <property name="font">Sans 12</property>
-    <property name="language">en-us</property>
-    <property name="preview-text"/>
-    <property name="use-font">1</property>
-  </object>
+                  <object class="GtkFontButton" id="font_chooser">
+                    <property name="vexpand">false</property>
+                    <property name="valign">center</property>
+                    <property name="font">Sans 12</property>
+                    <property name="language">en-us</property>
+                    <property name="preview-text"/>
+                    <property name="use-font">1</property>
+                  </object>
                 </child>
               </object>
             </child>

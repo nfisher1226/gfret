@@ -1,13 +1,8 @@
 mod imp;
 
-use adw::{
-    gtk::{self, gio, glib::{self, Object}},
-    prelude::*,
-    subclass::{
-        prelude::*,
-        window::AdwWindowImpl,
-        preferences_window::PreferencesWindowImpl
-    },
+use adw::gtk::{
+    self,
+    glib::{self, Object},
 };
 
 glib::wrapper! {
@@ -20,8 +15,8 @@ glib::wrapper! {
 
 impl PreferencesWindow {
     #[must_use]
-     pub fn new() -> Self {
+    pub fn new() -> Self {
         let obj: Self = Object::new(&[]).expect("Cannot create preferences window");
         obj
-     }
+    }
 }

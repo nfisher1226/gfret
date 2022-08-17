@@ -1,12 +1,7 @@
 mod imp;
 
 use {
-    crate::{
-        preferences::PreferencesWindow,
-        theme_switcher::ThemeSwitcher,
-        ConvertUnits,
-        CONFIG
-    },
+    crate::{ConvertUnits, PreferencesWindow, ThemeSwitcher, CONFIG},
     adw::{
         gtk::{
             self,
@@ -41,25 +36,44 @@ impl Window {
 
     fn bind_properties(&self, app: &crate::Application) {
         let settings = &app.imp().settings;
-        settings.bind("fret-count", self, "fret-count")
+        settings
+            .bind("fret-count", self, "fret-count")
             .flags(SettingsBindFlags::DEFAULT)
             .build();
-        settings.bind("scale", &self.imp().scale.adjustment(), "value")
+        settings
+            .bind("scale", &self.imp().scale.adjustment(), "value")
             .flags(SettingsBindFlags::DEFAULT)
             .build();
-        settings.bind("treble-scale", &self.imp().scale_multi.adjustment(), "value")
+        settings
+            .bind(
+                "treble-scale",
+                &self.imp().scale_multi.adjustment(),
+                "value",
+            )
             .flags(SettingsBindFlags::DEFAULT)
             .build();
-        settings.bind("nut-width", &self.imp().nut_width.adjustment(), "value")
+        settings
+            .bind("nut-width", &self.imp().nut_width.adjustment(), "value")
             .flags(SettingsBindFlags::DEFAULT)
             .build();
-        settings.bind("bridge-spacing", &self.imp().bridge_spacing.adjustment(), "value")
+        settings
+            .bind(
+                "bridge-spacing",
+                &self.imp().bridge_spacing.adjustment(),
+                "value",
+            )
             .flags(SettingsBindFlags::DEFAULT)
             .build();
-        settings.bind("perpendicular-fret", &self.imp().perpendicular_fret.adjustment(), "value")
+        settings
+            .bind(
+                "perpendicular-fret",
+                &self.imp().perpendicular_fret.adjustment(),
+                "value",
+            )
             .flags(SettingsBindFlags::DEFAULT)
             .build();
-        settings.bind("variant", &self.imp().variant_list.get(), "selected")
+        settings
+            .bind("variant", &self.imp().variant_list.get(), "selected")
             .flags(SettingsBindFlags::DEFAULT)
             .build();
     }

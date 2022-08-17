@@ -182,3 +182,5 @@ glib-compile-schemas /usr/local/share/glib-2.0/gschemas/
 - [ ] Replace gfret::File type for glib::File
 - [ ] Make a `changed` boolean property of GfretWindow to track saved state
 - [ ] Create all dialogs as needed instead of persisting for the program lifespan
+- [ ] Replace templates with the ability to re-open svg files created by this
+      application

@@ -17,15 +17,14 @@ pub mod cli;
 mod config;
 /// Crate specific errors
 pub(crate) mod error;
-pub mod preferences;
-/// Persistent templates
-mod template;
-pub(crate) mod theme_switcher;
+mod preferences;
+mod theme_switcher;
 mod window;
 
-pub use {actions::Actions, application::Application, window::Window};
-
-//pub use gui::{dialogs::PrefWidgets, Gui};
+pub use {
+    actions::Actions, application::Application, preferences::PreferencesWindow,
+    theme_switcher::ThemeSwitcher, window::Window,
+};
 
 lazy_static! {
     static ref CONFIG: Mutex<Config> =

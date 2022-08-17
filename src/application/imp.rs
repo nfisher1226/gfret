@@ -4,12 +4,7 @@ use {
     crate::{Actions, ConvertUnits, Window, CONFIG},
     adw::{
         gio::{PropertyAction, Settings, SettingsBindFlags},
-        gtk::{
-            self, gdk,
-            glib,
-            prelude::*,
-            subclass::prelude::*,
-        },
+        gtk::{self, gdk, glib, prelude::*, subclass::prelude::*},
         subclass::prelude::*,
     },
     fretboard_layout::Units,
@@ -37,9 +32,11 @@ impl ObjectSubclass for Application {
 impl ObjectImpl for Application {
     fn constructed(&self, obj: &Self::Type) {
         self.parent_constructed(obj);
-        let set_property_action = PropertyAction::new("set-theme", &obj.style_manager(), "color-scheme");
+        let set_property_action =
+            PropertyAction::new("set-theme", &obj.style_manager(), "color-scheme");
         obj.add_action(&set_property_action);
-        self.settings.bind("theme", &obj.style_manager(), "color-scheme")
+        self.settings
+            .bind("theme", &obj.style_manager(), "color-scheme")
             .flags(SettingsBindFlags::DEFAULT)
             .build();
     }

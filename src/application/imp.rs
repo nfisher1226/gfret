@@ -1,11 +1,10 @@
-use adw::traits::AdwApplicationExt;
-
 use {
     crate::{Actions, ConvertUnits, Window, CONFIG},
     adw::{
         gio::{PropertyAction, Settings, SettingsBindFlags},
         gtk::{self, gdk, glib, prelude::*, subclass::prelude::*},
         subclass::prelude::*,
+        traits::AdwApplicationExt,
     },
     fretboard_layout::Units,
 };

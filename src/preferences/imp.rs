@@ -17,13 +17,17 @@ pub struct PreferencesWindow {
     #[template_child]
     pub weight_adjustment: TemplateChild<gtk::Adjustment>,
     #[template_child]
+    pub external_row: TemplateChild<adw::EntryRow>,
+    #[template_child]
     pub external_button: TemplateChild<gtk::Button>,
+    #[template_child]
+    pub units_selector: TemplateChild<adw::ComboRow>,
     #[template_child]
     pub border_width: TemplateChild<gtk::SpinButton>,
     #[template_child]
     pub line_weight: TemplateChild<gtk::SpinButton>,
     #[template_child]
-    fretline_color: TemplateChild<gtk::ColorButton>,
+    pub fretline_color: TemplateChild<gtk::ColorButton>,
     #[template_child]
     pub fretboard_color: TemplateChild<gtk::ColorButton>,
     #[template_child]
@@ -33,7 +37,7 @@ pub struct PreferencesWindow {
     #[template_child]
     pub centerline_color: TemplateChild<gtk::ColorButton>,
     #[template_child]
-    print_specs: TemplateChild<gtk::Switch>,
+    pub print_specs: TemplateChild<gtk::Switch>,
     #[template_child]
     font_row: TemplateChild<adw::ActionRow>,
     #[template_child]

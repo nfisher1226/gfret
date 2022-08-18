@@ -206,7 +206,12 @@ impl Window {
     }
 
     pub fn run_preferences(&self) {
-        let pwin = PreferencesWindow::new();
+        let app = self
+            .application()
+            .unwrap()
+            .downcast::<crate::Application>()
+            .unwrap();
+        let pwin = PreferencesWindow::new(&app);
         pwin.show();
     }
 }

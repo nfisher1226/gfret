@@ -1,18 +1,12 @@
-use {
-    adw::{
-        gtk::{
-            self, gio,
-            glib::{
-                self, once_cell::sync::Lazy, subclass::InitializingObject, BindingFlags, ParamSpec,
-                ParamSpecUInt, Value,
-            },
-            subclass::prelude::*,
-            CompositeTemplate,
-        },
-        prelude::*,
+use adw::{
+    gtk::{
+        self, gio,
+        glib::{self, subclass::InitializingObject},
         subclass::prelude::*,
+        CompositeTemplate,
     },
-    std::cell::Cell,
+    prelude::*,
+    subclass::prelude::*,
 };
 
 #[derive(CompositeTemplate, Default)]
@@ -46,8 +40,6 @@ pub struct Window {
     pub fret_count: TemplateChild<gtk::SpinButton>,
     pub file: Option<gio::File>,
     pub changed: bool,
-    // Mapping this value to a u32 so as to bind to a settings property
-    pub count: Cell<u32>,
 }
 
 #[glib::object_subclass]
@@ -66,48 +58,8 @@ impl ObjectSubclass for Window {
 }
 
 impl ObjectImpl for Window {
-    fn properties() -> &'static [glib::ParamSpec] {
-        static PROPERTIES: Lazy<Vec<glib::ParamSpec>> =
-            Lazy::new(|| vec![ParamSpecUInt::builder("fret-count").build()]);
-        PROPERTIES.as_ref()
-    }
-
-    fn set_property(&self, _obj: &Self::Type, _id: usize, value: &Value, pspec: &ParamSpec) {
-        match pspec.name() {
-            "fret-count" => {
-                let input = value.get().expect("The value needs to be of type `f64`.");
-                self.count.replace(input);
-            }
-            _ => unimplemented!(),
-        }
-    }
-
-    fn property(&self, _obj: &Self::Type, _id: usize, pspec: &ParamSpec) -> Value {
-        match pspec.name() {
-            "fret-count" => self.count.get().to_value(),
-            _ => unimplemented!(),
-        }
-    }
-
     fn constructed(&self, obj: &Self::Type) {
         self.parent_constructed(obj);
-        obj.bind_property("fret-count", &self.fret_count.adjustment(), "value")
-            .transform_to(|_, value| {
-                let num = value
-                    .get::<u32>()
-                    .expect("The property needs to be of type `u32`.");
-                let num = f64::from(num);
-                Some(num.to_value())
-            })
-            .transform_from(|_, value| {
-                let num = value
-                    .get::<f64>()
-                    .expect("the property needs to be of type `f64`.");
-                let num = num as u32;
-                Some(num.to_value())
-            })
-            .flags(BindingFlags::SYNC_CREATE | BindingFlags::BIDIRECTIONAL)
-            .build();
     }
 }
 

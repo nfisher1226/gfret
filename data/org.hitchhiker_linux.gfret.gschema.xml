@@ -38,5 +38,40 @@
       <default>0</default>
       <summary>Monoscale, multiscale, or multiscale left handed types</summary>
     </key>
+    <key name="external-editor" type="s">
+      <default>'inkscape'</default>
+      <summary>An external program capable of editing svg files</summary>
+    </key>
+    <key name="border-width" type="d">
+      <default>10</default>
+      <summary>The width of the border around the rendered image</summary>
+    </key>
+    <key name="line-weight" type="d">
+      <default>1</default>
+    </key>
+    <key name="fretline-color" type="s">
+      <default>'rgba(255,255,255,255)'</default>
+      <summary>The color used to draw the fret lines</summary>
+    </key>
+    <key name="fretboard-color" type="s">
+      <default>'rgba(36,31,49,255)'</default>
+      <summary>The color of the fretboard</summary>
+    </key>
+    <key name="draw-centerline" type="b">
+      <default>true</default>
+      <summary>Whether to draw the dashed centerline</summary>
+    </key>
+    <key name="centerline-color" type="s">
+      <default>'rgba(0,0,0,255)'</default>
+      <summary>The color of the centerline</summary>
+    </key>
+    <key name="print-specs" type="b">
+      <default>true</default>
+      <summary>Whether to print the specs used in creation on the document</summary>
+    </key>
+    <key name="font" type="s">
+      <default>'Sans Regular 10'</default>
+      <summary>The font used to print the specifications</summary>
+    </key>
   </schema>
 </schemalist>

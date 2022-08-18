@@ -37,8 +37,21 @@ impl Window {
     fn bind_properties(&self, app: &crate::Application) {
         let settings = &app.imp().settings;
         settings
-            .bind("fret-count", self, "fret-count")
-            .flags(SettingsBindFlags::DEFAULT)
+            .bind("fret-count", &self.imp().fret_count.adjustment(), "value")
+            .mapping(|variant, _vtype| {
+                let num = variant
+                    .get::<u32>()
+                    .expect("The value needs to be of type `u32`");
+                let num = f64::from(num);
+                Some(num.to_value())
+            })
+            .set_mapping(|value, _vtype| {
+                let num = value
+                    .get::<f64>()
+                    .expect("The value needs to be of type `f64`");
+                let num = num as u32;
+                Some(num.to_variant())
+            })
             .build();
         settings
             .bind("scale", &self.imp().scale.adjustment(), "value")

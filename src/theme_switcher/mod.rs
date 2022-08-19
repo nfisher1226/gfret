@@ -11,10 +11,15 @@ glib::wrapper! {
         @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget;
 }
 
+impl Default for ThemeSwitcher {
+    fn default() -> Self {
+        Object::new(&[]).expect("Cannot create ThemeSwitcher")
+    }
+}
+
 impl ThemeSwitcher {
     #[must_use]
     pub fn new() -> Self {
-        let obj: Self = Object::new(&[]).expect("Cannot create ThemeSwitcher");
-        obj
+        Self::default()
     }
 }

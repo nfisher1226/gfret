@@ -34,6 +34,8 @@ impl Window {
         obj
     }
 
+    #[allow(clippy::cast_possible_truncation)]
+    #[allow(clippy::cast_sign_loss)]
     fn bind_properties(&self, app: &crate::Application) {
         let settings = &app.imp().settings;
         settings
@@ -190,12 +192,6 @@ impl Window {
             return;
         }
         self.imp().image_preview.set_pixbuf(Some(&pixbuf.unwrap()));
-        /*if swap {
-            if let Ok(mut file) = FILE.try_lock() {
-                file.unset_current();
-                self.set_window_title(&file);
-            }
-        }*/
     }
 
     fn toggle_multi(&self, set: bool) {
@@ -205,12 +201,13 @@ impl Window {
         self.imp().perpendicular_fret.set_visible(set);
     }
 
+    /// Creates and displays a preferences window
     pub fn run_preferences(&self) {
         let app = self
             .application()
-            .unwrap()
+            .expect("Cannot get application")
             .downcast::<crate::Application>()
-            .unwrap();
+            .expect("The application must be of type `crate::Application`");
         let pwin = PreferencesWindow::new(&app);
         pwin.show();
     }

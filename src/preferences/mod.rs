@@ -2,11 +2,9 @@ mod imp;
 
 use adw::{
     gdk,
-    gio::SettingsBindFlags,
     gtk::{
         self,
         glib::{self, Object},
-        pango::FontDescription,
     },
     prelude::*,
     subclass::prelude::*,
@@ -30,12 +28,12 @@ impl PreferencesWindow {
 
     fn bind_properties(&self, app: &crate::Application) {
         let settings = &app.imp().settings;
+        let imp = self.imp();
         settings
-            .bind("external-editor", &self.imp().external_row.get(), "text")
-            .flags(SettingsBindFlags::DEFAULT)
+            .bind("external-editor", &imp.external_row.get(), "text")
             .build();
         settings
-            .bind("units", &self.imp().units_selector.get(), "selected")
+            .bind("units", &imp.units_selector.get(), "selected")
             .mapping(|variant, _vtype| {
                 let item = variant
                     .get::<String>()
@@ -54,18 +52,15 @@ impl PreferencesWindow {
                     _ => Some("imperial".to_variant()),
                 }
             })
-            .flags(SettingsBindFlags::DEFAULT)
             .build();
         settings
-            .bind("border-width", &self.imp().border_adjustment.get(), "value")
-            .flags(SettingsBindFlags::DEFAULT)
+            .bind("border-width", &imp.border_adjustment.get(), "value")
             .build();
         settings
-            .bind("line-weight", &self.imp().weight_adjustment.get(), "value")
-            .flags(SettingsBindFlags::DEFAULT)
+            .bind("line-weight", &imp.weight_adjustment.get(), "value")
             .build();
         settings
-            .bind("fretline-color", &self.imp().fretline_color.get(), "rgba")
+            .bind("fretline-color", &imp.fretline_color.get(), "rgba")
             .mapping(|variant, _vtype| {
                 let rgba = variant
                     .get::<String>()
@@ -81,10 +76,9 @@ impl PreferencesWindow {
                     .to_string();
                 Some(color.to_variant())
             })
-            .flags(SettingsBindFlags::DEFAULT)
             .build();
         settings
-            .bind("fretboard-color", &self.imp().fretboard_color.get(), "rgba")
+            .bind("fretboard-color", &imp.fretboard_color.get(), "rgba")
             .mapping(|variant, _vtype| {
                 let rgba = variant
                     .get::<String>()
@@ -100,22 +94,12 @@ impl PreferencesWindow {
                     .to_string();
                 Some(color.to_variant())
             })
-            .flags(SettingsBindFlags::DEFAULT)
             .build();
         settings
-            .bind(
-                "draw-centerline",
-                &self.imp().draw_centerline.get(),
-                "active",
-            )
-            .flags(SettingsBindFlags::DEFAULT)
+            .bind("draw-centerline", &imp.draw_centerline.get(), "active")
             .build();
         settings
-            .bind(
-                "centerline-color",
-                &self.imp().centerline_color.get(),
-                "rgba",
-            )
+            .bind("centerline-color", &imp.centerline_color.get(), "rgba")
             .mapping(|variant, _vtype| {
                 let rgba = variant
                     .get::<String>()
@@ -131,29 +115,12 @@ impl PreferencesWindow {
                     .to_string();
                 Some(color.to_variant())
             })
-            .flags(SettingsBindFlags::DEFAULT)
             .build();
         settings
-            .bind("print-specs", &self.imp().print_specs.get(), "active")
-            .flags(SettingsBindFlags::DEFAULT)
+            .bind("print-specs", &imp.print_specs.get(), "active")
             .build();
         settings
-            .bind("specs-font", &self.imp().font_chooser.get(), "font-desc")
-            .mapping(|variant, _vtype| {
-                let font = variant
-                    .get::<String>()
-                    .expect("The value needs to be of type `String`");
-                let font_desc = FontDescription::from_string(&font);
-                Some(font_desc.to_value())
-            })
-            .set_mapping(|value, _vtype| {
-                let font = value
-                    .get::<FontDescription>()
-                    .expect("The value needs to be of type `FontDescription`")
-                    .to_string();
-                Some(font.to_variant())
-            })
-            .flags(SettingsBindFlags::DEFAULT)
+            .bind("specs-font", &imp.font_chooser.get(), "font")
             .build();
     }
 }

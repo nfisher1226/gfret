@@ -42,7 +42,7 @@ impl ObjectImpl for ThemeSwitcher {
         self.light_button
             .set_detailed_action_name("app.set-theme::force-light");
         self.dark_button
-            .set_detailed_action_name("app.set-theme::force-dark")
+            .set_detailed_action_name("app.set-theme::force-dark");
     }
 }
 

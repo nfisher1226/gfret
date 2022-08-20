@@ -180,7 +180,12 @@ impl Window {
     /// Performs a full render of the svg image without saving to disk, and
     /// refreshes the image preview with the new data.
     pub(crate) fn draw_preview(&self) {
-        let cfg = CONFIG.try_lock().unwrap().clone();
+        let app = self
+            .application()
+            .expect("Cannot get application")
+            .downcast::<crate::Application>()
+            .expect("The app needs to be of type `crate::Application`");
+        let cfg = app.config();
         let image = self.specs().create_document(Some(cfg)).to_string();
         let bytes = gtk::glib::Bytes::from_owned(image.into_bytes());
         let stream = MemoryInputStream::from_bytes(&bytes);

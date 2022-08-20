@@ -1,7 +1,7 @@
 mod imp;
 
 use {
-    crate::config::Config,
+    fretboard_layout::Config,
     adw::{
         gtk::{
             self,
@@ -45,7 +45,6 @@ impl Application {
             .get::<String>("units")
             .parse()
             .expect("Could not parse units from string");
-        let external_program = Some(settings.get::<String>("external-editor"));
         let border = settings.get::<f64>("border-width");
         let line_weight = settings.get::<f64>("line-weight");
         let fretline_color = settings
@@ -67,7 +66,6 @@ impl Application {
         let font = Some(FontDescription::from_string(&font).into());
         Config {
             units,
-            external_program,
             border,
             line_weight,
             fretline_color,

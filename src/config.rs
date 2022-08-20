@@ -1,12 +1,9 @@
 #![warn(clippy::all, clippy::pedantic)]
+
 use {
     crate::error::Error,
     adw::gtk::glib,
-    fretboard_layout::{
-        Font, Primary,
-        PrimaryColor::{Black, Blue, White},
-        Units, RGBA,
-    },
+    fretboard_layout::{Font, PrimaryColor, Units, RGBA},
     serde::{Deserialize, Serialize},
     std::{
         fs,
@@ -59,9 +56,9 @@ impl Default for Config {
             external_program: Some(String::from("inkscape")),
             border: 10.0,
             line_weight: 1.0,
-            fretline_color: RGBA::primary(White),
-            fretboard_color: RGBA::primary(Black),
-            centerline_color: Some(RGBA::primary(Blue)),
+            fretline_color: PrimaryColor::White.into(),
+            fretboard_color: PrimaryColor::Black.into(),
+            centerline_color: Some(PrimaryColor::Blue.into()),
             font: Some(Font::default()),
         }
     }

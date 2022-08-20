@@ -27,7 +27,7 @@ features = ["dox", "v1_2"]
 [dependencies.fretboard_layout]
 #version = "~0.3"
 git = "https://codeberg.org/jeang3nie/fretboard-layout"
-features = ["gdk"]
+features = ["gdk", "pango"]
 
 [dependencies.gtk]
 version = "*"
@@ -35,6 +35,14 @@ package = "gtk4"
 #[dependencies.gtk]
 #version = "0.4"
 #package = "gtk4"
+
+[dependencies.gdk]
+version = "*"
+package = "gdk4"
+
+[dependencies.pango]
+version = "*"
+package = "pango"
 
 [dependencies.serde]
 version = "1.0"

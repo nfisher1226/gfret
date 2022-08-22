@@ -1,7 +1,6 @@
 mod imp;
 
 use {
-    fretboard_layout::Config,
     adw::{
         gtk::{
             self,
@@ -12,6 +11,7 @@ use {
         prelude::*,
         subclass::prelude::*,
     },
+    fretboard_layout::Config,
     pango::FontDescription,
 };
 
@@ -57,11 +57,13 @@ impl Application {
             .parse::<gdk::RGBA>()
             .expect("The string could not be parsed into an RGBA struct")
             .into();
-        let centerline_color = Some(settings
-            .get::<String>("centerline-color")
-            .parse::<gdk::RGBA>()
-            .expect("The string could not be parsed into an RGBA struct")
-            .into());
+        let centerline_color = Some(
+            settings
+                .get::<String>("centerline-color")
+                .parse::<gdk::RGBA>()
+                .expect("The string could not be parsed into an RGBA struct")
+                .into(),
+        );
         let font = settings.get::<String>("specs-font");
         let font = Some(FontDescription::from_string(&font).into());
         Config {

@@ -234,7 +234,10 @@ impl Window {
             .action(gtk::FileChooserAction::Save)
             .create_folders(true)
             .build();
-        dlg.add_buttons(&[("Cancel", gtk::ResponseType::Cancel), ("Ok", gtk::ResponseType::Ok)]);
+        dlg.add_buttons(&[
+            ("Cancel", gtk::ResponseType::Cancel),
+            ("Ok", gtk::ResponseType::Ok),
+        ]);
         dlg.connect_response(clone!(@weak self as win => move |dlg,res| {
             if res == gtk::ResponseType::Ok {
                 {
@@ -266,18 +269,38 @@ impl Window {
             match svg::save(file.path().unwrap(), &img) {
                 Ok(_) => {
                     self.set_toast(&format!("{} saved", file.basename().unwrap().display()));
-                },
+                    self.update_title();
+                }
                 Err(e) => eprintln!("{e}"),
             }
         }
     }
 
     fn set_toast(&self, toast: &str) {
-        let toast = adw::Toast::builder()
-            .title(toast)
-            .timeout(3)
-            .build();
+        let toast = adw::Toast::builder().title(toast).timeout(3).build();
         self.imp().overlay.add_toast(&toast);
+    }
+
+    fn update_title(&self) {
+        let title_widget = &self.imp().title;
+        if let Some(file) = self.imp().file.borrow().clone() {
+            if let Some(base) = file.basename() {
+                title_widget.set_title(&format!(
+                    "{}-{} - {}",
+                    env!("CARGO_PKG_NAME"),
+                    env!("CARGO_PKG_VERSION"),
+                    base.display(),
+                ));
+            }
+            if let Some(parent) = file.parent() {
+                if let Some(path) = parent.path() {
+                    title_widget.set_subtitle(&format!(
+                        "{}",
+                        path.display(),
+                    ));
+                }
+            }
+        }
     }
 }
 

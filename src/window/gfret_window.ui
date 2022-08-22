@@ -147,18 +147,9 @@
           </object>
         </child>
         <child>
-          <object class="GtkScrolledWindow">
-            <property name="hexpand">1</property>
-            <property name="vexpand">1</property>
-            <property name="halign">fill</property>
-            <property name="valign">fill</property>
-            <property name="margin-start">0</property>
-            <property name="margin-end">0</property>
-            <property name="margin-top">0</property>
-            <property name="margin-bottom">0</property>
+          <object class="AdwToastOverlay" id="overlay">
             <child>
-              <object class="GtkPicture" id="image_preview">
-                <property name="can-focus">0</property>
+              <object class="GtkScrolledWindow">
                 <property name="hexpand">1</property>
                 <property name="vexpand">1</property>
                 <property name="halign">fill</property>
@@ -167,6 +158,19 @@
                 <property name="margin-end">0</property>
                 <property name="margin-top">0</property>
                 <property name="margin-bottom">0</property>
+                <child>
+                  <object class="GtkPicture" id="image_preview">
+                    <property name="can-focus">0</property>
+                    <property name="hexpand">1</property>
+                    <property name="vexpand">1</property>
+                    <property name="halign">fill</property>
+                    <property name="valign">fill</property>
+                    <property name="margin-start">0</property>
+                    <property name="margin-end">0</property>
+                    <property name="margin-top">0</property>
+                    <property name="margin-bottom">0</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -213,8 +217,10 @@
                 <property name="tooltip-text" translatable="yes">Treble scale length course adjustment</property>
                 <property name="hexpand">1</property>
                 <property name="adjustment">treble_scale_adjustment</property>
-                <layout><property name="row">1</property>
-                <property name="column">0</property></layout>
+                <layout>
+                  <property name="row">1</property>
+                  <property name="column">0</property>
+                </layout>
               </object>
             </child>
             <child>
@@ -228,8 +234,10 @@
                 <property name="numeric">1</property>
                 <property name="update-policy">if-valid</property>
                 <property name="value">610</property>
-                <layout><property name="row">1</property>
-                <property name="column">1</property></layout>
+                <layout>
+                  <property name="row">1</property>
+                  <property name="column">1</property>
+                </layout>
               </object>
             </child>
           </object>

@@ -264,10 +264,20 @@ impl Window {
             let cfg = app.config();
             let img = self.specs().create_document(Some(cfg));
             match svg::save(file.path().unwrap(), &img) {
-                Ok(_) => {},
+                Ok(_) => {
+                    self.set_toast(&format!("{} saved", file.basename().unwrap().display()));
+                },
                 Err(e) => eprintln!("{e}"),
             }
         }
+    }
+
+    fn set_toast(&self, toast: &str) {
+        let toast = adw::Toast::builder()
+            .title(toast)
+            .timeout(3)
+            .build();
+        self.imp().overlay.add_toast(&toast);
     }
 }
 

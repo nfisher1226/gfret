@@ -22,6 +22,8 @@ pub struct Window {
     #[template_child]
     pub variant_list: TemplateChild<gtk::DropDown>,
     #[template_child]
+    pub overlay: TemplateChild<adw::ToastOverlay>,
+    #[template_child]
     pub image_preview: TemplateChild<gtk::Picture>,
     #[template_child]
     pub scale: TemplateChild<gtk::Scale>,

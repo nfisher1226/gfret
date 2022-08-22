@@ -1,12 +1,15 @@
-use adw::{
-    gtk::{
-        self, gio,
-        glib::{self, subclass::InitializingObject},
+use {
+    adw::{
+        gtk::{
+            self, gio,
+            glib::{self, subclass::InitializingObject},
+            subclass::prelude::*,
+            CompositeTemplate,
+        },
+        prelude::*,
         subclass::prelude::*,
-        CompositeTemplate,
     },
-    prelude::*,
-    subclass::prelude::*,
+    std::cell::RefCell,
 };
 
 #[derive(CompositeTemplate, Default)]
@@ -38,7 +41,7 @@ pub struct Window {
     pub perpendicular_fret: TemplateChild<gtk::SpinButton>,
     #[template_child]
     pub fret_count: TemplateChild<gtk::SpinButton>,
-    pub file: Option<gio::File>,
+    pub file: RefCell<Option<gio::File>>,
     pub changed: bool,
 }
 

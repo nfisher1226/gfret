@@ -44,12 +44,12 @@ impl<'a> Actions<'a> {
                 }
                 "save" => {
                     action.connect_activate(clone!(@weak win => move |_, _| {
-                        //gui.save();
+                        win.save();
                     }));
                 }
                 "save_as" => {
                     action.connect_activate(clone!(@weak win => move |_, _| {
-                        //gui.dialogs.save_as.show();
+                        win.save_as();
                     }));
                 }
                 "open_external" => {

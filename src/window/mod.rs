@@ -216,6 +216,59 @@ impl Window {
         let pwin = PreferencesWindow::new(&app);
         pwin.show();
     }
+
+    pub fn save(&self) {
+        let file = self.imp().file.borrow().clone();
+        if file.is_none() {
+            self.save_as();
+            return;
+        }
+        self.do_save();
+    }
+
+    pub fn save_as(&self) {
+        let dlg = gtk::FileChooserDialog::builder()
+            .application(&self.application().unwrap())
+            .title("Select a location")
+            .transient_for(self)
+            .action(gtk::FileChooserAction::Save)
+            .create_folders(true)
+            .build();
+        dlg.add_buttons(&[("Cancel", gtk::ResponseType::Cancel), ("Ok", gtk::ResponseType::Ok)]);
+        dlg.connect_response(clone!(@weak self as win => move |dlg,res| {
+            if res == gtk::ResponseType::Ok {
+                {
+                    let file = dlg.file();
+                    if let Some(f) = file {
+                        let mut path = f.path().expect("Cannot get file path");
+                        path.set_extension("svg");
+                        let f = gio::File::for_path(&path);
+                        *win.imp().file.borrow_mut() = Some(f);
+                    }
+                }
+                win.do_save();
+            }
+            dlg.close();
+        }));
+        dlg.show();
+    }
+
+    fn do_save(&self) {
+        let file = self.imp().file.borrow();
+        if let Some(file) = &*file {
+            let app = self
+                .application()
+                .expect("Cannot get application")
+                .downcast::<crate::Application>()
+                .expect("The app needs to be of type `crate::Application`");
+            let cfg = app.config();
+            let img = self.specs().create_document(Some(cfg));
+            match svg::save(file.path().unwrap(), &img) {
+                Ok(_) => {},
+                Err(e) => eprintln!("{e}"),
+            }
+        }
+    }
 }
 
 impl ConvertUnits for Window {

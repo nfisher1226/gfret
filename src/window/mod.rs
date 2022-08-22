@@ -1,7 +1,7 @@
 mod imp;
 
 use {
-    crate::{ConvertUnits, PreferencesWindow, ThemeSwitcher, CONFIG},
+    crate::{ConvertUnits, PreferencesWindow, ThemeSwitcher},
     adw::{
         gtk::{
             self,
@@ -165,12 +165,17 @@ impl Window {
     /// which will be used by the backend to render the svg image.
     #[allow(clippy::cast_sign_loss)]
     fn specs(&self) -> Specs {
+        let app = self
+            .application()
+            .expect("Cannot get application")
+            .downcast::<crate::Application>()
+            .expect("The struct must be of type `crate::Application`");
         Specs::builder()
             .scale(self.imp().scale.value())
             .count(self.imp().fret_count.value_as_int() as u32)
             .variant(self.variant())
             .nut(self.imp().nut_width.value())
-            .bridge(match CONFIG.try_lock().unwrap().units {
+            .bridge(match app.config().units {
                 Units::Metric => self.imp().bridge_spacing.value() + 6.0,
                 Units::Imperial => self.imp().bridge_spacing.value() + (6.0 / 20.4),
             })

@@ -3,18 +3,12 @@
 //#![feature(mutex_unlock)]
 #![doc = include_str!("../README.md")]
 
-use {
-    adw::{gtk, prelude::*},
-    fretboard_layout::Config,
-    lazy_static::lazy_static,
-    std::sync::Mutex,
-};
+use adw::{gtk, prelude::*};
+
 pub mod actions;
 pub mod application;
 /// The cli
 pub mod cli;
-/// Handles getting the configuration data to and from disk
-mod config;
 /// Crate specific errors
 pub(crate) mod error;
 mod preferences;
@@ -25,11 +19,6 @@ pub use {
     actions::Actions, application::Application, preferences::PreferencesWindow,
     theme_switcher::ThemeSwitcher, window::Window,
 };
-
-lazy_static! {
-    static ref CONFIG: Mutex<Config> =
-        Mutex::new(config::Config::from_file().unwrap_or_default().truncate());
-}
 
 /// Switches between imperial and metric units
 pub(crate) trait ConvertUnits {

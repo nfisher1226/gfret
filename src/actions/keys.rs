@@ -1,5 +1,5 @@
 use {
-    crate::config,
+    adw::glib,
     serde::Deserialize,
     std::{collections::HashMap, fs, path::PathBuf},
 };
@@ -10,7 +10,8 @@ pub struct Keys {
 }
 
 fn get_key_file() -> PathBuf {
-    let mut file = config::get_config_dir();
+    let mut file = glib::user_config_dir();
+    file.push(env!("CARGO_PKG_NAME"));
     file.push("keys.toml");
     file
 }

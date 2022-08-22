@@ -1,5 +1,5 @@
 use {
-    crate::{Actions, ConvertUnits, Window, CONFIG},
+    crate::{Actions, ConvertUnits, Window},
     adw::{
         gio::{PropertyAction, Settings, SettingsBindFlags},
         gtk::{self, gdk, glib, prelude::*, subclass::prelude::*},
@@ -54,7 +54,7 @@ impl ApplicationImpl for Application {
                 gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
             );
             {
-                let cfg = CONFIG.try_lock().unwrap().clone();
+                let cfg = app.config();
                 if cfg.units == Units::Imperial {
                     window.to_imperial();
                 }

@@ -182,6 +182,30 @@ impl Window {
             .build()
     }
 
+    fn load_specs(&self, specs: &Specs) {
+        self.imp().scale.set_value(specs.scale);
+        match specs.variant() {
+            Variant::Monoscale => {
+                self.imp().variant_list.set_selected(0);
+            }
+            Variant::Multiscale {
+                scale: s,
+                handedness: h,
+                pfret: pf,
+            } => {
+                match h {
+                    Handedness::Right => self.imp().variant_list.set_selected(1),
+                    Handedness::Left => self.imp().variant_list.set_selected(2),
+                }
+                self.imp().scale_multi.set_value(s);
+                self.imp().perpendicular_fret.set_value(pf);
+            }
+        }
+        self.imp().fret_count.set_value(specs.count as f64);
+        self.imp().nut_width.set_value(specs.nut);
+        self.imp().bridge_spacing.set_value(specs.bridge);
+    }
+
     /// Performs a full render of the svg image without saving to disk, and
     /// refreshes the image preview with the new data.
     pub(crate) fn draw_preview(&self) {
@@ -222,6 +246,42 @@ impl Window {
         pwin.show();
     }
 
+    pub fn open_file(&self) {
+        let filter = gtk::FileFilter::new();
+        filter.add_pattern("*.svg");
+        filter.set_name(Some("svg images"));
+        let dlg = gtk::FileChooserDialog::builder()
+            .application(&self.application().expect("Cannot get application"))
+            .title("Select a file to open")
+            .transient_for(self)
+            .action(gtk::FileChooserAction::Open)
+            .create_folders(true)
+            .select_multiple(false)
+            .filter(&filter)
+            .build();
+        dlg.add_buttons(&[
+            ("Cancel", gtk::ResponseType::Cancel),
+            ("Accept", gtk::ResponseType::Accept),
+        ]);
+        dlg.connect_response(clone!(@weak self as win => move |dlg,res| {
+            if res == gtk::ResponseType::Accept {
+                if let Some(file) = dlg.file() {
+                    if let Some(path) = file.path() {
+                        if let Ok(specs) = fretboard_layout::open::open(path) {
+                            win.load_specs(&specs);
+                            let base = file.basename().unwrap();
+                            win.set_toast(&format!("{} opened", base.display()));
+                            *win.imp().file.borrow_mut() = Some(file);
+                            win.update_title();
+                        }
+                    }
+                }
+            }
+            dlg.close();
+        }));
+        dlg.show();
+    }
+
     pub fn save(&self) {
         let file = self.imp().file.borrow().clone();
         if file.is_none() {
@@ -233,7 +293,7 @@ impl Window {
 
     pub fn save_as(&self) {
         let dlg = gtk::FileChooserDialog::builder()
-            .application(&self.application().unwrap())
+            .application(&self.application().expect("Cannot get application"))
             .title("Select a location")
             .transient_for(self)
             .action(gtk::FileChooserAction::Save)
@@ -241,10 +301,10 @@ impl Window {
             .build();
         dlg.add_buttons(&[
             ("Cancel", gtk::ResponseType::Cancel),
-            ("Ok", gtk::ResponseType::Ok),
+            ("Accept", gtk::ResponseType::Accept),
         ]);
         dlg.connect_response(clone!(@weak self as win => move |dlg,res| {
-            if res == gtk::ResponseType::Ok {
+            if res == gtk::ResponseType::Accept {
                 {
                     let file = dlg.file();
                     if let Some(f) = file {
@@ -273,7 +333,8 @@ impl Window {
             let img = self.specs().create_document(Some(cfg));
             match svg::save(file.path().unwrap(), &img) {
                 Ok(_) => {
-                    self.set_toast(&format!("{} saved", file.basename().unwrap().display()));
+                    let base = file.basename().unwrap();
+                    self.set_toast(&format!("{} saved", base.display()));
                     self.update_title();
                 }
                 Err(e) => eprintln!("{e}"),
@@ -299,10 +360,7 @@ impl Window {
             }
             if let Some(parent) = file.parent() {
                 if let Some(path) = parent.path() {
-                    title_widget.set_subtitle(&format!(
-                        "{}",
-                        path.display(),
-                    ));
+                    title_widget.set_subtitle(&format!("{}", path.display()));
                 }
             }
         }

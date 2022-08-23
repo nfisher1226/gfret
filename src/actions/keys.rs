@@ -25,7 +25,7 @@ impl Keys {
             }
         }
         match action {
-            "open_template" => "<primary>O",
+            "open" => "<primary>O",
             "save" => "<primary>S",
             "save_as" => "<primary><Shift>S",
             "open_external" => "<primary>E",

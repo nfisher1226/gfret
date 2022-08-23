@@ -17,7 +17,7 @@ impl<'a> Default for Actions<'a> {
     fn default() -> Self {
         Self {
             names: [
-                "open_template",
+                "open",
                 "save",
                 "save_as",
                 "open_external",
@@ -37,9 +37,9 @@ impl<'a> Actions<'a> {
             app.set_accels_for_action(&format!("win.{name}"), &[keys.get(name)]);
             win.add_action(&action);
             match *name {
-                "open_template" => {
+                "open" => {
                     action.connect_activate(clone!(@weak win => move |_, _| {
-                        //gui.dialogs.open_template.show();
+                        win.open_file();
                     }));
                 }
                 "save" => {
@@ -100,7 +100,6 @@ impl<'a> Actions<'a> {
                 }
                 "quit" => {
                     action.connect_activate(clone!(@weak win => move |_, _| {
-                        //gui.cleanup();
                         win.close();
                     }));
                 }

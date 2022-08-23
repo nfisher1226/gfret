@@ -267,12 +267,17 @@ impl Window {
             if res == gtk::ResponseType::Accept {
                 if let Some(file) = dlg.file() {
                     if let Some(path) = file.path() {
-                        if let Ok(specs) = fretboard_layout::open::open(path) {
-                            win.load_specs(&specs);
-                            let base = file.basename().unwrap();
-                            win.set_toast(&format!("{} opened", base.display()));
-                            *win.imp().file.borrow_mut() = Some(file);
-                            win.update_title();
+                        match fretboard_layout::open::open(path) {
+                            Ok(specs) => {
+                                win.load_specs(&specs);
+                                let base = file.basename().unwrap();
+                                win.set_toast(&format!("{} opened", base.display()));
+                                *win.imp().file.borrow_mut() = Some(file);
+                                win.update_title();
+                            },
+                            Err(e) => {
+                                win.set_toast(&format!("Error opening file: {e}"));
+                            }
                         }
                     }
                 }
@@ -337,7 +342,9 @@ impl Window {
                     self.set_toast(&format!("{} saved", base.display()));
                     self.update_title();
                 }
-                Err(e) => eprintln!("{e}"),
+                Err(e) => {
+                    self.set_toast(&format!("Error saving file: {e}"));
+                }
             }
         }
     }

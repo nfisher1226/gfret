@@ -2,14 +2,14 @@ use {
     adw::{
         gtk::{
             self, gio,
-            glib::{self, subclass::InitializingObject},
+            glib::{self, once_cell::sync::Lazy, subclass::InitializingObject},
             subclass::prelude::*,
             CompositeTemplate,
         },
         prelude::*,
         subclass::prelude::*,
     },
-    std::cell::RefCell,
+    std::cell::{Cell, RefCell},
 };
 
 #[derive(CompositeTemplate, Default)]
@@ -44,7 +44,7 @@ pub struct Window {
     #[template_child]
     pub fret_count: TemplateChild<gtk::SpinButton>,
     pub file: RefCell<Option<gio::File>>,
-    pub changed: bool,
+    pub changed: Cell<bool>,
 }
 
 #[glib::object_subclass]
@@ -63,6 +63,29 @@ impl ObjectSubclass for Window {
 }
 
 impl ObjectImpl for Window {
+    fn properties() -> &'static [glib::ParamSpec] {
+        static PROPERTIES: Lazy<Vec<glib::ParamSpec>> =
+            Lazy::new(|| vec![glib::ParamSpecBoolean::builder("changed").build()]);
+        PROPERTIES.as_ref()
+    }
+
+    fn set_property(&self, _obj: &Self::Type, _id: usize, value: &glib::Value, pspec: &glib::ParamSpec) {
+        match pspec.name() {
+            "changed" => {
+                let input = value.get().expect("The value needs to be of type `boolean`");
+                self.changed.replace(input);
+            },
+            _ => unimplemented!(),
+        }
+    }
+
+    fn property(&self, _obj: &Self::Type, _id: usize, pspec: &glib::ParamSpec) -> glib::Value {
+        match pspec.name() {
+            "changed" => self.changed.get().to_value(),
+            _ => unimplemented!(),
+        }
+    }
+
     fn constructed(&self, obj: &Self::Type) {
         self.parent_constructed(obj);
     }

@@ -31,7 +31,18 @@ impl Window {
         obj.connect_signals();
         obj.setup_theme_switcher();
         obj.bind_properties(app);
+        // This will have been set to `true` while binding properties
+        obj.set_changed(false);
+        obj.update_title();
         obj
+    }
+
+    pub fn set_changed(&self, changed: bool) {
+        self.set_property("changed", changed);
+    }
+
+    pub fn changed(&self) -> bool {
+        self.property("changed")
     }
 
     #[allow(clippy::cast_possible_truncation)]
@@ -98,38 +109,38 @@ impl Window {
             clone!(@strong self as win => move |list| {
                 let set = list.selected() == 1 || list.selected() == 2;
                 win.toggle_multi(set);
-                win.draw_preview();
+                win.update();
             }),
         );
         self.imp()
             .scale
             .connect_value_changed(clone!(@weak self as win => move |_scl| {
-                win.draw_preview();
+                win.update();
             }));
         self.imp()
             .scale_multi
             .connect_value_changed(clone!(@weak self as win => move |_scl| {
-                win.draw_preview();
+                win.update();
             }));
         self.imp()
             .nut_width
             .connect_value_changed(clone!(@weak self as win => move |_scl| {
-                win.draw_preview();
+                win.update();
             }));
         self.imp()
             .bridge_spacing
             .connect_value_changed(clone!(@weak self as win => move |_scl| {
-                win.draw_preview();
+                win.update();
             }));
         self.imp().perpendicular_fret.connect_value_changed(
             clone!(@weak self as win => move |_scl| {
-                win.draw_preview();
+                win.update();
             }),
         );
         self.imp()
             .fret_count
             .connect_value_changed(clone!(@weak self as win => move |_scl| {
-                win.draw_preview();
+                win.update();
             }));
     }
 
@@ -206,6 +217,14 @@ impl Window {
         self.imp().bridge_spacing.set_value(specs.bridge);
     }
 
+    fn update(&self) {
+        self.draw_preview();
+        if !self.changed() {
+            self.set_changed(true);
+            self.update_title();
+        }
+    }
+
     /// Performs a full render of the svg image without saving to disk, and
     /// refreshes the image preview with the new data.
     pub(crate) fn draw_preview(&self) {
@@ -246,6 +265,8 @@ impl Window {
         pwin.show();
     }
 
+    /// Opens an svg file if it was created with this program previously by
+    /// reading the <description> and mapping those values to a `Specs` struct
     pub fn open_file(&self) {
         let filter = gtk::FileFilter::new();
         filter.add_pattern("*.svg");
@@ -273,6 +294,7 @@ impl Window {
                                 let base = file.basename().unwrap();
                                 win.set_toast(&format!("{} opened", base.display()));
                                 *win.imp().file.borrow_mut() = Some(file);
+                                win.set_changed(false);
                                 win.update_title();
                             },
                             Err(e) => {
@@ -340,6 +362,7 @@ impl Window {
                 Ok(_) => {
                     let base = file.basename().unwrap();
                     self.set_toast(&format!("{} saved", base.display()));
+                    self.set_changed(false);
                     self.update_title();
                 }
                 Err(e) => {
@@ -359,10 +382,15 @@ impl Window {
         if let Some(file) = self.imp().file.borrow().clone() {
             if let Some(base) = file.basename() {
                 title_widget.set_title(&format!(
-                    "{}-{} - {}",
+                    "{}-{} - {}{}",
                     env!("CARGO_PKG_NAME"),
                     env!("CARGO_PKG_VERSION"),
                     base.display(),
+                    if self.changed() {
+                        "*"
+                    } else {
+                        ""
+                    }
                 ));
             }
             if let Some(parent) = file.parent() {
@@ -370,6 +398,12 @@ impl Window {
                     title_widget.set_subtitle(&format!("{}", path.display()));
                 }
             }
+        } else {
+            title_widget.set_subtitle(if self.changed() {
+                "New file*"
+            } else {
+                "New file"
+            });
         }
     }
 }

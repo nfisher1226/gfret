@@ -45,9 +45,62 @@ impl Window {
         self.property("changed")
     }
 
+    fn bind_adjustments(&self, app: &crate::Application) {
+        let settings = &app.imp().settings;
+        settings
+            .bind("step-increment", &self.imp().scale.adjustment(), "step-increment")
+            .build();
+        settings
+            .bind("step-increment", &self.imp().scale_multi.adjustment(), "step-increment")
+            .build();
+        settings
+            .bind("step-increment", &self.imp().nut_width.adjustment(), "step-increment")
+            .build();
+        settings
+            .bind("step-increment", &self.imp().bridge_spacing.adjustment(), "step-increment")
+            .build();
+        settings
+            .bind("page-increment", &self.imp().scale.adjustment(), "page-increment")
+            .build();
+        settings
+            .bind("page-increment", &self.imp().scale_multi.adjustment(), "page-increment")
+            .build();
+        settings
+            .bind("page-increment", &self.imp().nut_width.adjustment(), "page-increment")
+            .build();
+        settings
+            .bind("page-increment", &self.imp().bridge_spacing.adjustment(), "page-increment")
+            .build();
+        settings
+            .bind("scale-lower", &self.imp().scale.adjustment(), "lower")
+            .build();
+        settings
+            .bind("scale-upper", &self.imp().scale.adjustment(), "upper")
+            .build();
+        settings
+            .bind("scale-lower", &self.imp().scale_multi.adjustment(), "lower")
+            .build();
+        settings
+            .bind("scale-upper", &self.imp().scale_multi.adjustment(), "upper")
+            .build();
+        settings
+            .bind("nut-lower", &self.imp().nut_width.adjustment(), "lower")
+            .build();
+        settings
+            .bind("nut-upper", &self.imp().nut_width.adjustment(), "upper")
+            .build();
+        settings
+            .bind("nut-lower", &self.imp().bridge_spacing.adjustment(), "lower")
+            .build();
+        settings
+            .bind("nut-upper", &self.imp().bridge_spacing.adjustment(), "upper")
+            .build();
+    }
+
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
     fn bind_properties(&self, app: &crate::Application) {
+        self.bind_adjustments(app);
         let settings = &app.imp().settings;
         settings
             .bind("fret-count", &self.imp().fret_count.adjustment(), "value")

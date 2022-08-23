@@ -26,7 +26,37 @@ impl PreferencesWindow {
         obj
     }
 
+    fn bind_adjustments(&self, app: &crate::Application) {
+        let settings = &app.imp().settings;
+        let imp = self.imp();
+        settings
+            .bind("step-increment", &imp.border_adjustment.get(), "step-increment")
+            .build();
+        settings
+            .bind("page-increment", &imp.border_adjustment.get(), "page-increment")
+            .build();
+        settings
+            .bind("border-lower", &imp.border_adjustment.get(), "lower")
+            .build();
+        settings
+            .bind("border-upper", &imp.border_adjustment.get(), "upper")
+            .build();
+        settings
+            .bind("step-increment", &imp.weight_adjustment.get(), "step-increment")
+            .build();
+        settings
+            .bind("page-increment", &imp.weight_adjustment.get(), "page-increment")
+            .build();
+        settings
+            .bind("weight-lower", &imp.weight_adjustment.get(), "lower")
+            .build();
+        settings
+            .bind("weight-upper", &imp.weight_adjustment.get(), "upper")
+            .build();
+    }
+
     fn bind_properties(&self, app: &crate::Application) {
+        self.bind_adjustments(app);
         let settings = &app.imp().settings;
         let imp = self.imp();
         settings

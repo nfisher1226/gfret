@@ -10,6 +10,28 @@
       <default>'default'</default>
       <summary>The application theme to use</summary>
     </key>
+    <key name="step-increment" type="d">
+      <default>1.0</default>
+    </key>
+    <key name="page-increment" type="d">
+      <default>5.0</default>
+    </key>
+    <key name="scale-lower" type="d">
+      <default>225.0</default>
+      <summary>The lower bound of the bass scale length</summary>
+    </key>
+    <key name="scale-upper" type="d">
+      <default>1250.0</default>
+      <summary>The upper bound of the bass scale length</summary>
+    </key>
+    <key name="nut-lower" type="d">
+      <default>20.0</default>
+      <summary>The lower bound of the bass scale length</summary>
+    </key>
+    <key name="nut-upper" type="d">
+      <default>100.0</default>
+      <summary>The upper bound of the bass scale length</summary>
+    </key>
     <key name="fret-count" type="u">
       <default>24</default>
       <summary>The number of frets to render</summary>
@@ -49,6 +71,22 @@
       </choices>
       <default>'metric'</default>
       <summary>Whether to use Metric or Imperial units</summary>
+    </key>
+    <key name="border-lower" type="d">
+      <default>10.0</default>
+      <summary>The lower bound of the bass scale length</summary>
+    </key>
+    <key name="border-upper" type="d">
+      <default>40.0</default>
+      <summary>The upper bound of the bass scale length</summary>
+    </key>
+    <key name="weight-lower" type="d">
+      <default>0.0</default>
+      <summary>The lower bound of the bass scale length</summary>
+    </key>
+    <key name="weight-upper" type="d">
+      <default>2.0</default>
+      <summary>The upper bound of the bass scale length</summary>
     </key>
     <key name="border-width" type="d">
       <default>10</default>

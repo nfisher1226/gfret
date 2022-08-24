@@ -20,7 +20,8 @@
             <property name="hexpand">true</property>
             <property name="halign">center</property>
             <property name="tooltip-text" translatable="yes">Follow system style</property>
-            <property name="active">true</property>
+            <property name="action-name">app.set-theme</property>
+            <property name="action-target">'default'</property>
             <style>
               <class name="theme-button"/>
               <class name="theme-system"/>
@@ -35,6 +36,8 @@
             <property name="hexpand">true</property>
             <property name="halign">center</property>
             <property name="tooltip-text" translatable="yes">Light style</property>
+            <property name="action-name">app.set-theme</property>
+            <property name="action-target">'force-light'</property>
             <style>
               <class name="theme-button"/>
               <class name="theme-light"/>
@@ -49,6 +52,8 @@
             <property name="hexpand">true</property>
             <property name="halign">center</property>
             <property name="tooltip-text" translatable="yes">Dark style</property>
+            <property name="action-name">app.set-theme</property>
+            <property name="action-target">'force-dark'</property>
             <style>
               <class name="theme-button"/>
               <class name="theme-dark"/>

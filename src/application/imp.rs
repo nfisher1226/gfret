@@ -1,12 +1,11 @@
 use {
-    crate::{Actions, ConvertUnits, Window},
+    crate::{Actions, Window},
     adw::{
         gio::{PropertyAction, Settings, SettingsBindFlags},
         gtk::{self, gdk, glib, prelude::*, subclass::prelude::*},
         subclass::prelude::*,
         traits::AdwApplicationExt,
     },
-    fretboard_layout::Units,
 };
 
 pub struct Application {
@@ -53,12 +52,6 @@ impl ApplicationImpl for Application {
                 &provider,
                 gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
             );
-            {
-                let cfg = app.config();
-                if cfg.units == Units::Imperial {
-                    window.to_imperial();
-                }
-            }
             window.draw_preview();
             window.present();
         }

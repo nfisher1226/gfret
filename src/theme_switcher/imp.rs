@@ -37,12 +37,6 @@ impl ObjectImpl for ThemeSwitcher {
     fn constructed(&self, obj: &Self::Type) {
         self.parent_constructed(obj);
         obj.set_layout_manager(Some(&gtk::BinLayout::new()));
-        self.system_button
-            .set_detailed_action_name("app.set-theme::default");
-        self.light_button
-            .set_detailed_action_name("app.set-theme::force-light");
-        self.dark_button
-            .set_detailed_action_name("app.set-theme::force-dark");
     }
 }
 

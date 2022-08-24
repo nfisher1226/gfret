@@ -6,7 +6,7 @@ use {
         gtk::{
             self,
             gdk_pixbuf::Pixbuf,
-            gio::{self, Cancellable, MemoryInputStream, SettingsBindFlags},
+            gio::{self, Cancellable, MemoryInputStream},
             glib::{self, clone, Object},
         },
         prelude::*,
@@ -47,53 +47,78 @@ impl Window {
 
     fn bind_adjustments(&self, app: &crate::Application) {
         let settings = &app.imp().settings;
+        let imp = self.imp();
         settings
-            .bind("step-increment", &self.imp().scale.adjustment(), "step-increment")
+            .bind("step-increment", &imp.scale.adjustment(), "step-increment")
             .build();
         settings
-            .bind("step-increment", &self.imp().scale_multi.adjustment(), "step-increment")
+            .bind(
+                "step-increment",
+                &imp.scale_multi.adjustment(),
+                "step-increment",
+            )
             .build();
         settings
-            .bind("step-increment", &self.imp().nut_width.adjustment(), "step-increment")
+            .bind(
+                "step-increment",
+                &imp.nut_width.adjustment(),
+                "step-increment",
+            )
             .build();
         settings
-            .bind("step-increment", &self.imp().bridge_spacing.adjustment(), "step-increment")
+            .bind(
+                "step-increment",
+                &imp.bridge_spacing.adjustment(),
+                "step-increment",
+            )
             .build();
         settings
-            .bind("page-increment", &self.imp().scale.adjustment(), "page-increment")
+            .bind("page-increment", &imp.scale.adjustment(), "page-increment")
             .build();
         settings
-            .bind("page-increment", &self.imp().scale_multi.adjustment(), "page-increment")
+            .bind(
+                "page-increment",
+                &imp.scale_multi.adjustment(),
+                "page-increment",
+            )
             .build();
         settings
-            .bind("page-increment", &self.imp().nut_width.adjustment(), "page-increment")
+            .bind(
+                "page-increment",
+                &imp.nut_width.adjustment(),
+                "page-increment",
+            )
             .build();
         settings
-            .bind("page-increment", &self.imp().bridge_spacing.adjustment(), "page-increment")
+            .bind(
+                "page-increment",
+                &imp.bridge_spacing.adjustment(),
+                "page-increment",
+            )
             .build();
         settings
-            .bind("scale-lower", &self.imp().scale.adjustment(), "lower")
+            .bind("scale-lower", &imp.scale.adjustment(), "lower")
             .build();
         settings
-            .bind("scale-upper", &self.imp().scale.adjustment(), "upper")
+            .bind("scale-upper", &imp.scale.adjustment(), "upper")
             .build();
         settings
-            .bind("scale-lower", &self.imp().scale_multi.adjustment(), "lower")
+            .bind("scale-lower", &imp.scale_multi.adjustment(), "lower")
             .build();
         settings
-            .bind("scale-upper", &self.imp().scale_multi.adjustment(), "upper")
+            .bind("scale-upper", &imp.scale_multi.adjustment(), "upper")
             .build();
         settings
-            .bind("nut-lower", &self.imp().nut_width.adjustment(), "lower")
+            .bind("nut-lower", &imp.nut_width.adjustment(), "lower")
             .build();
         settings
-            .bind("nut-upper", &self.imp().nut_width.adjustment(), "upper")
+            .bind("nut-upper", &imp.nut_width.adjustment(), "upper")
             .build();
         settings
-            .bind("nut-lower", &self.imp().bridge_spacing.adjustment(), "lower")
+            .bind("nut-lower", &imp.bridge_spacing.adjustment(), "lower")
             .build();
         settings
-            .bind("nut-upper", &self.imp().bridge_spacing.adjustment(), "upper")
+            .bind("nut-upper", &imp.bridge_spacing.adjustment(), "upper")
             .build();
     }
 
@@ -102,8 +127,9 @@ impl Window {
     fn bind_properties(&self, app: &crate::Application) {
         self.bind_adjustments(app);
         let settings = &app.imp().settings;
+        let imp = self.imp();
         settings
-            .bind("fret-count", &self.imp().fret_count.adjustment(), "value")
+            .bind("fret-count", &imp.fret_count.adjustment(), "value")
             .mapping(|variant, _vtype| {
                 let num = variant
                     .get::<u32>()
@@ -120,40 +146,26 @@ impl Window {
             })
             .build();
         settings
-            .bind("scale", &self.imp().scale.adjustment(), "value")
-            .flags(SettingsBindFlags::DEFAULT)
+            .bind("scale", &imp.scale.adjustment(), "value")
             .build();
         settings
-            .bind(
-                "treble-scale",
-                &self.imp().scale_multi.adjustment(),
-                "value",
-            )
-            .flags(SettingsBindFlags::DEFAULT)
+            .bind("treble-scale", &imp.scale_multi.adjustment(), "value")
             .build();
         settings
-            .bind("nut-width", &self.imp().nut_width.adjustment(), "value")
-            .flags(SettingsBindFlags::DEFAULT)
+            .bind("nut-width", &imp.nut_width.adjustment(), "value")
             .build();
         settings
-            .bind(
-                "bridge-spacing",
-                &self.imp().bridge_spacing.adjustment(),
-                "value",
-            )
-            .flags(SettingsBindFlags::DEFAULT)
+            .bind("bridge-spacing", &imp.bridge_spacing.adjustment(), "value")
             .build();
         settings
             .bind(
                 "perpendicular-fret",
-                &self.imp().perpendicular_fret.adjustment(),
+                &imp.perpendicular_fret.adjustment(),
                 "value",
             )
-            .flags(SettingsBindFlags::DEFAULT)
             .build();
         settings
-            .bind("variant", &self.imp().variant_list.get(), "selected")
-            .flags(SettingsBindFlags::DEFAULT)
+            .bind("variant", &imp.variant_list.get(), "selected")
             .build();
     }
 
@@ -314,7 +326,7 @@ impl Window {
             .expect("Cannot get application")
             .downcast::<crate::Application>()
             .expect("The application must be of type `crate::Application`");
-        let pwin = PreferencesWindow::new(&app);
+        let pwin = PreferencesWindow::new(&app, self);
         pwin.show();
     }
 
@@ -439,11 +451,7 @@ impl Window {
                     env!("CARGO_PKG_NAME"),
                     env!("CARGO_PKG_VERSION"),
                     base.display(),
-                    if self.changed() {
-                        "*"
-                    } else {
-                        ""
-                    }
+                    if self.changed() { "*" } else { "" }
                 ));
             }
             if let Some(parent) = file.parent() {
@@ -463,16 +471,70 @@ impl Window {
 
 impl ConvertUnits for Window {
     fn to_metric(&self) {
-        self.imp().bridge_spacing.to_metric();
-        self.imp().nut_width.to_metric();
-        self.imp().scale_fine.to_metric();
-        self.imp().scale_multi_fine.to_metric();
+        let mut value = self.imp().bridge_spacing.value();
+        let mut adjustment = self.imp().bridge_spacing.adjustment();
+        adjustment.set_lower(20.0);
+        adjustment.set_upper(100.0);
+        adjustment.set_step_increment(1.0);
+        adjustment.set_page_increment(5.0);
+        adjustment.set_value(value * 20.4);
+
+        value = self.imp().nut_width.value();
+        adjustment = self.imp().nut_width.adjustment();
+        adjustment.set_lower(20.0);
+        adjustment.set_upper(100.0);
+        adjustment.set_step_increment(1.0);
+        adjustment.set_page_increment(5.0);
+        adjustment.set_value(value * 20.4);
+
+        value = self.imp().scale.value();
+        adjustment = self.imp().scale.adjustment();
+        adjustment.set_lower(225.0);
+        adjustment.set_upper(1250.0);
+        adjustment.set_step_increment(1.0);
+        adjustment.set_page_increment(5.0);
+        adjustment.set_value(value * 20.4);
+
+        value = self.imp().scale_multi.value();
+        adjustment = self.imp().scale_multi.adjustment();
+        adjustment.set_lower(225.0);
+        adjustment.set_upper(1250.0);
+        adjustment.set_step_increment(1.0);
+        adjustment.set_page_increment(5.0);
+        adjustment.set_value(value * 20.4);
     }
 
     fn to_imperial(&self) {
-        self.imp().bridge_spacing.to_imperial();
-        self.imp().nut_width.to_imperial();
-        self.imp().scale_fine.to_imperial();
-        self.imp().scale_multi_fine.to_imperial();
+        let mut value = self.imp().bridge_spacing.value();
+        let mut adjustment = self.imp().bridge_spacing.adjustment();
+        adjustment.set_lower(20.0 / 20.4);
+        adjustment.set_upper(100.0 / 20.4);
+        adjustment.set_step_increment(0.125);
+        adjustment.set_page_increment(0.5);
+        adjustment.set_value(value / 20.4);
+
+        value = self.imp().nut_width.value();
+        adjustment = self.imp().nut_width.adjustment();
+        adjustment.set_lower(20.0 / 20.4);
+        adjustment.set_upper(100.0 / 20.4);
+        adjustment.set_step_increment(0.125);
+        adjustment.set_page_increment(0.5);
+        adjustment.set_value(value / 20.4);
+
+        value = self.imp().scale.value();
+        adjustment = self.imp().scale.adjustment();
+        adjustment.set_lower(225.0 / 20.4);
+        adjustment.set_upper(1250.0 / 20.4);
+        adjustment.set_step_increment(0.125);
+        adjustment.set_page_increment(0.5);
+        adjustment.set_value(value / 20.4);
+
+        value = self.imp().scale_multi.value();
+        adjustment = self.imp().scale_multi.adjustment();
+        adjustment.set_lower(225.0 / 20.4);
+        adjustment.set_upper(1250.0 / 20.4);
+        adjustment.set_step_increment(1.0);
+        adjustment.set_page_increment(5.0);
+        adjustment.set_value(value / 20.4);
     }
 }

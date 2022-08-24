@@ -1,13 +1,16 @@
 mod imp;
 
-use adw::{
-    gdk,
-    gtk::{
-        self,
-        glib::{self, Object},
+use {
+    crate::ConvertUnits,
+    adw::{
+        gdk,
+        gtk::{
+            self,
+            glib::{self, clone, Object},
+        },
+        prelude::*,
+        subclass::prelude::*,
     },
-    prelude::*,
-    subclass::prelude::*,
 };
 
 glib::wrapper! {
@@ -20,20 +23,48 @@ glib::wrapper! {
 
 impl PreferencesWindow {
     #[must_use]
-    pub fn new(app: &crate::Application) -> Self {
-        let obj: Self = Object::new(&[]).expect("Cannot create preferences window");
+    pub fn new(app: &crate::Application, win: &crate::Window) -> Self {
+        let obj: Self =
+            Object::new(&[("transient-for", win)]).expect("Cannot create preferences window");
         obj.bind_properties(app);
+        obj.connect_signals(app, win);
         obj
+    }
+
+    fn connect_signals(&self, app: &crate::Application, win: &crate::Window) {
+        self.imp().units_selector.connect_selected_notify(
+            clone!(@weak app, @weak win, @weak self as pwin => move |combo| {
+                match combo.selected() {
+                    0 => {
+                        pwin.to_metric();
+                        win.to_metric();
+                    },
+                    1 => {
+                        pwin.to_imperial();
+                        win.to_imperial();
+                    },
+                    _ => unimplemented!(),
+                }
+            }),
+        );
     }
 
     fn bind_adjustments(&self, app: &crate::Application) {
         let settings = &app.imp().settings;
         let imp = self.imp();
         settings
-            .bind("step-increment", &imp.border_adjustment.get(), "step-increment")
+            .bind(
+                "step-increment",
+                &imp.border_adjustment.get(),
+                "step-increment",
+            )
             .build();
         settings
-            .bind("page-increment", &imp.border_adjustment.get(), "page-increment")
+            .bind(
+                "page-increment",
+                &imp.border_adjustment.get(),
+                "page-increment",
+            )
             .build();
         settings
             .bind("border-lower", &imp.border_adjustment.get(), "lower")
@@ -42,10 +73,18 @@ impl PreferencesWindow {
             .bind("border-upper", &imp.border_adjustment.get(), "upper")
             .build();
         settings
-            .bind("step-increment", &imp.weight_adjustment.get(), "step-increment")
+            .bind(
+                "step-increment",
+                &imp.weight_adjustment.get(),
+                "step-increment",
+            )
             .build();
         settings
-            .bind("page-increment", &imp.weight_adjustment.get(), "page-increment")
+            .bind(
+                "page-increment",
+                &imp.weight_adjustment.get(),
+                "page-increment",
+            )
             .build();
         settings
             .bind("weight-lower", &imp.weight_adjustment.get(), "lower")
@@ -152,5 +191,43 @@ impl PreferencesWindow {
         settings
             .bind("specs-font", &imp.font_chooser.get(), "font")
             .build();
+    }
+}
+
+impl ConvertUnits for PreferencesWindow {
+    fn to_metric(&self) {
+        self.imp().border_width.set_digits(2);
+        let adjustment = self.imp().border_width.adjustment();
+        let value = adjustment.value();
+        adjustment.set_upper(40.0);
+        adjustment.set_lower(10.0);
+        adjustment.set_step_increment(0.1);
+        adjustment.set_page_increment(0.5);
+        adjustment.set_value(value * 20.4);
+        self.imp().line_weight.set_digits(2);
+        let adjustment = self.imp().line_weight.adjustment();
+        let value = adjustment.value();
+        adjustment.set_upper(2.0);
+        adjustment.set_step_increment(0.1);
+        adjustment.set_page_increment(0.5);
+        adjustment.set_value(value * 20.4);
+    }
+
+    fn to_imperial(&self) {
+        self.imp().border_width.set_digits(3);
+        let mut adjustment = self.imp().border_width.adjustment();
+        let mut value = adjustment.value();
+        adjustment.set_upper(40.0 / 20.4);
+        adjustment.set_lower(10.0 / 20.4);
+        adjustment.set_step_increment(0.01);
+        adjustment.set_page_increment(0.1);
+        adjustment.set_value(value / 20.4);
+        self.imp().line_weight.set_digits(2);
+        adjustment = self.imp().line_weight.adjustment();
+        value = adjustment.value();
+        adjustment.set_upper(0.098);
+        adjustment.set_step_increment(0.01);
+        adjustment.set_page_increment(0.1);
+        adjustment.set_value(value / 20.4);
     }
 }

@@ -13,6 +13,7 @@ use {
         subclass::prelude::*,
     },
     fretboard_layout::{Handedness, MultiscaleBuilder, Specs, Units, Variant},
+    std::process::Command,
 };
 
 glib::wrapper! {
@@ -374,16 +375,7 @@ impl Window {
         dlg.show();
     }
 
-    pub fn save(&self) {
-        let file = self.imp().file.borrow().clone();
-        if file.is_none() {
-            self.save_as();
-            return;
-        }
-        self.do_save();
-    }
-
-    pub fn save_as(&self) {
+    fn save_dlg(&self) -> gtk::FileChooserDialog {
         let dlg = gtk::FileChooserDialog::builder()
             .application(&self.application().expect("Cannot get application"))
             .title("Select a location")
@@ -395,6 +387,20 @@ impl Window {
             ("Cancel", gtk::ResponseType::Cancel),
             ("Accept", gtk::ResponseType::Accept),
         ]);
+        dlg
+    }
+
+    pub fn save(&self) {
+        let file = self.imp().file.borrow().clone();
+        if file.is_none() {
+            self.save_as();
+            return;
+        }
+        self.do_save();
+    }
+
+    pub fn save_as(&self) {
+        let dlg = self.save_dlg();
         dlg.connect_response(clone!(@weak self as win => move |dlg,res| {
             if res == gtk::ResponseType::Accept {
                 {
@@ -433,6 +439,48 @@ impl Window {
                 Err(e) => {
                     self.set_toast(&format!("Error saving file: {e}"));
                 }
+            }
+        }
+    }
+
+    pub fn open_external(&self) {
+        let file = self.imp().file.borrow().clone();
+        if file.is_none() {
+            let dlg = self.save_dlg();
+            dlg.connect_response(clone!(@weak self as win => move |dlg,res| {
+                if res == gtk::ResponseType::Accept {
+                    {
+                        let file = dlg.file();
+                        if let Some(f) = file {
+                            let mut path = f.path().expect("Cannot get file path");
+                            path.set_extension("svg");
+                            let f = gio::File::for_path(&path);
+                            *win.imp().file.borrow_mut() = Some(f);
+                        }
+                    }
+                    win.do_save();
+                    win.open_external();
+                }
+                dlg.close();
+            }));
+            dlg.show();
+        }
+        if self.changed() {
+            self.save();
+        }
+        if let Some(file) = file {
+            let app = self
+                .application()
+                .expect("Cannot get application")
+                .downcast::<crate::Application>()
+                .expect("The app needs to be of type `crate::Application`");
+            let ext = app
+                .imp()
+                .settings
+                .get::<String>("external-editor");
+            let path = file.path().expect("Cannot get file path");
+            if let Err(e) = Command::new(ext).arg(path).spawn() {
+                self.set_toast(&format!("Error opening external program: {e}"));
             }
         }
     }

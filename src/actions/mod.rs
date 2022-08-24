@@ -54,12 +54,7 @@ impl<'a> Actions<'a> {
                 }
                 "open_external" => {
                     action.connect_activate(clone!(@weak win => move |_, _| {
-                        /*if let Ok(file) = FILE.try_lock() {
-                            if !file.saved() {
-                                gui.dialogs.save_as.show();
-                            }
-                            Gui::open_external(&file);
-                        };*/
+                        win.open_external();
                     }));
                 }
                 "preferences" => {

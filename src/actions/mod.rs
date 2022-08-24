@@ -83,6 +83,10 @@ impl<'a> Actions<'a> {
                                 <li>Subclass Application from AdwApplication</li>\
                                 <li>Subclass Window from AdwWindow</li>\
                                 <li>Use adwaita AboutWindow</li>\
+                                <li>Subclass PreferencesWindow from AdwPreferencesWindow</li>\
+                                <li>Store application state and settings in gschema format</li>\
+                                <li>Open previously created files directly instead of using templates</li>\
+                                <li>Add AdwToastOverlay to send in app notifications for file save etc.</li>\
                                 </ul>"
                             )
                             .version(env!("CARGO_PKG_VERSION"))

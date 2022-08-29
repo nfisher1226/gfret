@@ -465,8 +465,8 @@ impl Window {
             }));
             dlg.show();
         }
-        if self.changed() {
-            self.save();
+        if self.changed() && file.is_some() {
+            self.do_save();
         }
         if let Some(file) = file {
             let app = self
@@ -474,10 +474,7 @@ impl Window {
                 .expect("Cannot get application")
                 .downcast::<crate::Application>()
                 .expect("The app needs to be of type `crate::Application`");
-            let ext = app
-                .imp()
-                .settings
-                .get::<String>("external-editor");
+            let ext = app.imp().settings.get::<String>("external-editor");
             let path = file.path().expect("Cannot get file path");
             if let Err(e) = Command::new(ext).arg(path).spawn() {
                 self.set_toast(&format!("Error opening external program: {e}"));

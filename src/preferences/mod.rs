@@ -47,6 +47,11 @@ impl PreferencesWindow {
                 }
             }),
         );
+        self.imp()
+            .external_button
+            .connect_clicked(clone!(@weak self as pwin => move |_| {
+                pwin.appchooser();
+            }));
     }
 
     fn bind_adjustments(&self, app: &crate::Application) {
@@ -191,6 +196,38 @@ impl PreferencesWindow {
         settings
             .bind("specs-font", &imp.font_chooser.get(), "font")
             .build();
+    }
+
+    fn appchooser(&self) {
+        let chooser = gtk::AppChooserDialog::for_content_type(
+            Some(self),
+            gtk::DialogFlags::all(),
+            "image/svg+xml",
+        );
+        chooser.connect_response(move |dlg,res| {
+            if res == gtk::ResponseType::Ok {
+                if let Some(app_info) = dlg.app_info() {
+                    if let Some(text) = app_info.commandline().map(|cmd| {
+                        String::from(cmd.to_str().unwrap())
+                            .split_whitespace()
+                            .next()
+                            .unwrap_or("")
+                            .to_string()
+                    }) {
+                        dlg
+                            .transient_for()
+                            .expect("The window should be transient for a PreferencesWindow")
+                            .downcast::<PreferencesWindow>()
+                            .expect("The window should be of type `crate::PreferencesWindow`")
+                            .imp()
+                            .external_row
+                            .set_text(&text);
+                    }
+                };
+            };
+            dlg.hide();
+        });
+        chooser.show();
     }
 }
 

@@ -173,14 +173,14 @@ glib-compile-schemas /usr/local/share/glib-2.0/gschemas/
 ### 3.0
 - [x] Subclass application window from AdwApplicationWindow
 - [x] Subclass GfretApplication from AdwApplication
-- [ ] Create a gio::Settings object and store application state in it
-- [ ] Move Config into GfretApplication
+- [x] Create a gio::Settings object and store application state in it
+- [x] Move Config into GfretApplication
 - [x] Provide theme switcher
 - [x] Subclass preferences window from AdwPreferencesWindow
-- [ ] Make a property action and menu entry for Units
-- [ ] Add AdwToastOverlay and set toast when a file is saved
-- [ ] Replace gfret::File type for glib::File
-- [ ] Make a `changed` boolean property of GfretWindow to track saved state
-- [ ] Create all dialogs as needed instead of persisting for the program lifespan
-- [ ] Replace templates with the ability to re-open svg files created by this
+- [x] Make a property action and menu entry for Units
+- [x] Add AdwToastOverlay and set toast when a file is saved
+- [x] Replace gfret::File type for glib::File
+- [x] Make a `changed` boolean property of GfretWindow to track saved state
+- [x] Create all dialogs as needed instead of persisting for the program lifespan
+- [x] Replace templates with the ability to re-open svg files created by this
       application

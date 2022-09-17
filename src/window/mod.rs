@@ -259,7 +259,7 @@ impl Window {
             .build()
     }
 
-    fn load_specs(&self, specs: &Specs) {
+    pub fn load_specs(&self, specs: &Specs) {
         self.imp().scale.set_value(specs.scale);
         match specs.variant() {
             Variant::Monoscale => {
@@ -482,12 +482,12 @@ impl Window {
         }
     }
 
-    fn set_toast(&self, toast: &str) {
+    pub fn set_toast(&self, toast: &str) {
         let toast = adw::Toast::builder().title(toast).timeout(3).build();
         self.imp().overlay.add_toast(&toast);
     }
 
-    fn update_title(&self) {
+    pub fn update_title(&self) {
         let title_widget = &self.imp().title;
         if let Some(file) = self.imp().file.borrow().clone() {
             if let Some(base) = file.basename() {

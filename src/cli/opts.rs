@@ -91,11 +91,10 @@ pub fn build() -> Command<'static> {
         .author("The JeanG3nie <jeang3nie@hitchhiker-linux.org>")
         .version(env!("CARGO_PKG_VERSION"))
         .arg(
-            Arg::new("TEMPLATE")
-                .help("A valid Gfret template in toml format")
-                .short('t')
-                .long("template")
-                .takes_value(true),
+            Arg::new("FILE")
+                .help("An svg image previously created by Gfret")
+                .takes_value(true)
+                .multiple_values(false)
         )
         .subcommand(build_cli())
 }

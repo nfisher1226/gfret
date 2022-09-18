@@ -79,7 +79,7 @@ impl ApplicationImpl for Application {
                         *win.imp().file.borrow_mut() = Some(file);
                         win.set_changed(false);
                         win.update_title();
-                    },
+                    }
                     Err(e) => {
                         eprintln!("Error opening file: {e}");
                     }

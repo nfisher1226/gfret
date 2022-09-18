@@ -94,7 +94,7 @@ pub fn build() -> Command<'static> {
             Arg::new("FILE")
                 .help("An svg image previously created by Gfret")
                 .takes_value(true)
-                .multiple_values(false)
+                .multiple_values(false),
         )
         .subcommand(build_cli())
 }

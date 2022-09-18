@@ -39,6 +39,7 @@ impl Application {
         obj
     }
 
+    #[must_use]
     pub fn config(&self) -> Config {
         let settings = &self.imp().settings;
         let units = settings

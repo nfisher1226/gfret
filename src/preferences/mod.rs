@@ -204,7 +204,7 @@ impl PreferencesWindow {
             gtk::DialogFlags::all(),
             "image/svg+xml",
         );
-        chooser.connect_response(move |dlg,res| {
+        chooser.connect_response(move |dlg, res| {
             if res == gtk::ResponseType::Ok {
                 if let Some(app_info) = dlg.app_info() {
                     if let Some(text) = app_info.commandline().map(|cmd| {
@@ -214,8 +214,7 @@ impl PreferencesWindow {
                             .unwrap_or("")
                             .to_string()
                     }) {
-                        dlg
-                            .transient_for()
+                        dlg.transient_for()
                             .expect("The window should be transient for a PreferencesWindow")
                             .downcast::<PreferencesWindow>()
                             .expect("The window should be of type `crate::PreferencesWindow`")

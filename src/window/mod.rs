@@ -42,6 +42,7 @@ impl Window {
         self.set_property("changed", changed);
     }
 
+    #[must_use]
     pub fn changed(&self) -> bool {
         self.property("changed")
     }
@@ -278,7 +279,7 @@ impl Window {
                 self.imp().perpendicular_fret.set_value(pf);
             }
         }
-        self.imp().fret_count.set_value(specs.count as f64);
+        self.imp().fret_count.set_value(f64::from(specs.count));
         self.imp().nut_width.set_value(specs.nut);
         self.imp().bridge_spacing.set_value(specs.bridge);
     }
@@ -357,8 +358,9 @@ impl Window {
                         match fretboard_layout::open::open(path) {
                             Ok(specs) => {
                                 win.load_specs(&specs);
-                                let base = file.basename().unwrap();
-                                win.set_toast(&format!("{} opened", base.display()));
+                                if let Some(base) = file.basename() {
+                                    win.set_toast(&format!("{} opened", base.display()));
+                                }
                                 *win.imp().file.borrow_mut() = Some(file);
                                 win.set_changed(false);
                                 win.update_title();

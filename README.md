@@ -85,65 +85,6 @@ or creating shortcuts.
 | Ctrl/Shift/P | open the `preferences` dialog |
 | Ctrl/A | open the `about` dialog |
 | Ctrl/Q | quit the program |
-## Templates
-Along with the svg output, Gfret will save the specifications used to
-generate the rendering in a Toml file with it's name corresponding to the
-name of the svg file. These templates can be loaded later, either as an
-argument when invoking the program, in which case the output will be
-immediately generated, or else loaded from the Gui interface for further
-editing. This is useful for sharing a common scale among multiple designs to
-use as a starting point.
-## Configuration
-On Unix systems the default configuration directory is ```~/.config/gfret```.
-Gfret will maintain a configuration file here in [Toml](https://github.com/toml-lang/toml)
-format, with the following fields:
-```Toml
-## must match either "Metric" or "Imperial"
-units = "Metric"
-## the command line to run
-external_program = "inkscape"
-## the size of the border around the image
-border = 10.0
-## how thick the lines are
-line_weight = 1.0
-
-[fretline_color]
-## Colors must be "Hex", "Reduced" or "RGBA"
-## "Reduced" will take a whole number between 0 and 255 for each channel,
-## while "RGBA" takes a decimal between 0.0 and 1.0.
-
-## "Hex" will have a <color> field and an <alpha> field
-## ColorType = "Hex"
-## color = "#00ff00"
-## alpha = 1.0
-ColorType = "Reduced"
-red = <u8>
-green = <u8>
-blue = <u8>
-alpha = <u8>
-
-[fretboard_color]
-ColorType = "Reduced"
-red = 36
-green = 31
-blue = 49
-alpha = 255
-
-[centerline_color]
-ColorType = "Reduced"
-red = 0
-green = 0
-blue = 255
-alpha = 255
-
-## Fonts take a family and weight (style), but size is ignored
-[font]
-family = "Sans"
-weight = "Normal"
-```
-> Note: The graphical interface has a preferences dialog and will take care
-> of maintaining the preferences file for you. There will be no need to edit
-> this file by hand in normal use.
 ## Building
 You will need a Rust toolchain installed, including cargo. Gtk+4x is also
 required.
@@ -184,3 +125,4 @@ glib-compile-schemas /usr/local/share/glib-2.0/gschemas/
 - [x] Create all dialogs as needed instead of persisting for the program lifespan
 - [x] Replace templates with the ability to re-open svg files created by this
       application
+- [ ] Prepare for FlatPak packaging and distribution

@@ -60,8 +60,8 @@ impl ObjectSubclass for PreferencesWindow {
 }
 
 impl ObjectImpl for PreferencesWindow {
-    fn constructed(&self, obj: &Self::Type) {
-        self.parent_constructed(obj);
+    fn constructed(&self) {
+        self.parent_constructed();
         // Bind some properties
         self.draw_centerline
             .get()

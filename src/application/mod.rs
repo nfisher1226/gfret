@@ -34,8 +34,7 @@ impl Application {
             ("application-id", &Some("org.hitchhiker_linux.gfret")),
             ("flags", &ApplicationFlags::HANDLES_OPEN),
             ("register-session", &true.to_value()),
-        ])
-        .expect("Cannot create Application");
+        ]);
         obj
     }
 

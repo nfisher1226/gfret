@@ -28,23 +28,25 @@ impl ObjectSubclass for Application {
 }
 
 impl ObjectImpl for Application {
-    fn constructed(&self, obj: &Self::Type) {
-        self.parent_constructed(obj);
+    fn constructed(&self) {
+        self.parent_constructed();
+        let instance = self.instance();
         let set_property_action =
-            PropertyAction::new("set-theme", &obj.style_manager(), "color-scheme");
-        obj.add_action(&set_property_action);
+            PropertyAction::new("set-theme", &instance.style_manager(), "color-scheme");
+        instance.add_action(&set_property_action);
         self.settings
-            .bind("theme", &obj.style_manager(), "color-scheme")
+            .bind("theme", &instance.style_manager(), "color-scheme")
             .flags(SettingsBindFlags::DEFAULT)
             .build();
     }
 }
 
 impl ApplicationImpl for Application {
-    fn activate(&self, app: &Self::Type) {
-        if app.windows().is_empty() {
-            let window = Window::new(app);
-            Actions::default().add(&window, app);
+    fn activate(&self) {
+        let instance = self.instance();
+        if instance.windows().is_empty() {
+            let window = Window::new(&*instance);
+            Actions::default().add(&window, &*instance);
             let provider = gtk::CssProvider::new();
             provider.load_from_data(include_str!("../style.css").as_bytes());
             gtk::StyleContext::add_provider_for_display(
@@ -57,14 +59,14 @@ impl ApplicationImpl for Application {
         }
     }
 
-    fn open(&self, app: &Self::Type, files: &[adw::gio::File], _hint: &str) {
+    fn open(&self, files: &[adw::gio::File], _hint: &str) {
         for file in files {
             let file = file.clone();
             if let Some(path) = file.path() {
                 match fretboard_layout::open::open(path) {
                     Ok(specs) => {
-                        let win = Window::new(app);
-                        Actions::default().add(&win, app);
+                        let win = Window::new(&*self.instance());
+                        Actions::default().add(&win, &*self.instance());
                         let provider = gtk::CssProvider::new();
                         provider.load_from_data(include_str!("../style.css").as_bytes());
                         win.present();

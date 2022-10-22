@@ -18,8 +18,7 @@ toml = "0.5"
 clap = "3.2"
 
 [dependencies.adw]
-#version = "0.1"
-git = "https://gitlab.gnome.org/World/Rust/libadwaita-rs.git"
+version = "0.2"
 package = "libadwaita"
 features = ["dox", "v1_2"]
 
@@ -29,11 +28,8 @@ git = "https://codeberg.org/jeang3nie/fretboard-layout"
 features = ["gdk", "pango"]
 
 [dependencies.gtk]
-version = "*"
+version = "0.5"
 package = "gtk4"
-#[dependencies.gtk]
-#version = "0.4"
-#package = "gtk4"
 
 [dependencies.gdk]
 version = "*"

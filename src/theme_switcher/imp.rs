@@ -34,9 +34,10 @@ impl ObjectSubclass for ThemeSwitcher {
 }
 
 impl ObjectImpl for ThemeSwitcher {
-    fn constructed(&self, obj: &Self::Type) {
-        self.parent_constructed(obj);
-        obj.set_layout_manager(Some(&gtk::BinLayout::new()));
+    fn constructed(&self) {
+        self.parent_constructed();
+        let instance = self.instance();
+        instance.set_layout_manager(Some(&gtk::BinLayout::new()));
     }
 }
 

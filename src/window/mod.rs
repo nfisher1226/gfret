@@ -28,7 +28,7 @@ glib::wrapper! {
 impl Window {
     #[must_use]
     pub fn new(app: &crate::Application) -> Self {
-        let obj: Self = Object::new(&[("application", app)]).expect("Cannot create GfretWindow");
+        let obj: Self = Object::new(&[("application", app)]);
         obj.connect_signals();
         obj.setup_theme_switcher();
         obj.bind_properties(app);

@@ -333,7 +333,7 @@ impl Window {
     }
 
     /// Opens an svg file if it was created with this program previously by
-    /// reading the <description> and mapping those values to a `Specs` struct
+    /// reading the description tag and mapping those values to a `Specs` struct
     pub fn open_file(&self) {
         let filter = gtk::FileFilter::new();
         filter.add_pattern("*.svg");

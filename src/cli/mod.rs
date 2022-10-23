@@ -11,14 +11,14 @@ pub fn run(matches: &ArgMatches) {
     let scale: f64 = match matches.value_of_t("SCALE") {
         Ok(c) => c,
         Err(e) => {
-            eprintln!("{}", e);
+            eprintln!("{e}");
             process::exit(1);
         }
     };
     let count = match matches.value_of_t("COUNT") {
         Ok(c) => c,
         Err(e) => {
-            eprintln!("{}", e);
+            eprintln!("{e}");
             process::exit(1);
         }
     };
@@ -26,7 +26,7 @@ pub fn run(matches: &ArgMatches) {
         let scale = match matches.value_of_t("MULTI") {
             Ok(c) => c,
             Err(e) => {
-                eprintln!("{}", e);
+                eprintln!("{e}");
                 process::exit(1);
             }
         };
@@ -53,14 +53,14 @@ pub fn run(matches: &ArgMatches) {
     let nut = match matches.value_of_t("NUT") {
         Ok(c) => c,
         Err(e) => {
-            eprintln!("{}", e);
+            eprintln!("{e}");
             process::exit(1);
         }
     };
     let bridge = match matches.value_of_t::<f64>("BRIDGE") {
         Ok(c) => c + 6.0,
         Err(e) => {
-            eprintln!("{}", e);
+            eprintln!("{e}");
             process::exit(1);
         }
     };
@@ -68,20 +68,20 @@ pub fn run(matches: &ArgMatches) {
     let doc = specs.create_document(None);
     let output = matches.value_of("OUTPUT").unwrap_or("-").to_string();
     if output == "-" {
-        println!("{}", doc);
+        println!("{doc}");
     } else {
         match svg::save(&output, &doc) {
-            Ok(_) => println!("Output saved as {}.", output),
+            Ok(_) => println!("Output saved as {output}."),
             Err(e) => {
-                eprintln!("{}", e);
+                eprintln!("{e}");
                 process::exit(1);
             }
         };
         if matches.occurrences_of("EXTERN") > 0 {
             if let Some(cmd) = matches.value_of("EXTERN") {
-                match process::Command::new(&cmd).args(&[&output]).spawn() {
+                match process::Command::new(cmd).args([&output]).spawn() {
                     Ok(_) => (),
-                    Err(e) => eprintln!("{}", e),
+                    Err(e) => eprintln!("{e}"),
                 }
             }
         }

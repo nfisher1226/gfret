@@ -24,8 +24,7 @@ glib::wrapper! {
 impl PreferencesWindow {
     #[must_use]
     pub fn new(app: &crate::Application, win: &crate::Window) -> Self {
-        let obj: Self =
-            Object::new(&[("transient-for", win)]);
+        let obj: Self = Object::new(&[("transient-for", win)]);
         obj.bind_properties(app);
         obj.connect_signals(app, win);
         obj

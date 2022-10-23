@@ -45,8 +45,8 @@ impl ApplicationImpl for Application {
     fn activate(&self) {
         let instance = self.instance();
         if instance.windows().is_empty() {
-            let window = Window::new(&*instance);
-            Actions::default().add(&window, &*instance);
+            let window = Window::new(&instance);
+            Actions::default().add(&window, &instance);
             let provider = gtk::CssProvider::new();
             provider.load_from_data(include_str!("../style.css").as_bytes());
             gtk::StyleContext::add_provider_for_display(
@@ -65,8 +65,8 @@ impl ApplicationImpl for Application {
             if let Some(path) = file.path() {
                 match fretboard_layout::open::open(path) {
                     Ok(specs) => {
-                        let win = Window::new(&*self.instance());
-                        Actions::default().add(&win, &*self.instance());
+                        let win = Window::new(&self.instance());
+                        Actions::default().add(&win, &self.instance());
                         let provider = gtk::CssProvider::new();
                         provider.load_from_data(include_str!("../style.css").as_bytes());
                         win.present();

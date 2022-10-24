@@ -196,7 +196,8 @@ dependencies = [
 [[package]]
 name = "fretboard_layout"
 version = "0.5.0"
-source = "git+https://codeberg.org/jeang3nie/fretboard-layout#32d7f8c2bd35d87b3888884f85ac0c6b04daf17b"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2644787cda9a5d7c7b83d601be1e31a4933af9ce2d28b1d12fe711b213424847"
 dependencies = [
  "pango",
  "rayon",
@@ -328,7 +329,7 @@ dependencies = [
 
 [[package]]
 name = "gfret"
-version = "2.2.0"
+version = "3.0.0"
 dependencies = [
  "clap",
  "fretboard_layout",
@@ -789,8 +790,9 @@ dependencies = [
 
 [[package]]
 name = "rgba_simple"
-version = "0.7.0"
-source = "git+https://codeberg.org/jeang3nie/rgba-simple#fae57815ca5cbbb644bc7c72a518ef976040d8b0"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "14adfcd4bd2ab6e8e44775262a7d85dbc7b875a1d4bad945d39a465da4201d94"
 dependencies = [
  "gdk4",
 ]

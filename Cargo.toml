@@ -1,6 +1,6 @@
 [package]
 name = "gfret"
-version = "2.2.0"
+version = "3.0.0"
 edition = "2021"
 description = "Generates an svg template of a musical instrument fretboard"
 authors = ["Nathan Fisher"]
@@ -23,8 +23,7 @@ package = "libadwaita"
 features = ["dox", "v1_2"]
 
 [dependencies.fretboard_layout]
-#version = "~0.3"
-git = "https://codeberg.org/jeang3nie/fretboard-layout"
+version = "0.5"
 features = ["gdk", "pango"]
 
 [dependencies.gtk]
@@ -32,11 +31,11 @@ version = "0.5"
 package = "gtk4"
 
 [dependencies.gdk]
-version = "*"
+version = "0.5"
 package = "gdk4"
 
 [dependencies.pango]
-version = "*"
+version = "0.16"
 package = "pango"
 
 [dependencies.serde]

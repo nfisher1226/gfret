@@ -22,7 +22,7 @@ expressed in metric units only.
 *Gfret* is distributed primarily in source form. The main repo is at
 [codeberg.org](https://codeberg.org/jeang3nie/gfret) with mirrors at
 [gitlab](https://gitlab.com/jeang3nie/gfret) and
-[gibub.com](https://github.com/nfisher1226/gfret). Releases are recommended.
+[github.com](https://github.com/nfisher1226/gfret). Releases are recommended.
 ## Usage
 *Gfret* can be used from the command line or using the Gtk+ interface.
 ## Running the command line interface

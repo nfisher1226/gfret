@@ -6,7 +6,7 @@ pub fn build_cli() -> Command<'static> {
     Command::new("cli")
         .about("Output an svg without running the interface")
         .long_about(
-            "Gfret can be run from the commmand line just as easily as it can from a graphical
+            "Gfret can be run from the command line just as easily as it can from a graphical
 interface, and sometimes more quickly if all of the desired specifications are
 known in advance.",
         )

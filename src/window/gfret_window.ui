@@ -257,7 +257,7 @@
             <child>
               <object class="GtkSpinButton" id="nut_width">
                 <property name="name">nut_width</property>
-                <property name="tooltip-text" translatable="yes">The physical width of the neck at the nut. For multiscale designs, this dimansion is an approximation where each end of the nut will be half of this width from the centerline.</property>
+                <property name="tooltip-text" translatable="yes">The physical width of the neck at the nut. For multiscale designs, this dimension is an approximation where each end of the nut will be half of this width from the centerline.</property>
                 <property name="text" translatable="yes">43.0</property>
                 <property name="adjustment">nut_adjustment</property>
                 <property name="digits">2</property>

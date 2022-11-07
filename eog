@@ -1,0 +1,36 @@
+<svg height="82mm" preserveAspectRatio="xMidYMid meet" viewBox="0 0 520 82" width="520mm" xmlns="http://www.w3.org/2000/svg">
+<desc BridgeSpacing="56" FretCount="24" Handedness="right" NutWidth="43" PerpendicularFret="8.5" Scale="500" ScaleTreble="450"/>
+<path d="M509.90973,19.5 L490.5146,63.45 L146.76251,69.98247 L127.96299,12.241701 L509.90973,19.5 z" fill="#000000" fill-opacity="255" id="Fretboard" stroke="none"/>
+<path d="M10,10 L40.595814,72 z" fill="none" id="Bridge" stroke="black" stroke-width="1"/>
+<g id="Frets">
+<path d="M509.90973,19.5 L490.5146,63.45 z" fill="none" id="Nut" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M481.85196,18.966806 L465.26257,63.929874 z" fill="none" id="Fret 1" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M455.36896,18.463537 L441.42786,64.38281 z" fill="none" id="Fret 2" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M430.3723,17.988516 L418.9309,64.81033 z" fill="none" id="Fret 3" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M406.77863,17.540155 L397.69656,65.21386 z" fill="none" id="Fret 4" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M384.50916,17.116959 L377.65405,65.594734 z" fill="none" id="Fret 5" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M363.48956,16.717514 L358.73642,65.95424 z" fill="none" id="Fret 6" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M343.64972,16.340488 L340.88055,66.29356 z" fill="none" id="Fret 7" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M324.9234,15.984625 L324.0269,66.61384 z" fill="none" id="Fret 8" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M307.2481,15.648734 L308.1191,66.91614 z" fill="none" id="Fret 9" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M290.56485,15.331695 L293.1042,67.20148 z" fill="none" id="Fret 10" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M274.81796,15.03245 L278.93198,67.470795 z" fill="none" id="Fret 11" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M259.95486,14.75 L265.5552,67.725 z" fill="none" id="Fret 12" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M245.92598,14.483403 L252.9292,67.964935 z" fill="none" id="Fret 13" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M232.68448,14.231769 L241.01184,68.19141 z" fill="none" id="Fret 14" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M220.18616,13.994258 L229.76335,68.40517 z" fill="none" id="Fret 15" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M208.38931,13.770078 L219.1462,68.60693 z" fill="none" id="Fret 16" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M197.25458,13.558479 L209.12494,68.79737 z" fill="none" id="Fret 17" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M186.74478,13.358757 L199.66612,68.97712 z" fill="none" id="Fret 18" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M176.82486,13.170244 L190.73819,69.14678 z" fill="none" id="Fret 19" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M167.4617,12.992312 L182.31134,69.306915 z" fill="none" id="Fret 20" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M158.62405,12.824367 L174.35747,69.45807 z" fill="none" id="Fret 21" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M150.28242,12.665848 L166.85,69.60074 z" fill="none" id="Fret 22" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M142.40898,12.516225 L159.7639,69.7354 z" fill="none" id="Fret 23" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+<path d="M134.97743,12.375 L153.0755,69.8625 z" fill="none" id="Fret 24" stroke="#ffffff" stroke-opacity="255" stroke-width="1"/>
+</g>
+<text font-family="Sans" font-size="5px" font-stretch="normal" font-style="Normal" font-weight="400" id="Specifications" x="10" y="79">
+ScaleBass: 500.00mm | ScaleTreble: 450.00mm | PerpendicularFret: 8.5 | NutWidth: 43.00mm | BridgeSpacing: 56.00mm
+</text>
+<path d="M10,41 L510,41 z" fill="none" id="Centerline" stroke="#0000ff" stroke-dasharray="4.0, 8.0" stroke-dashoffset="0" stroke-opacity="65025" stroke-width="1"/>
+</svg>

@@ -66,12 +66,10 @@ pub fn run(matches: &ArgMatches) {
                 process::exit(1);
             }
         };
-        if matches.index_of("EXTERN").is_some() {
-            if let Some(cmd) = matches.get_one::<String>("EXTERN") {
-                match process::Command::new(cmd).args([&output]).spawn() {
-                    Ok(_) => (),
-                    Err(e) => eprintln!("{e}"),
-                }
+        if let Some(cmd) = matches.get_one::<String>("EXTERN") {
+            match process::Command::new(cmd).args([&output]).spawn() {
+                Ok(_) => (),
+                Err(e) => eprintln!("{e}"),
             }
         }
     }

@@ -77,7 +77,9 @@ known in advance.",
                 .help("Open output file in external program")
                 .short('e')
                 .long("external")
-                .default_value("inkscape"),
+                .num_args(0..=1)
+                .value_parser(value_parser!(String))
+                .default_missing_value("inkscape"),
         )
 }
 

@@ -15,7 +15,7 @@ license = "BSD-2-Clause"
 [dependencies]
 svg = "0.10"
 toml = "0.5"
-clap = "3.2"
+clap = "4.0"
 
 [dependencies.adw]
 version = "0.2"

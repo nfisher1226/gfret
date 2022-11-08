@@ -193,9 +193,9 @@ dependencies = [
 
 [[package]]
 name = "fretboard_layout"
-version = "0.5.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2644787cda9a5d7c7b83d601be1e31a4933af9ce2d28b1d12fe711b213424847"
+checksum = "58e9c5c4845d62450557872f94200672bb50f2602a14e268312ec10daf07aed1"
 dependencies = [
  "pango",
  "rayon",
@@ -855,9 +855,9 @@ checksum = "73473c0e59e6d5812c5dfe2a064a6444949f089e20eec9a2e5506596494e4623"
 
 [[package]]
 name = "svg"
-version = "0.10.0"
+version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e72d8b19ab05827afefcca66bf47040c1e66a0901eb814784c77d4ec118bd309"
+checksum = "a6e6ff893392e6a1eb94a210562432c6380cebf09d30962a012a655f7dde2ff8"
 
 [[package]]
 name = "syn"

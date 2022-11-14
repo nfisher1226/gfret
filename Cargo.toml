@@ -26,6 +26,11 @@ features = ["dox", "v1_2"]
 version = "0.5"
 features = ["gdk", "pango"]
 
+[dependencies.gettext]
+version = "0.7"
+package = "gettext-rs"
+features = ["gettext-system"]
+
 [dependencies.gtk]
 version = "0.5"
 package = "gtk4"

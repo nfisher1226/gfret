@@ -49,35 +49,35 @@
     </section>
     <section>
       <item>
-        <attribute name="label">Open File</attribute>
+        <attribute name="label" translatable="yes">Open File</attribute>
         <attribute name="action">win.open</attribute>
       </item>
       <item>
-        <attribute name="label">Save</attribute>
+        <attribute name="label" translatable="yes">Save</attribute>
         <attribute name="action">win.save</attribute>
       </item>
       <item>
-        <attribute name="label">Save As</attribute>
+        <attribute name="label" translatable="yes">Save As</attribute>
         <attribute name="action">win.save_as</attribute>
       </item>
       <item>
-        <attribute name="label">Open External</attribute>
+        <attribute name="label" translatable="yes">Open External</attribute>
         <attribute name="action">win.open_external</attribute>
       </item>
     </section>
     <section>
       <item>
-        <attribute name="label">Preferences</attribute>
+        <attribute name="label" translatable="yes">Preferences</attribute>
         <attribute name="action">win.preferences</attribute>
       </item>
       <item>
-        <attribute name="label">About</attribute>
+        <attribute name="label" translatable="yes">About</attribute>
         <attribute name="action">win.about</attribute>
       </item>
     </section>
     <section>
       <item>
-        <attribute name="label">Quit</attribute>
+        <attribute name="label" translatable="yes">Quit</attribute>
         <attribute name="action">win.quit</attribute>
       </item>
     </section>
@@ -311,7 +311,7 @@
               <object class="GtkSpinButton" id="perpendicular_fret">
                 <property name="name">perpendicularFret</property>
                 <property name="tooltip-text" translatable="yes">Which fret is perpendicular to the centerline. If a value is set that is between two whole numbers, then the transition will take place between frets.</property>
-                <property name="text" translatable="yes">8.0</property>
+                <property name="text">8.0</property>
                 <property name="visible">false</property>
                 <property name="adjustment">perpendicular_fret_adjustment</property>
                 <property name="digits">1</property>

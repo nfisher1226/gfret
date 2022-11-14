@@ -35,8 +35,8 @@
             </child>
             <child>
               <object class="AdwComboRow" id="units_selector">
-                <property name="title">The type of units</property>
-                <property name="subtitle">Metric or Imperial</property>
+                <property name="title" translatable="yes">The type of units</property>
+                <property name="subtitle" translatable="yes">Metric or Imperial</property>
                 <property name="model">
                   <object class="GtkStringList">
                     <items>
@@ -49,7 +49,7 @@
             </child>
             <child>
               <object class="AdwActionRow" id="border_row">
-                <property name="title">Border width</property>
+                <property name="title" translatable="yes">Border width</property>
                 <child>
                   <object class="GtkSpinButton" id="border_width">
                     <property name="adjustment">border_adjustment</property>
@@ -63,7 +63,7 @@
             </child>
             <child>
               <object class="AdwActionRow" id="line_weight_row">
-                <property name="title">Line weight</property>
+                <property name="title" translatable="yes">Line weight</property>
                 <child>
                   <object class="GtkSpinButton" id="line_weight">
                     <property name="adjustment">weight_adjustment</property>
@@ -79,10 +79,10 @@
         </child>
         <child>
           <object class="AdwPreferencesGroup">
-            <property name="title">Appearance</property>
+            <property name="title" translatable="yes">Appearance</property>
             <child>
               <object class="AdwActionRow" id="fretline_color_row">
-                <property name="title">Fret line color</property>
+                <property name="title" translatable="yes">Fret line color</property>
                 <child>
                   <object class="GtkColorButton" id="fretline_color">
                     <property name="hexpand">false</property>
@@ -95,7 +95,7 @@
             </child>
             <child>
               <object class="AdwActionRow" id="fretboard_color_row">
-                <property name="title">Fretboard color</property>
+                <property name="title" translatable="yes">Fretboard color</property>
                 <child>
                   <object class="GtkColorButton" id="fretboard_color">
                     <property name="hexpand">false</property>
@@ -108,7 +108,7 @@
             </child>
             <child>
               <object class="AdwActionRow" id="centerline_row">
-                <property name="title">Draw Centerline</property>
+                <property name="title" translatable="yes">Draw Centerline</property>
                 <child>
                   <object class="GtkSwitch" id="draw_centerline">
                     <property name="vexpand">false</property>
@@ -119,7 +119,7 @@
             </child>
             <child>
               <object class="AdwActionRow" id="centerline_color_row">
-                <property name="title">Centerline Color</property>
+                <property name="title" translatable="yes">Centerline Color</property>
                 <child>
                   <object class="GtkColorButton" id="centerline_color">
                     <property name="hexpand">false</property>
@@ -132,8 +132,8 @@
             </child>
             <child>
               <object class="AdwActionRow" id="print_row">
-                <property name="title">Print Specs</property>
-                <property name="subtitle">Whether to print the specifications on the document</property>
+                <property name="title" translatable="yes">Print Specs</property>
+                <property name="subtitle" translatable="yes">Whether to print the specifications on the document</property>
                 <child>
                   <object class="GtkSwitch" id="print_specs">
                     <property name="vexpand">false</property>
@@ -144,8 +144,8 @@
             </child>
             <child>
               <object class="AdwActionRow" id="font_row">
-                <property name="title">Font</property>
-                <property name="subtitle">The font used to print the specifications</property>
+                <property name="title" translatable="yes">Font</property>
+                <property name="subtitle" translatable="yes">The font used to print the specifications</property>
                 <child>
                   <object class="GtkFontButton" id="font_chooser">
                     <property name="vexpand">false</property>

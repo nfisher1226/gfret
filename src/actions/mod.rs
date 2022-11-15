@@ -6,6 +6,7 @@ use {
         glib::{self, clone},
         prelude::*,
     },
+    gettext::gettext,
     keys::Keys,
 };
 
@@ -67,7 +68,7 @@ impl<'a> Actions<'a> {
                         let win = adw::AboutWindow::builder()
                             .application_icon("gfret")
                             .application_name(&env!("CARGO_PKG_NAME").to_uppercase())
-                            .comments("A tool for lutherie\nBuilt using Rust and Gtk+")
+                            .comments(&gettext("A tool for lutherie\nBuilt using Rust and Gtk+"))
                             .copyright("©2020 by Nathan Fisher (the JeanG3nie)")
                             .developer_name("Nathan Fisher")
                             .issue_url("https://codeberg.org/jeang3nie/gfret/issues")

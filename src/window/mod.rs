@@ -13,6 +13,7 @@ use {
         subclass::prelude::*,
     },
     fretboard_layout::{Handedness, MultiscaleBuilder, Specs, Units, Variant},
+    gettext::gettext,
     std::process::Command,
 };
 
@@ -247,7 +248,7 @@ impl Window {
             .application()
             .expect("Cannot get application")
             .downcast::<crate::Application>()
-            .expect("The struct must be of type `crate::Application`");
+            .expect("The struct must be of type `gfret::Application`");
         Specs::builder()
             .scale(self.imp().scale.value())
             .count(self.imp().fret_count.value_as_int() as u32)
@@ -299,7 +300,7 @@ impl Window {
             .application()
             .expect("Cannot get application")
             .downcast::<crate::Application>()
-            .expect("The app needs to be of type `crate::Application`");
+            .expect("The app needs to be of type `gfret::Application`");
         let cfg = app.config();
         let image = self.specs().create_document(Some(cfg)).to_string();
         let bytes = gtk::glib::Bytes::from_owned(image.into_bytes());
@@ -327,7 +328,7 @@ impl Window {
             .application()
             .expect("Cannot get application")
             .downcast::<crate::Application>()
-            .expect("The application must be of type `crate::Application`");
+            .expect("The application must be of type `gfret::Application`");
         let pwin = PreferencesWindow::new(&app, self);
         pwin.show();
     }
@@ -340,7 +341,7 @@ impl Window {
         filter.set_name(Some("svg images"));
         let dlg = gtk::FileChooserDialog::builder()
             .application(&self.application().expect("Cannot get application"))
-            .title("Select a file to open")
+            .title(&gettext("Select a file to open"))
             .transient_for(self)
             .action(gtk::FileChooserAction::Open)
             .create_folders(true)
@@ -348,8 +349,8 @@ impl Window {
             .filter(&filter)
             .build();
         dlg.add_buttons(&[
-            ("Cancel", gtk::ResponseType::Cancel),
-            ("Accept", gtk::ResponseType::Accept),
+            (&gettext("Cancel"), gtk::ResponseType::Cancel),
+            (&gettext("Accept"), gtk::ResponseType::Accept),
         ]);
         dlg.connect_response(clone!(@weak self as win => move |dlg,res| {
             if res == gtk::ResponseType::Accept {
@@ -359,14 +360,14 @@ impl Window {
                             Ok(specs) => {
                                 win.load_specs(&specs);
                                 if let Some(base) = file.basename() {
-                                    win.set_toast(&format!("{} opened", base.display()));
+                                    win.set_toast(&format!("{} {}", base.display(), gettext("opened")));
                                 }
                                 *win.imp().file.borrow_mut() = Some(file);
                                 win.set_changed(false);
                                 win.update_title();
                             },
                             Err(e) => {
-                                win.set_toast(&format!("Error opening file: {e}"));
+                                win.set_toast(&format!("{}: {e}", gettext("Error opening file")));
                             }
                         }
                     }
@@ -380,14 +381,14 @@ impl Window {
     fn save_dlg(&self) -> gtk::FileChooserDialog {
         let dlg = gtk::FileChooserDialog::builder()
             .application(&self.application().expect("Cannot get application"))
-            .title("Select a location")
+            .title(&gettext("Select a location"))
             .transient_for(self)
             .action(gtk::FileChooserAction::Save)
             .create_folders(true)
             .build();
         dlg.add_buttons(&[
-            ("Cancel", gtk::ResponseType::Cancel),
-            ("Accept", gtk::ResponseType::Accept),
+            (&gettext("Cancel"), gtk::ResponseType::Cancel),
+            (&gettext("Accept"), gtk::ResponseType::Accept),
         ]);
         dlg
     }
@@ -428,7 +429,7 @@ impl Window {
                 .application()
                 .expect("Cannot get application")
                 .downcast::<crate::Application>()
-                .expect("The app needs to be of type `crate::Application`");
+                .expect("The app needs to be of type `gfret::Application`");
             let cfg = app.config();
             let img = self.specs().create_document(Some(cfg));
             match svg::save(file.path().unwrap(), &img) {
@@ -439,7 +440,7 @@ impl Window {
                     self.update_title();
                 }
                 Err(e) => {
-                    self.set_toast(&format!("Error saving file: {e}"));
+                    self.set_toast(&format!("{}: {e}", gettext("Error saving file")));
                 }
             }
         }
@@ -475,11 +476,11 @@ impl Window {
                 .application()
                 .expect("Cannot get application")
                 .downcast::<crate::Application>()
-                .expect("The app needs to be of type `crate::Application`");
+                .expect("The app needs to be of type `gfret::Application`");
             let ext = app.imp().settings.get::<String>("external-editor");
             let path = file.path().expect("Cannot get file path");
             if let Err(e) = Command::new(ext).arg(path).spawn() {
-                self.set_toast(&format!("Error opening external program: {e}"));
+                self.set_toast(&format!("{}: {e}", gettext("Error opening external program")));
             }
         }
     }
@@ -507,10 +508,11 @@ impl Window {
                 }
             }
         } else {
-            title_widget.set_subtitle(if self.changed() {
-                "New file*"
+            let new = gettext("New file");
+            title_widget.set_subtitle(&if self.changed() {
+                format!("{new}*")
             } else {
-                "New file"
+                new
             });
         }
     }

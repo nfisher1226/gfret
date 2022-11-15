@@ -2,6 +2,7 @@ pub mod opts;
 
 use {
     clap::ArgMatches,
+    gettext::gettext,
     fretboard_layout::{Handedness, Specs, Variant},
     std::process,
 };
@@ -39,7 +40,7 @@ pub fn run(matches: &ArgMatches) {
         println!("{doc}");
     } else {
         match svg::save(output, &doc) {
-            Ok(_) => println!("Output saved as {output}."),
+            Ok(_) => println!("{} {output}.", gettext("Output saved as")),
             Err(e) => {
                 eprintln!("{e}");
                 process::exit(1);

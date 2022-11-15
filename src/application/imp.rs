@@ -6,6 +6,7 @@ use {
         subclass::prelude::*,
         traits::AdwApplicationExt,
     },
+    gettext::gettext,
 };
 
 pub struct Application {
@@ -83,7 +84,7 @@ impl ApplicationImpl for Application {
                         win.update_title();
                     }
                     Err(e) => {
-                        eprintln!("Error opening file: {e}");
+                        eprintln!("{}: {e}", gettext("Error opening file"));
                     }
                 }
             }

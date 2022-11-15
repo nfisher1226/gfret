@@ -1,0 +1,322 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-11-14 18:42-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/theme_switcher/theme_switcher.ui:22
+#: src/theme_switcher/theme_switcher.ui:30
+msgid "Follow system style"
+msgstr ""
+
+#: src/theme_switcher/theme_switcher.ui:38
+#: src/theme_switcher/theme_switcher.ui:46
+msgid "Light style"
+msgstr ""
+
+#: src/theme_switcher/theme_switcher.ui:54
+#: src/theme_switcher/theme_switcher.ui:62
+msgid "Dark style"
+msgstr ""
+
+#: src/preferences/preferences.ui:28
+msgid "Choose an external editor to run for svg files."
+msgstr ""
+
+#: src/preferences/preferences.ui:38
+msgid "The type of units"
+msgstr ""
+
+#: src/preferences/preferences.ui:39
+msgid "Metric or Imperial"
+msgstr ""
+
+#: src/preferences/preferences.ui:43
+msgid "Metric"
+msgstr ""
+
+#: src/preferences/preferences.ui:44
+msgid "Imperial"
+msgstr ""
+
+#: src/preferences/preferences.ui:52
+msgid "Border width"
+msgstr ""
+
+#: src/preferences/preferences.ui:66
+msgid "Line weight"
+msgstr ""
+
+#: src/preferences/preferences.ui:82
+msgid "Appearance"
+msgstr ""
+
+#: src/preferences/preferences.ui:85
+msgid "Fret line color"
+msgstr ""
+
+#: src/preferences/preferences.ui:98
+msgid "Fretboard color"
+msgstr ""
+
+#: src/preferences/preferences.ui:111
+msgid "Draw Centerline"
+msgstr ""
+
+#: src/preferences/preferences.ui:122
+msgid "Centerline Color"
+msgstr ""
+
+#: src/preferences/preferences.ui:135
+msgid "Print Specs"
+msgstr ""
+
+#: src/preferences/preferences.ui:136
+msgid "Whether to print the specifications on the document"
+msgstr ""
+
+#: src/preferences/preferences.ui:147
+msgid "Font"
+msgstr ""
+
+#: src/preferences/preferences.ui:148
+msgid "The font used to print the specifications"
+msgstr ""
+
+#: src/window/gfret_window.ui:52
+msgid "Open File"
+msgstr ""
+
+#: src/window/gfret_window.ui:56 src/window/gfret_window.ui:135
+msgid "Save"
+msgstr ""
+
+#: src/window/gfret_window.ui:60
+msgid "Save As"
+msgstr ""
+
+#: src/window/gfret_window.ui:64
+msgid "Open External"
+msgstr ""
+
+#: src/window/gfret_window.ui:70
+msgid "Preferences"
+msgstr ""
+
+#: src/window/gfret_window.ui:74
+msgid "About"
+msgstr ""
+
+#: src/window/gfret_window.ui:80
+msgid "Quit"
+msgstr ""
+
+#: src/window/gfret_window.ui:105
+msgid ""
+"Whether the neck has a single scale for both sides or a \"Multiscale\", or "
+"fanned fret, layout."
+msgstr ""
+
+#: src/window/gfret_window.ui:109
+msgid "Monoscale"
+msgstr ""
+
+#: src/window/gfret_window.ui:110
+msgid "Multiscale"
+msgstr ""
+
+#: src/window/gfret_window.ui:111
+msgid "Multiscale LH"
+msgstr ""
+
+#: src/window/gfret_window.ui:127
+msgid "Opens the application menu."
+msgstr ""
+
+#: src/window/gfret_window.ui:183
+msgid ""
+"Scale length course adjustment. If \"Multiscale\" is selected, this is the "
+"bass side scale length."
+msgstr ""
+
+#: src/window/gfret_window.ui:195
+msgid ""
+"Scale length fine adjustment. If \"Multiscale\" is selected, then this will "
+"be the bass side scale length."
+msgstr ""
+
+#: src/window/gfret_window.ui:211
+msgid "Treble scale length course adjustment"
+msgstr ""
+
+#: src/window/gfret_window.ui:224
+msgid "Treble scale length fine adjustment"
+msgstr ""
+
+#: src/window/gfret_window.ui:225
+msgid "610.0"
+msgstr ""
+
+#: src/window/gfret_window.ui:250
+msgid "Nut Width:"
+msgstr ""
+
+#: src/window/gfret_window.ui:260
+msgid ""
+"The physical width of the neck at the nut. For multiscale designs, this "
+"dimension is an approximation where each end of the nut will be half of this "
+"width from the centerline."
+msgstr ""
+
+#: src/window/gfret_window.ui:261
+msgid "43.0"
+msgstr ""
+
+#: src/window/gfret_window.ui:276
+msgid "Bridge Spacing:"
+msgstr ""
+
+#: src/window/gfret_window.ui:286
+msgid ""
+"The string spacing at the bridge. For purposes of calculating the fretboard "
+"dimensions this number will be appropriately padded to allow for fretboard "
+"overhang beyond the outer strings."
+msgstr ""
+
+#: src/window/gfret_window.ui:287
+msgid "56.0"
+msgstr ""
+
+#: src/window/gfret_window.ui:303
+msgid "Perpendicular Fret:"
+msgstr ""
+
+#: src/window/gfret_window.ui:313
+msgid ""
+"Which fret is perpendicular to the centerline. If a value is set that is "
+"between two whole numbers, then the transition will take place between frets."
+msgstr ""
+
+#: src/window/gfret_window.ui:330
+msgid "Fret Count:"
+msgstr ""
+
+#: src/window/gfret_window.ui:340
+msgid "The number of frets to render"
+msgstr ""
+
+#: src/window/gfret_window.ui:341
+msgid "24"
+msgstr ""
+
+#: src/cli/opts.rs:10 src/cli/opts.rs:10 src/cli/opts.rs:10
+msgid "Output an svg without running the interface"
+msgstr ""
+
+#: src/cli/opts.rs:12 src/cli/opts.rs:12 src/cli/opts.rs:12
+msgid "Gfret can be run from the command line just as easily as it can from a graphical\n"
+"interface, and sometimes more quickly if all of the desired specifications are\n"
+"known in advance."
+msgstr ""
+
+#: src/cli/opts.rs:20 src/cli/opts.rs:20 src/cli/opts.rs:20
+msgid "Scale length in mm"
+msgstr ""
+
+#: src/cli/opts.rs:26 src/cli/opts.rs:26 src/cli/opts.rs:26
+msgid "Multiscale fretboard with <MULTI> as the treble scale"
+msgstr ""
+
+#: src/cli/opts.rs:32 src/cli/opts.rs:32 src/cli/opts.rs:32
+msgid "Multiscale fretboard reversed (left handed)"
+msgstr ""
+
+#: src/cli/opts.rs:37 src/cli/opts.rs:37 src/cli/opts.rs:37
+msgid "Which fret is perpendicular to the centerline"
+msgstr ""
+
+#: src/cli/opts.rs:43 src/cli/opts.rs:43 src/cli/opts.rs:43
+msgid "Total fret count"
+msgstr ""
+
+#: src/cli/opts.rs:49 src/cli/opts.rs:49 src/cli/opts.rs:49
+msgid "Nut width"
+msgstr ""
+
+#: src/cli/opts.rs:55 src/cli/opts.rs:55 src/cli/opts.rs:55
+msgid "Bridge Spacing"
+msgstr ""
+
+#: src/cli/opts.rs:61 src/cli/opts.rs:61 src/cli/opts.rs:61
+msgid "Name of the output file"
+msgstr ""
+
+#: src/cli/opts.rs:64 src/cli/opts.rs:64 src/cli/opts.rs:64
+msgid "Open output file in external program"
+msgstr ""
+
+#: src/cli/opts.rs:77 src/cli/opts.rs:77 src/cli/opts.rs:77
+msgid "Generates layout dimensions for a stringed instrument fretboard"
+msgstr ""
+
+#: src/cli/opts.rs:82 src/cli/opts.rs:82 src/cli/opts.rs:82
+msgid "An svg image previously created by Gfret"
+msgstr ""
+
+#: src/cli/mod.rs:43 src/cli/mod.rs:43
+msgid "Output saved as"
+msgstr ""
+
+#: src/window/mod.rs:344 src/window/mod.rs:344
+msgid "Select a file to open"
+msgstr ""
+
+#: src/window/mod.rs:352 src/window/mod.rs:390 src/window/mod.rs:352 src/window/mod.rs:390
+msgid "Cancel"
+msgstr ""
+
+#: src/window/mod.rs:353 src/window/mod.rs:391 src/window/mod.rs:353 src/window/mod.rs:391
+msgid "Accept"
+msgstr ""
+
+#: src/window/mod.rs:363 src/window/mod.rs:363
+msgid "opened"
+msgstr ""
+
+#: src/window/mod.rs:370 src/application/imp.rs:87 src/window/mod.rs:370 src/application/imp.rs:87 src/application/imp.rs:87
+msgid "Error opening file"
+msgstr ""
+
+#: src/window/mod.rs:384 src/window/mod.rs:384
+msgid "Select a location"
+msgstr ""
+
+#: src/window/mod.rs:443 src/window/mod.rs:443
+msgid "Error saving file"
+msgstr ""
+
+#: src/window/mod.rs:483 src/window/mod.rs:483
+msgid "Error opening external program"
+msgstr ""
+
+#: src/window/mod.rs:511 src/window/mod.rs:511
+msgid "New file"
+msgstr ""
+
+#: src/actions/mod.rs:71 src/actions/mod.rs:71
+msgid "A tool for lutherie\n"
+"Built using Rust and Gtk+"
+msgstr ""

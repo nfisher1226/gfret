@@ -216,7 +216,7 @@ impl PreferencesWindow {
                         dlg.transient_for()
                             .expect("The window should be transient for a PreferencesWindow")
                             .downcast::<PreferencesWindow>()
-                            .expect("The window should be of type `crate::PreferencesWindow`")
+                            .expect("The window should be of type `gfret::PreferencesWindow`")
                             .imp()
                             .external_row
                             .set_text(&text);

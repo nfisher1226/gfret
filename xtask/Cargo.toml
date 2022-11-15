@@ -12,3 +12,8 @@ resvg = "0.22"
 usvg = "0.22"
 tiny-skia = "0.6"
 
+[dependencies.gettext]
+package = "gettext-rs"
+version = "0.7"
+features = ["gettext-system"]
+

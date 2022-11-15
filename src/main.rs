@@ -1,6 +1,14 @@
-use adw::gtk::prelude::*;
+use {
+    adw::gtk::prelude::*,
+    gettext::{bind_textdomain_codeset, TextDomain},
+    std::error::Error,
+};
 
-fn main() {
+fn main() -> Result<(), Box<dyn Error>> {
+    TextDomain::new("gfret")
+        .push("/usr/local/share")
+        .init()?;
+    bind_textdomain_codeset("gfret", "UTF-8")?;
     let matches = gfret::cli::opts::build().get_matches();
     match matches.subcommand() {
         Some(("cli", cli_matches)) => gfret::cli::run(cli_matches),
@@ -9,4 +17,5 @@ fn main() {
             app.run();
         }
     }
+    Ok(())
 }

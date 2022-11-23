@@ -1,13 +1,20 @@
 use {
     adw::gtk::prelude::*,
-    gettext::{bind_textdomain_codeset, TextDomain},
+    gettext::{bind_textdomain_codeset, TextDomain, TextDomainError},
     std::error::Error,
 };
 
 fn main() -> Result<(), Box<dyn Error>> {
-    TextDomain::new("gfret")
+    if let Err(e) = TextDomain::new("gfret")
         .push("/usr/local/share")
-        .init()?;
+        .init() {
+        match e {
+            TextDomainError::TextDomainCallFailed(_) |
+            TextDomainError::BindTextDomainCallFailed(_) |
+            TextDomainError::BindTextDomainCodesetCallFailed(_) => return Err(e.into()),
+            _ => {},
+        }
+    }
     bind_textdomain_codeset("gfret", "UTF-8")?;
     let matches = gfret::cli::opts::build().get_matches();
     match matches.subcommand() {

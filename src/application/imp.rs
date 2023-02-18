@@ -31,7 +31,7 @@ impl ObjectSubclass for Application {
 impl ObjectImpl for Application {
     fn constructed(&self) {
         self.parent_constructed();
-        let instance = self.instance();
+        let instance = self.obj();
         let set_property_action =
             PropertyAction::new("set-theme", &instance.style_manager(), "color-scheme");
         instance.add_action(&set_property_action);
@@ -44,12 +44,12 @@ impl ObjectImpl for Application {
 
 impl ApplicationImpl for Application {
     fn activate(&self) {
-        let instance = self.instance();
+        let instance = self.obj();
         if instance.windows().is_empty() {
             let window = Window::new(&instance);
             Actions::default().add(&window, &instance);
             let provider = gtk::CssProvider::new();
-            provider.load_from_data(include_str!("../style.css").as_bytes());
+            provider.load_from_data(include_str!("../style.css"));
             gtk::StyleContext::add_provider_for_display(
                 &gdk::Display::default().expect("Cannot get display"),
                 &provider,
@@ -66,10 +66,10 @@ impl ApplicationImpl for Application {
             if let Some(path) = file.path() {
                 match fretboard_layout::open::open(path) {
                     Ok(specs) => {
-                        let win = Window::new(&self.instance());
-                        Actions::default().add(&win, &self.instance());
+                        let win = Window::new(&self.obj());
+                        Actions::default().add(&win, &self.obj());
                         let provider = gtk::CssProvider::new();
-                        provider.load_from_data(include_str!("../style.css").as_bytes());
+                        provider.load_from_data(include_str!("../style.css"));
                         win.present();
                         gtk::StyleContext::add_provider_for_display(
                             &gdk::Display::default().expect("Cannot get display"),

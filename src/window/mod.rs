@@ -29,7 +29,7 @@ glib::wrapper! {
 impl Window {
     #[must_use]
     pub fn new(app: &crate::Application) -> Self {
-        let obj: Self = Object::new(&[("application", app)]);
+        let obj: Self = Object::builder().property("application", app).build();
         obj.connect_signals();
         obj.setup_theme_switcher();
         obj.bind_properties(app);
@@ -37,15 +37,6 @@ impl Window {
         obj.set_changed(false);
         obj.update_title();
         obj
-    }
-
-    pub fn set_changed(&self, changed: bool) {
-        self.set_property("changed", changed);
-    }
-
-    #[must_use]
-    pub fn changed(&self) -> bool {
-        self.property("changed")
     }
 
     fn bind_adjustments(&self, app: &crate::Application) {
@@ -487,7 +478,7 @@ impl Window {
 
     pub fn set_toast(&self, toast: &str) {
         let toast = adw::Toast::builder().title(toast).timeout(3).build();
-        self.imp().overlay.add_toast(&toast);
+        self.imp().overlay.add_toast(toast);
     }
 
     pub fn update_title(&self) {

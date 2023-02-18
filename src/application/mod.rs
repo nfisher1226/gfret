@@ -30,12 +30,11 @@ impl Default for Application {
 impl Application {
     #[must_use]
     pub fn new() -> Self {
-        let obj: Self = Object::new(&[
-            ("application-id", &Some("org.hitchhiker_linux.gfret")),
-            ("flags", &ApplicationFlags::HANDLES_OPEN),
-            ("register-session", &true.to_value()),
-        ]);
-        obj
+        Object::builder()
+            .property("application-id", &Some("org.hitchhiker_linux.gfret"))
+            .property("flags", &ApplicationFlags::HANDLES_OPEN)
+            .property("register-session", &true.to_value())
+            .build()
     }
 
     #[must_use]

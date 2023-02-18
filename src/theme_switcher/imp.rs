@@ -1,7 +1,6 @@
 use adw::gtk::{
     self,
     glib::{self, subclass::InitializingObject},
-    prelude::*,
     subclass::prelude::*,
     traits::WidgetExt,
     CompositeTemplate,
@@ -36,8 +35,8 @@ impl ObjectSubclass for ThemeSwitcher {
 impl ObjectImpl for ThemeSwitcher {
     fn constructed(&self) {
         self.parent_constructed();
-        let instance = self.instance();
-        instance.set_layout_manager(Some(&gtk::BinLayout::new()));
+        let instance = self.obj();
+        instance.set_layout_manager(Some(gtk::BinLayout::new()));
     }
 }
 

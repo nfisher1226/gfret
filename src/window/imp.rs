@@ -2,7 +2,7 @@ use {
     adw::{
         gtk::{
             self, gio,
-            glib::{self, once_cell::sync::Lazy, subclass::InitializingObject},
+            glib::{self, subclass::InitializingObject, Properties},
             subclass::prelude::*,
             CompositeTemplate,
         },
@@ -12,7 +12,8 @@ use {
     std::cell::{Cell, RefCell},
 };
 
-#[derive(CompositeTemplate, Default)]
+#[derive(CompositeTemplate, Default, Properties)]
+#[properties(wrapper_type = super::Window)]
 #[template(file = "gfret_window.ui")]
 pub struct Window {
     #[template_child]
@@ -44,6 +45,7 @@ pub struct Window {
     #[template_child]
     pub fret_count: TemplateChild<gtk::SpinButton>,
     pub file: RefCell<Option<gio::File>>,
+    #[property(get, set)]
     pub changed: Cell<bool>,
 }
 
@@ -64,28 +66,15 @@ impl ObjectSubclass for Window {
 
 impl ObjectImpl for Window {
     fn properties() -> &'static [glib::ParamSpec] {
-        static PROPERTIES: Lazy<Vec<glib::ParamSpec>> =
-            Lazy::new(|| vec![glib::ParamSpecBoolean::builder("changed").build()]);
-        PROPERTIES.as_ref()
+        Self::derived_properties()
     }
 
-    fn set_property(&self, _id: usize, value: &glib::Value, pspec: &glib::ParamSpec) {
-        match pspec.name() {
-            "changed" => {
-                let input = value
-                    .get()
-                    .expect("The value needs to be of type `boolean`");
-                self.changed.replace(input);
-            }
-            _ => unimplemented!(),
-        }
+    fn set_property(&self, _id: usize, _value: &glib::Value, _pspec: &glib::ParamSpec) {
+        Self::derived_set_property(self, _id, _value, _pspec)
     }
 
-    fn property(&self, _id: usize, pspec: &glib::ParamSpec) -> glib::Value {
-        match pspec.name() {
-            "changed" => self.changed.get().to_value(),
-            _ => unimplemented!(),
-        }
+    fn property(&self, _id: usize, _pspec: &glib::ParamSpec) -> glib::Value {
+        Self::derived_property(self, _id, _pspec)
     }
 
     fn constructed(&self) {

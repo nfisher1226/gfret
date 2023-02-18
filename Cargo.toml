@@ -13,17 +13,17 @@ license = "BSD-2-Clause"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-svg = "0.12"
-toml = "0.5"
-clap = "4.0"
+svg = "0.13"
+toml = "0.7"
+clap = "4.1"
 
 [dependencies.adw]
-version = "0.2"
+version = "0.3"
 package = "libadwaita"
-features = ["dox", "v1_2"]
+features = ["v1_2"]
 
 [dependencies.fretboard_layout]
-version = "0.5"
+version = "0.6"
 features = ["gdk", "pango"]
 
 [dependencies.gettext]
@@ -32,15 +32,15 @@ package = "gettext-rs"
 features = ["gettext-system"]
 
 [dependencies.gtk]
-version = "0.5"
+version = "0.6"
 package = "gtk4"
 
 [dependencies.gdk]
-version = "0.5"
+version = "0.6"
 package = "gdk4"
 
 [dependencies.pango]
-version = "0.16"
+version = "0.17"
 package = "pango"
 
 [dependencies.serde]

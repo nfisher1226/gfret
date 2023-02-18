@@ -13,7 +13,7 @@ glib::wrapper! {
 
 impl Default for ThemeSwitcher {
     fn default() -> Self {
-        Object::new(&[])
+        Object::new()
     }
 }
 

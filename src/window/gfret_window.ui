@@ -125,6 +125,9 @@
                 <property name="icon-name">open-menu-symbolic</property>
                 <property name="menu-model">actionMenu</property>
                 <property name="tooltip-text" translatable="yes">Opens the application menu.</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Menu</property>
+                </accessibility>
               </object>
             </child>
             <child type="end">
@@ -136,6 +139,9 @@
                   </object>
                 </property>
                 <property name="action-name">win.save</property>
+                <accessibility>
+                  <property name="label" translatable="yes">Save</property>
+                </accessibility>
               </object>
             </child>
           </object>
@@ -183,6 +189,9 @@
                 <property name="tooltip-text" translatable="yes">Scale length course adjustment. If "Multiscale" is selected, this is the bass side scale length.</property>
                 <property name="hexpand">1</property>
                 <property name="adjustment">scale_adjustment</property>
+                <accessibility>
+                  <property name="label" translatable="true">Adjust scale</property>
+                </accessibility>
                 <layout>
                   <property name="row">0</property>
                   <property name="column">0</property>
@@ -198,6 +207,9 @@
                 <property name="numeric">1</property>
                 <property name="update-policy">if-valid</property>
                 <property name="value">655</property>
+                <accessibility>
+                  <property name="label" translatable="true">Adjust scale</property>
+                </accessibility>
                 <layout>
                   <property name="row">0</property>
                   <property name="column">1</property>
@@ -211,6 +223,9 @@
                 <property name="tooltip-text" translatable="yes">Treble scale length course adjustment</property>
                 <property name="hexpand">1</property>
                 <property name="adjustment">treble_scale_adjustment</property>
+                <accessibility>
+                  <property name="label" translatable="true">Adjust secondary scale</property>
+                </accessibility>
                 <layout>
                   <property name="row">1</property>
                   <property name="column">0</property>
@@ -228,6 +243,9 @@
                 <property name="numeric">1</property>
                 <property name="update-policy">if-valid</property>
                 <property name="value">610</property>
+                <accessibility>
+                  <property name="label" translatable="true">Adjust secondary scale</property>
+                </accessibility>
                 <layout>
                   <property name="row">1</property>
                   <property name="column">1</property>
@@ -264,6 +282,9 @@
                 <property name="numeric">1</property>
                 <property name="update-policy">if-valid</property>
                 <property name="value">43</property>
+                <accessibility>
+                  <property name="label" translatable="true">Nut width</property>
+                </accessibility>
                 <layout>
                   <property name="column">0</property>
                   <property name="row">1</property>
@@ -290,6 +311,9 @@
                 <property name="numeric">1</property>
                 <property name="update-policy">if-valid</property>
                 <property name="value">56</property>
+                <accessibility>
+                  <property name="label" translatable="true">Bridge spacing</property>
+                </accessibility>
                 <layout>
                   <property name="column">1</property>
                   <property name="row">1</property>
@@ -318,6 +342,9 @@
                 <property name="numeric">1</property>
                 <property name="update-policy">if-valid</property>
                 <property name="value">8</property>
+                <accessibility>
+                  <property name="label" translatable="true">Perpendicular fret</property>
+                </accessibility>
                 <layout>
                   <property name="column">2</property>
                   <property name="row">1</property>
@@ -343,6 +370,9 @@
                 <property name="numeric">1</property>
                 <property name="update-policy">if-valid</property>
                 <property name="value">24</property>
+                <accessibility>
+                  <property name="label" translatable="true">Fret count</property>
+                </accessibility>
                 <layout>
                   <property name="column">3</property>
                   <property name="row">1</property>

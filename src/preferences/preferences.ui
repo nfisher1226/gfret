@@ -19,7 +19,7 @@
           <object class="AdwPreferencesGroup">
             <child>
               <object class="AdwEntryRow" id="external_row">
-                <property name="title">External editor</property>
+                <property name="title" translatable="yes">External editor</property>
                 <property name="text">inkscape</property>
                 <child>
                   <object class="GtkButton" id="external_button">
@@ -29,6 +29,9 @@
                     <property name="icon-name">folder</property>
                     <property name="vexpand">false</property>
                     <property name="valign">center</property>
+                    <accessibility>
+                      <property name="label" translatable="true">External svg editor</property>
+                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -37,6 +40,9 @@
               <object class="AdwComboRow" id="units_selector">
                 <property name="title" translatable="yes">The type of units</property>
                 <property name="subtitle" translatable="yes">Metric or Imperial</property>
+                <accessibility>
+                  <property name="label" translatable="true">Metric or imperial units</property>
+                </accessibility>
                 <property name="model">
                   <object class="GtkStringList">
                     <items>
@@ -57,6 +63,9 @@
                     <property name="numeric">1</property>
                     <property name="vexpand">false</property>
                     <property name="valign">center</property>
+                    <accessibility>
+                      <property name="label" translatable="true">Border width</property>
+                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -71,6 +80,9 @@
                     <property name="numeric">1</property>
                     <property name="vexpand">false</property>
                     <property name="valign">center</property>
+                    <accessibility>
+                      <property name="label" translatable="true">Line weight</property>
+                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -89,6 +101,9 @@
                     <property name="vexpand">false</property>
                     <property name="valign">center</property>
                     <property name="rgba">rgb(255,255,255)</property>
+                    <accessibility>
+                      <property name="label" translatable="true">Fret line color</property>
+                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -102,6 +117,9 @@
                     <property name="vexpand">false</property>
                     <property name="valign">center</property>
                     <property name="rgba">rgb(36,31,49)</property>
+                    <accessibility>
+                      <property name="label" translatable="true">Fretboard color</property>
+                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -113,6 +131,9 @@
                   <object class="GtkSwitch" id="draw_centerline">
                     <property name="vexpand">false</property>
                     <property name="valign">center</property>
+                    <accessibility>
+                      <property name="label" translatable="true">Draw centerline</property>
+                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -126,6 +147,9 @@
                     <property name="vexpand">false</property>
                     <property name="valign">center</property>
                     <property name="rgba">rgb(0,0,255)</property>
+                    <accessibility>
+                      <property name="label" translatable="true">Centerline color</property>
+                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -138,6 +162,9 @@
                   <object class="GtkSwitch" id="print_specs">
                     <property name="vexpand">false</property>
                     <property name="valign">center</property>
+                    <accessibility>
+                      <property name="label" translatable="true">Print specs on document</property>
+                    </accessibility>
                   </object>
                 </child>
               </object>
@@ -154,6 +181,9 @@
                     <property name="language">en-us</property>
                     <property name="preview-text"/>
                     <property name="use-font">1</property>
+                    <accessibility>
+                      <property name="label" translatable="true">Font used for specs</property>
+                    </accessibility>
                   </object>
                 </child>
               </object>
